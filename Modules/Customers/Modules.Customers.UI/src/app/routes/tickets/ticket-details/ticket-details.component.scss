@@ -1,0 +1,117 @@
+.ticket-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.ticket-row div {
+  min-width: 180px;
+  font-size: 20px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.ticket-card {
+  margin: 16px 0;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  margin-bottom: 2rem;
+  background: #fff;
+  background-color: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.ticket-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 12px 0;
+}
+
+.ticket-field {
+  display: flex;
+  flex-direction: column;
+  min-width: 160px;
+  margin-right: 200px;
+  margin-bottom: 10px;
+  width: 100px;
+
+  .label {
+    font-size: 16px;
+    color: #666;
+  }
+
+  .value {
+    font-weight: 500;
+    font-size: 16px;
+    color: #222;
+  }
+
+  &.full-width {
+    flex: 1 1 100%;
+  }
+}
+
+
+.ticket-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.ticket-line div {
+  min-width: 180px;
+  font-size: 20px;
+  color: #333;
+}
+
+
+.w-100 {
+  width: 100%;
+}
+
+.p-3 {
+  padding: 1rem;
+}
+
+.add-comment-btn {
+  float: right;
+}
+
+
+.comment-card {
+  margin-bottom: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 12px;
+}
+
+.support-box {
+  border-left: 4px solid #1976d2; // blue for support
+  direction: rtl;
+  text-align: right;
+}
+
+.customer-box {
+  border-left: 4px solid #43a047; // green for customer
+  text-align: left;
+}
+
+.attachment-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+::ng-deep .custom-tab .mat-tab-label {
+  font-size: 24px !important;
+}
+
+.mat-tab-label {
+  font-size: 24px !important;
+}

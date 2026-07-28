@@ -1,0 +1,10 @@
+<div class="list-actions">
+  <ng-content select="[custom-action]" />
+  @if (showFilter) {
+    <div class="list-filter-icon" [class.active]="filterOpen">
+      <button mat-icon-button (click)="onFilterClick()">
+        <mat-icon>filter_list</mat-icon>
+      </button>
+    </div>
+  }
+</div>

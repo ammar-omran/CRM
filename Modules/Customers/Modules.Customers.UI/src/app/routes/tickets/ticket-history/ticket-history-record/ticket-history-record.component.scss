@@ -1,0 +1,32 @@
+.history-card {
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  background: #f9f9f9;
+  border-left: 4px solid #1976d2;
+
+  .header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+
+    mat-icon {
+      margin-right: 0.5rem;
+    }
+
+    .title {
+      font-weight: bold;
+    }
+  }
+
+  .description {
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #666;
+  }
+}

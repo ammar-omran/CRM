@@ -1,0 +1,21 @@
+<mtx-grid
+  #grid
+  [data]="(data$ | async) || []"
+  [columns]="columns"
+  [loading]="isLoading"
+  [columnResizable]="true"
+  [rowHover]="true"
+  [columnHideable]="true"
+  [columnSortable]="true"
+  [expandable]="true"
+  [showPaginator]="true"
+  [pageSizeOptions]="pageSizeOptions"
+  [pageIndex]="pageIndex"
+  [pageSize]="pageSize"
+  [pageOnFront]="false"
+  [length]="totalRecords"
+  [rowClassFormatter]="rowClassFormatter"
+  (page)="onPageChange($event)"
+  (sortChange)="sortChange($event)"
+>
+</mtx-grid>

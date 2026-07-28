@@ -1,0 +1,25 @@
+.organizations-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.organizations-header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.organizations-empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 48px 16px;
+  text-align: center;
+  font-size: 16px;
+  opacity: 0.8;
+}
+
+.empty-title {
+  margin: 0;
+}
+

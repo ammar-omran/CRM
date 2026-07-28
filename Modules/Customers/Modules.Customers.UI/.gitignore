@@ -1,0 +1,19 @@
+# Node modules
+node_modules/
+
+# Angular build cache
+.angular/
+.cache/
+dist/
+out-tsc/
+
+# IDE-specific
+.vscode/
+.idea/
+
+# System files
+.DS_Store
+Thumbs.db
+
+yarn.lock
+package-lock.lock

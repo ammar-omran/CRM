@@ -1,0 +1,97 @@
+/* You can add global styles to this file, and also import other style files */
+@use 'app/theme/style';
+@use 'styles/themes';
+@use 'styles/custom';
+// @use 'styles/grid';
+@use 'styles/helpers';
+@use 'styles/plugins';
+
+// Global RTL Support
+[dir='rtl'] {
+  .language-toggle {
+    right: auto !important;
+    left: 20px !important;
+  }
+
+  .mat-mdc-form-field {
+    direction: rtl;
+  }
+
+  .mat-mdc-form-field-prefix {
+    margin-left: 8px;
+    margin-right: 0;
+  }
+
+  .mat-mdc-form-field-suffix {
+    margin-right: 8px;
+    margin-left: 0;
+  }
+
+  .mat-mdc-form-field-subscript-wrapper {
+    text-align: right;
+  }
+
+  .mat-mdc-card-header {
+    text-align: right;
+  }
+
+  .mat-mdc-card-title,
+  .mat-mdc-card-subtitle {
+    text-align: right;
+  }
+
+  .mat-mdc-button {
+    direction: rtl;
+  }
+
+  .mat-mdc-raised-button {
+    direction: rtl;
+  }
+
+  .mat-mdc-icon-button {
+    direction: rtl;
+  }
+}
+
+// RTL Body classes
+body.rtl {
+  direction: rtl;
+  text-align: right;
+
+  .mat-mdc-form-field {
+    direction: rtl;
+  }
+
+  .mat-mdc-button,
+  .mat-mdc-raised-button,
+  .mat-mdc-icon-button {
+    direction: rtl;
+  }
+}
+
+body.ltr {
+  direction: ltr;
+  text-align: left;
+}
+
+// Global styles
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+// Ensure proper font loading for Arabic
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+
+[dir='rtl'] {
+  font-family: 'Noto Sans Arabic', Roboto, 'Helvetica Neue', sans-serif;
+}
+
+body.rtl {
+  font-family: 'Noto Sans Arabic', Roboto, 'Helvetica Neue', sans-serif;
+}

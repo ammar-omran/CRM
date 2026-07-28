@@ -1,0 +1,356 @@
+// RTL (Right-to-Left) styles for Arabic localization
+
+// Global RTL overrides
+[dir='rtl'] {
+  // Text alignment
+  text-align: right;
+  
+  // Font family for Arabic text
+  font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+  
+  // Form fields
+  .mat-mdc-form-field {
+    .mat-mdc-form-field-subscript-wrapper {
+      text-align: right;
+    }
+    
+    .mat-mdc-form-field-error {
+      text-align: right;
+    }
+    
+    .mat-mdc-form-field-hint {
+      text-align: right;
+    }
+  }
+  
+  // Input fields
+  input, textarea, select {
+    text-align: right;
+    direction: rtl;
+  }
+  
+  // Buttons
+  .mat-mdc-button, .mat-mdc-raised-button, .mat-mdc-outlined-button {
+    direction: rtl;
+    
+    .mat-mdc-button-label {
+      text-align: center;
+    }
+  }
+  
+  // Navigation and menus
+  .mat-mdc-menu-panel {
+    direction: rtl;
+    text-align: right;
+  }
+  
+  .mat-mdc-menu-item {
+    text-align: right;
+    direction: rtl;
+    
+    .mat-mdc-menu-item-text {
+      text-align: right;
+    }
+  }
+  
+  // Tables
+  .mat-mdc-table {
+    direction: rtl;
+    
+    .mat-mdc-header-cell,
+    .mat-mdc-cell {
+      text-align: right;
+    }
+  }
+  
+  // Cards
+  .mat-mdc-card {
+    .mat-mdc-card-header {
+      .mat-mdc-card-title,
+      .mat-mdc-card-subtitle {
+        text-align: right;
+      }
+    }
+    
+    .mat-mdc-card-content {
+      text-align: right;
+    }
+  }
+  
+  // Dialogs
+  .mat-mdc-dialog-container {
+    .mat-mdc-dialog-title {
+      text-align: right;
+    }
+    
+    .mat-mdc-dialog-content {
+      text-align: right;
+    }
+  }
+  
+  // Snackbars and toasts
+  .mat-mdc-snack-bar-container {
+    direction: rtl;
+    text-align: right;
+  }
+  
+  // Toast notifications (ngx-toastr)
+  .toast-container {
+    .ngx-toastr {
+      direction: rtl;
+      text-align: right;
+      
+      .toast-title {
+        text-align: right;
+      }
+      
+      .toast-message {
+        text-align: right;
+      }
+    }
+  }
+  
+  // Pagination
+  .mat-mdc-paginator {
+    direction: rtl;
+    
+    .mat-mdc-paginator-range-label {
+      text-align: right;
+    }
+  }
+  
+  // Tabs
+  .mat-mdc-tab-group {
+    .mat-mdc-tab-label {
+      text-align: center;
+    }
+  }
+  
+  // Lists
+  .mat-mdc-list {
+    .mat-mdc-list-item {
+      text-align: right;
+      
+      .mat-mdc-list-item-content {
+        text-align: right;
+      }
+    }
+  }
+  
+  // Expansion panels
+  .mat-expansion-panel {
+    .mat-expansion-panel-header {
+      text-align: right;
+      
+      .mat-expansion-panel-header-title {
+        text-align: right;
+      }
+      
+      .mat-expansion-panel-header-description {
+        text-align: right;
+      }
+    }
+    
+    .mat-expansion-panel-content {
+      text-align: right;
+    }
+  }
+  
+  // Stepper
+  .mat-stepper {
+    .mat-step-header {
+      .mat-step-label {
+        text-align: right;
+      }
+    }
+  }
+  
+  // Tooltips
+  .mat-mdc-tooltip {
+    direction: rtl;
+    text-align: right;
+  }
+  
+  // Select dropdowns
+  .mat-mdc-select {
+    text-align: right;
+    
+    .mat-mdc-select-value {
+      text-align: right;
+    }
+    
+    .mat-mdc-select-placeholder {
+      text-align: right;
+    }
+  }
+  
+  .mat-mdc-select-panel {
+    .mat-mdc-option {
+      text-align: right;
+      direction: rtl;
+    }
+  }
+  
+  // Checkboxes and radio buttons
+  .mat-mdc-checkbox,
+  .mat-mdc-radio-button {
+    .mat-mdc-checkbox-label,
+    .mat-mdc-radio-label {
+      text-align: right;
+      margin-right: 0;
+      margin-left: 8px;
+    }
+  }
+  
+  // Date picker
+  .mat-datepicker-popup {
+    direction: rtl;
+    
+    .mat-calendar {
+      direction: rtl;
+      
+      .mat-calendar-header {
+        text-align: right;
+      }
+      
+      .mat-calendar-table {
+        .mat-calendar-table-header {
+          text-align: center;
+        }
+        
+        .mat-calendar-body-cell-content {
+          text-align: center;
+        }
+      }
+    }
+  }
+  
+  // Progress indicators
+  .mat-mdc-progress-bar {
+    direction: rtl;
+  }
+  
+  // Chips
+  .mat-mdc-chip-set {
+    .mat-mdc-chip {
+      direction: rtl;
+      text-align: right;
+    }
+  }
+  
+  // Sidebar and navigation specific styles
+  .matero-sidenav {
+    .mat-mdc-list-item {
+      .mat-mdc-list-item-content {
+        flex-direction: row-reverse;
+        
+        .mat-icon {
+          margin-left: 8px;
+          margin-right: 0;
+        }
+      }
+    }
+  }
+  
+  // Login and authentication forms
+  .login-container {
+    .mat-mdc-card {
+      .mat-mdc-card-content {
+        .form-field {
+          .mat-mdc-form-field {
+            .mat-mdc-form-field-prefix {
+              order: 2;
+              margin-left: 8px;
+              margin-right: 0;
+            }
+            
+            .mat-mdc-form-field-suffix {
+              order: 1;
+              margin-right: 8px;
+              margin-left: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  // Data tables
+  .mat-mdc-table {
+    .mat-mdc-header-row,
+    .mat-mdc-row {
+      flex-direction: row-reverse;
+    }
+    
+    .mat-sort-header-arrow {
+      margin-left: 0;
+      margin-right: 6px;
+    }
+  }
+  
+  // Breadcrumbs
+  .breadcrumb {
+    direction: rtl;
+    
+    .breadcrumb-item {
+      text-align: right;
+      
+      &:not(:last-child)::after {
+        content: '\\';
+        margin: 0 8px;
+      }
+    }
+  }
+  
+  // Custom utility classes for RTL
+  .text-right-rtl {
+    text-align: right !important;
+  }
+  
+  .text-left-rtl {
+    text-align: left !important;
+  }
+  
+  .float-right-rtl {
+    float: right !important;
+  }
+  
+  .float-left-rtl {
+    float: left !important;
+  }
+  
+  .margin-right-rtl {
+    margin-right: 1rem !important;
+    margin-left: 0 !important;
+  }
+  
+  .margin-left-rtl {
+    margin-left: 1rem !important;
+    margin-right: 0 !important;
+  }
+  
+  .padding-right-rtl {
+    padding-right: 1rem !important;
+    padding-left: 0 !important;
+  }
+  
+  .padding-left-rtl {
+    padding-left: 1rem !important;
+    padding-right: 0 !important;
+  }
+}
+
+// LTR specific overrides when needed
+[dir='ltr'] {
+  // Ensure LTR languages maintain their proper alignment
+  input, textarea, select {
+    text-align: left;
+    direction: ltr;
+  }
+  
+  .mat-mdc-form-field-subscript-wrapper,
+  .mat-mdc-form-field-error,
+  .mat-mdc-form-field-hint {
+    text-align: left;
+  }
+}

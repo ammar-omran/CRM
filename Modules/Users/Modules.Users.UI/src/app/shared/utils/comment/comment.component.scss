@@ -1,0 +1,48 @@
+.comment-container {
+  font-family: Arial, sans-serif;
+  margin-bottom: 12px;
+  margin: 20px;
+  height: fit-content;
+  width: 300px fit-content;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+}
+
+.comment-author {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 18px;
+}
+
+.role-badge {
+  background-color: #e0e6ed;
+  color: #555;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.comment-date {
+  color: #888;
+  font-size: 0.75rem;
+}
+
+.comment-body {
+  background-color: #f5f7fa;
+  padding: 10px;
+  border-radius: 8px;
+  color: #333;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  font-size: 17px;
+}

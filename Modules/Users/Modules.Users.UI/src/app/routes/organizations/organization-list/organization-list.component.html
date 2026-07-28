@@ -1,0 +1,24 @@
+<page-header [title]="'organizations.title' | translate"></page-header>
+
+<div class="organizations-container">
+  <div class="organizations-header">
+    <button mat-raised-button color="primary" (click)="navigateToCreate()">
+      {{ 'organizations.create_button' | translate }}
+    </button>
+  </div>
+
+  <div *ngIf="!hasOrganizations" class="organizations-empty-state">
+    <p class="empty-title">
+      {{ 'organizations.empty_message' | translate }}
+    </p>
+  </div>
+
+  <div *ngIf="hasOrganizations">
+    <app-adaptive-table
+      [apiUrl]="endpoint"
+      [httpMethod]="httpVerb"
+      [columns]="columns"
+      (dataLoaded)="onDataLoaded($event)"
+    ></app-adaptive-table>
+  </div>
+</div>

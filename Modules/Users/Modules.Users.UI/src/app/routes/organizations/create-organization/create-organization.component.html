@@ -1,0 +1,114 @@
+<page-header [title]="'organizations.create_button' | translate"></page-header>
+
+<div class="create-organization-container">
+  <mat-card class="p-3">
+    <form [formGroup]="organizationForm">
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'organizations.name_label' | translate }}</mat-label>
+          <input
+                 matInput
+                 formControlName="name"
+                 [placeholder]="'organizations.name_placeholder' | translate" />
+          <mat-error *ngIf="organizationForm.get('name')?.hasError('required')">
+            {{ 'organizations.name_required' | translate }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="sections">
+        <div class="section">
+          <div class="section-header">
+            <h3>{{ 'organizations.agents_section_title' | translate }}</h3>
+            <button mat-stroked-button [color]="isAgentLookupMode ? 'primary' : undefined" type="button" (click)="addAgent()">
+              {{ 'organizations.add_agent_button' | translate }}
+            </button>
+          </div>
+
+          <div class="inline-agent-lookup" [formGroup]="agentLookupForm">
+            <mat-form-field appearance="outline" class="lookup-email">
+              <mat-label>{{ 'organizations.agent.email' | translate }}</mat-label>
+              <input
+                     matInput
+                     formControlName="email"
+                     type="email"
+                     [placeholder]="'organizations.agent.email_placeholder' | translate" />
+              <mat-error *ngIf="agentLookupForm.get('email')?.hasError('required')">
+                {{ 'organizations.inline_agent_email_required' | translate }}
+              </mat-error>
+              <mat-error *ngIf="agentLookupForm.get('email')?.hasError('email')">
+                {{ 'organizations.inline_agent_email_invalid' | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="lookup-role">
+              <mat-label>{{ 'organizations.agent.role' | translate }}</mat-label>
+              <mat-select formControlName="role">
+                <mat-option *ngFor="let opt of agentRoleOptions" [value]="opt.value">
+                  {{ opt.labelKey | translate }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="agentLookupForm.get('role')?.hasError('required')">
+                {{ 'organizations.inline_agent_role_required' | translate }}
+              </mat-error>
+            </mat-form-field>
+
+          </div>
+          <p class="inline-agent-hint">{{ 'organizations.inline_agent_lookup_hint' | translate }}
+          </p>
+
+          <div class="chips-list" *ngIf="agents.length === 0">
+            <span class="hint">{{'organizations.no_agents_yet' | translate}}</span>
+          </div>
+
+          <div class="chips-list" *ngIf="agents.length > 0">
+            <div class="chip-row" *ngFor="let agent of agents.controls; index as i">
+              <div class="chip-main">
+                <span class="chip-name">{{ agent.value.name }}</span>
+                <span class="chip-meta">{{ agent.value.email }}</span>
+                <span class="chip-meta">{{ agent.value.phone }}</span>
+                <span class="chip-role">{{ getRoleLabel(agent.value.role) | translate }}</span>
+              </div>
+              <button mat-icon-button color="warn" type="button" (click)="removeAgent(i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <h3>{{ 'organizations.customers_section_title' | translate }}</h3>
+            <button mat-stroked-button color="primary" type="button" (click)="assignCustomer()">
+              {{ 'organizations.assign_customer_button' | translate }}
+            </button>
+          </div>
+          
+          <div class="chips-list" *ngIf="customers.length === 0">
+            <span class="hint">{{ 'organizations.no_customers_yet' | translate }}</span>
+          </div>
+
+          <div class="chips-list" *ngIf="customers.length > 0">
+            <div class="chip-row" *ngFor="let customer of customers.controls; index as i">
+              <div class="chip-main">
+                <span class="chip-name">{{ customer.value.email }}</span>
+              </div>
+              <button mat-icon-button color="warn" type="button" (click)="removeCustomer(i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button mat-stroked-button type="button" (click)="cancel()">
+          {{ 'organizations.cancel_button' | translate }}
+        </button>
+        <button mat-raised-button color="primary" type="button" (click)="save()">
+          {{ 'organizations.save_button' | translate }}
+        </button>
+      </div>
+    </form>
+  </mat-card>
+</div>

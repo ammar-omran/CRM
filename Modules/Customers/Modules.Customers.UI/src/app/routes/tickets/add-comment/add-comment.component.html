@@ -1,0 +1,51 @@
+<page-header *ngIf="showHeader" title="Add Comment"></page-header>
+
+<!-- Empty state banner shown above the form only when there are no comments -->
+<mat-card class="empty-state m-3" *ngIf="showEmptyState">
+  <div class="empty-content">
+    <div class="empty-text">
+      <div class="title">{{ 'no_comments_yet' | translate }}</div>
+      <div class="subtitle">{{ 'no_commnets' | translate }}</div>
+      <div class="subtitle">
+        {{
+        'no_comment'
+        | translate
+        : {
+        default: 'No comments have been added yet.'
+        }
+        }}
+      </div>
+    </div>
+  </div>
+  <div class="top-border"></div>
+</mat-card>
+
+<mat-card class="m-3 shadow p-3 add-comment-card">
+  <div class="reply-header">{{ 'reply' | translate }}</div>
+
+  <textarea
+            class="reply-textarea"
+            [formControl]="comment"
+            [placeholder]="'write_your_reply_here' | translate"></textarea>
+  <div class="reply-hint" *ngIf="comment.hasError('required') && comment.touched">
+    {{ 'field_required' | translate: { fieldName: ('reply' | translate) } }}
+  </div>
+
+  <div class="actions actions-spaced">
+    <app-attachment-uploader
+                             #attachmentUploader
+                             class="me-auto"
+                             [attachmentFor]="attachmentType"
+                             [refId]="commentId"
+                             (attachmentsChange)="onAttachmentsChanged($event)"></app-attachment-uploader>
+    <button
+            mat-raised-button
+            color="primary"
+            class="submit-btn"
+            (click)="submit()"
+            [disabled]="submitting">
+      <mat-icon>send</mat-icon>
+      {{ 'send_reply' | translate }}
+    </button>
+  </div>
+</mat-card>

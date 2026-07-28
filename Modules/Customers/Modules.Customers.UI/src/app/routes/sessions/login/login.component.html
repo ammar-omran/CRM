@@ -1,0 +1,195 @@
+<div class="d-flex w-ful l h-full login-container">
+  <div class="logo">
+    <div class="logo-header d-flex align-items-center justify-content-center">
+      <img src="assets/images/svgs/Logo.svg" alt="CRM Customer Portal" />
+    </div>
+  </div>
+  <mat-card class="login-box">
+    <mat-card-header class="center-elem">
+      <div class="header-container">
+        <mat-card-title class="login-title">{{ 'login' | translate }}</mat-card-title>
+      </div>
+      <button class="lngbtn" mat-raised-button [matMenuTriggerFor]="menu" color="primary">
+        <span>Lng</span>
+        <mat-icon>language</mat-icon>
+      </button>
+
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="setLang('ar-EG')">
+          <span>Ar</span>
+        </button>
+        <button mat-menu-item (click)="setLang('en-US')">
+          <span>En</span>
+        </button>
+      </mat-menu>
+    </mat-card-header>
+    <hr class="my-0" />
+    <mat-card-content class="p-3 pt-0">
+      <mat-tab-group
+        [selectedIndex]="activeTabIndex"
+        (selectedTabChange)="onTabChange($event)"
+        class="login-tabs"
+      >
+        <mat-tab [label]="'email_tab' | translate">
+          <div class="tab-content">
+            <form class="form-field-full" [formGroup]="emailLoginForm" autocomplete="off">
+              <div class="form-field">
+                <mat-form-field
+                  appearance="outline"
+                  hideRequiredMarker="true"
+                  class="email-label-offset"
+                >
+                  <mat-label>{{ 'email' | translate }}</mat-label>
+                  <input type="email" matInput formControlName="email" autocomplete="email" />
+                  <mat-icon matPrefix>email</mat-icon>
+                  @if (email.hasError('required') && email.touched) {
+                    <mat-error>{{
+                      'field_required' | translate: { fieldName: ('email' | translate) }
+                    }}</mat-error>
+                  }
+                  @if (
+                    (email.hasError('email') || email.hasError('invalidEmailFormat')) &&
+                    email.touched &&
+                    !email.hasError('required')
+                  ) {
+                    <mat-error>{{ 'invalid_email_format' | translate }}</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+              <div class="form-field">
+                <mat-form-field
+                  appearance="outline"
+                  hideRequiredMarker="true"
+                  class="password-label-offset"
+                >
+                  <mat-label>{{ 'password' | translate }}</mat-label>
+                  <input
+                    [type]="hidePassword ? 'password' : 'text'"
+                    matInput
+                    formControlName="password"
+                    autocomplete="current-password"
+                  />
+                  <mat-icon matPrefix>lock_outline</mat-icon>
+                  <mat-icon
+                    matSuffix
+                    [class.text-grey]="hidePassword"
+                    [class.text-primary]="!hidePassword"
+                    class="password-toggle-icon cursor-pointer"
+                    (click)="togglePasswordVisibility()"
+                  >
+                    {{ hidePassword ? 'visibility_off' : 'visibility' }}
+                  </mat-icon>
+                  @if (password.hasError('required') && password.touched) {
+                    <mat-error>{{
+                      'field_required' | translate: { fieldName: ('password' | translate) }
+                    }}</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+
+              <!-- Forgot Password Link -->
+              <div class="forgot-password-link">
+                <a
+                  routerLink="/changePassword/change-password-init"
+                  class="forgot-password-text hover-underline"
+                >
+                  {{ 'forgot_password' | translate }}
+                </a>
+              </div>
+
+              <button
+                class="w-full"
+                mat-raised-button
+                color="primary"
+                [disabled]="isSubmitting"
+                [loading]="isSubmitting"
+                (click)="login()"
+              >
+                {{ 'login' | translate }}
+              </button>
+
+              <!-- Signup link -->
+              <div class="signup-link mt-3">
+                <span>{{ 'have_no_account' | translate }} </span>
+                <a routerLink="/auth/register" class="signup-text text-blue-custom">{{
+                  'register' | translate
+                }}</a>
+              </div>
+            </form>
+          </div>
+        </mat-tab>
+        <mat-tab [label]="'phone_tab' | translate">
+          <div class="tab-content">
+            <form class="form-field-full" [formGroup]="phoneLoginForm" autocomplete="off">
+              <mat-phone-field [control]="phoneControl"></mat-phone-field>
+              <div class="form-field">
+                <mat-form-field
+                  appearance="outline"
+                  hideRequiredMarker="true"
+                  class="phone-label-offset phone-password-label-offset"
+                >
+                  <mat-label>{{ 'password' | translate }}</mat-label>
+                  <input
+                    [type]="hidePassword ? 'password' : 'text'"
+                    matInput
+                    formControlName="password"
+                    autocomplete="current-password"
+                  />
+                  <mat-icon matPrefix>lock_outline</mat-icon>
+                  <mat-icon
+                    matSuffix
+                    [class.text-grey]="hidePassword"
+                    [class.text-primary]="!hidePassword"
+                    class="password-toggle-icon cursor-pointer"
+                    (click)="togglePasswordVisibility()"
+                  >
+                    {{ hidePassword ? 'visibility_off' : 'visibility' }}
+                  </mat-icon>
+                  @if (phonePassword.hasError('required') && phonePassword.touched) {
+                    <mat-error>{{
+                      'field_required' | translate: { fieldName: ('password' | translate) }
+                    }}</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+
+              <div class="forgot-password-link">
+                <a
+                  routerLink="/changePassword/change-password-init"
+                  class="forgot-password-text hover-underline"
+                >
+                  {{ 'forgot_password' | translate }}
+                </a>
+              </div>
+
+              <button
+                class="w-full"
+                mat-raised-button
+                color="primary"
+                [disabled]="isSubmitting"
+                [loading]="isSubmitting"
+                (click)="login()"
+              >
+                {{ 'login' | translate }}
+              </button>
+
+              <!-- Signup link -->
+              <div class="signup-link mt-3">
+                <span>{{ 'have_no_account' | translate }} </span>
+                <a routerLink="/auth/register" class="signup-text text-blue-custom">{{
+                  'register' | translate
+                }}</a>
+              </div>
+            </form>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+    <img class="icon-left-card" src="assets/images/svgs/side_icon.svg" alt="" />
+  </mat-card>
+
+  <div class="footer text-center">
+    <h6 class="mb-0">Powered By</h6>
+    <img class="imageFo" src="assets/images/svgs/AzkaLogo 1.png" alt="" />
+  </div>
+</div>

@@ -1,0 +1,21 @@
+<page-header [title]="'adminTicketsList' | translate">
+  <app-list-actions [showFilter]="true" (filterToggled)="toggleFilter()"></app-list-actions>
+</page-header>
+
+<div class="filter-container" [class.active]="filterVisible">
+  <app-filter
+    [isPrimary]="true"
+    [controls]="filterControls"
+    [showAllOption]="true"
+    [resetBtn]="true"
+    (filterChanged)="onFilterChanged($event)"
+  ></app-filter>
+</div>
+
+<app-adaptive-table
+  [apiUrl]="endpoint"
+  [httpMethod]="httpVerb"
+  [filters]="filters"
+  [columns]="columns"
+  [isLoading]="false"
+></app-adaptive-table>

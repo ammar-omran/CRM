@@ -1,0 +1,25 @@
+
+<div mat-dialog-content class="p-3">
+  <h2 mat-dialog-title>{{ 'organizations.assign_customer_button' | translate }}</h2>
+  <form [formGroup]="form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ 'organizations.customers_section_title' | translate }}</mat-label>
+      <mat-select formControlName="customers" multiple>
+        <mat-option *ngFor="let customer of availableCustomers" [value]="customer">
+          {{ customer.email }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+
+  <div mat-dialog-actions align="end">
+    <button mat-stroked-button type="button" (click)="cancel()">
+      {{ 'organizations.cancel_button' | translate }}
+    </button>
+    <button mat-raised-button color="primary" class="ms-2" type="button" (click)="save()">
+      {{ 'organizations.assign_customer_button' | translate }}
+    </button>
+  </div>
+</div>
+
+

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" width="24" height="16">
+  <!-- Egyptian flag with three horizontal stripes -->
+  <rect width="900" height="200" fill="#CE1126"/>  <!-- Red -->
+  <rect width="900" height="200" y="200" fill="#FFFFFF"/> <!-- White -->
+  <rect width="900" height="200" y="400" fill="#000000"/> <!-- Black -->
+  
+  <!-- Egyptian Eagle of Saladin (simplified) -->
+  <g transform="translate(450,300) scale(0.7)" fill="#C09300">
+    <!-- Eagle body -->
+    <path d="M0,0 C-10,-30 -40,-30 -50,-10 C-60,10 -40,30 -30,30 L30,30 C40,30 60,10 50,-10 C40,-30 10,-30 0,0 Z"/>
+    <!-- Wings -->
+    <path d="M-30,0 C-70,-10 -90,-40 -70,-60 C-50,-80 -30,-60 -30,-40 Z"/>
+    <path d="M30,0 C70,-10 90,-40 70,-60 C50,-80 30,-60 30,-40 Z"/>
+    <!-- Head -->
+    <circle cx="0" cy="-15" r="12"/>
+    <!-- Shield on chest -->
+    <rect x="-10" y="0" width="20" height="20" fill="#FFFFFF" stroke="#C09300" stroke-width="2"/>
+  </g>
+</svg>

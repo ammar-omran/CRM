@@ -1,0 +1,22 @@
+<div class="upload-wrapper">
+  <button type="button" mat-stroked-button color="primary"
+          (click)="uploadAttachment()"
+          [disabled]="isSubmittingAttachment">
+    <mat-icon>cloud_upload</mat-icon>
+    Upload Attachment
+  </button>
+
+  <button type="button" mat-button (click)="expanded = !expanded">
+    {{ expanded ? 'Hide Attachments' : 'Show Attachments' }}
+    <mat-icon>{{ expanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+  </button>
+
+  <div *ngIf="expanded">
+    <div *ngFor="let attachment of uploadedAttachments" class="attachment-item">
+      <span class="file-name">{{ attachment.name }}</span>
+      <button mat-icon-button color="warn" (click)="removeAttachment(attachment.id)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

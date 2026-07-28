@@ -1,0 +1,28 @@
+<div class="info-banner" [ngClass]="type" @slideDown>
+  <div class="banner-icon">
+    <mat-icon>{{ iconMap[type] }}</mat-icon>
+  </div>
+
+  <div class="banner-body">
+    <strong class="banner-title">{{ title }}</strong>
+    <span class="banner-message">{{ message }}</span>
+
+    <div class="banner-actions" *ngIf="confirmLabel || cancelLabel">
+      <button
+        *ngIf="cancelLabel"
+        mat-stroked-button
+        class="banner-cancel"
+        (click)="onCancel()">
+        {{ cancelLabel }}
+      </button>
+      <button
+        *ngIf="confirmLabel"
+        mat-flat-button
+        class="banner-confirm"
+        (click)="onConfirm()">
+        <mat-icon>{{ confirmIcon }}</mat-icon>
+        {{ confirmLabel }}
+      </button>
+    </div>
+  </div>
+</div>

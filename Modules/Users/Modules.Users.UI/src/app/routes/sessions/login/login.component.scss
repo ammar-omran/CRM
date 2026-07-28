@@ -1,0 +1,303 @@
+@use '../../../../styles/helpers/variables' as *;
+
+.login-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+}
+
+.logo {
+  text-align: center;
+  img {
+    max-width: 200px;
+    height: auto;
+  }
+}
+
+.language-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  .lang-btn {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 1);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .flag-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+  }
+}
+
+// RTL Support
+[dir='rtl'] .language-toggle {
+  right: auto;
+  left: 20px;
+}
+
+.login-box {
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+
+  mat-card-header {
+    background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+    color: white;
+    padding: 24px;
+    text-align: center;
+
+    mat-card-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    mat-card-subtitle {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 14px;
+    }
+  }
+
+  mat-card-content {
+    padding: 32px 24px;
+
+    .form-field {
+      margin-bottom: 20px;
+
+      mat-form-field {
+        width: 100%;
+        margin-bottom: 16px;
+
+        .mat-mdc-form-field {
+          width: 100%;
+        }
+
+        input {
+          margin: 8px 0;
+        }
+      }
+    }
+
+    button[mat-raised-button] {
+      width: 100%;
+      height: 48px;
+      font-size: 16px;
+      font-weight: 500;
+      border-radius: 8px;
+      margin-top: 16px;
+
+      &:disabled {
+        opacity: 0.6;
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 480px) {
+  .login-container {
+    padding: 16px;
+  }
+
+  .login-box {
+    max-width: 100%;
+
+    mat-card-header {
+      padding: 20px 16px;
+
+      mat-card-title {
+        font-size: 20px;
+      }
+    }
+
+    mat-card-content {
+      padding: 24px 16px;
+    }
+  }
+
+  .language-toggle {
+    top: 16px;
+    right: 16px;
+
+    .lang-btn {
+      padding: 6px 12px;
+
+      .lang-text {
+        font-size: 12px;
+      }
+    }
+  }
+
+  [dir='rtl'] .language-toggle {
+    right: auto;
+    left: 16px;
+  }
+}
+
+// Animation for form fields
+.form-field {
+  mat-form-field {
+    transition: all 0.3s ease;
+
+    &:focus-within {
+      transform: translateY(-2px);
+    }
+  }
+}
+
+// Error styling
+mat-error {
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+// Enhanced icon and placeholder spacing for login form fields
+::ng-deep .login-form-field.mat-form-field-appearance-outline {
+  .mat-mdc-form-field-prefix {
+    margin-inline-end: 16px !important;
+    display: flex;
+    align-items: center;
+    padding-inline-end: 0 !important;
+  }
+
+  .mat-icon.form-icon {
+    margin-inline-end: 0 !important;
+    margin-inline-start: 0 !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    font-size: 20px;
+    color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  input.mat-mdc-input-element {
+    padding-inline-start: 4px !important;
+    padding-inline-end: 12px !important;
+    font-size: 16px;
+
+    &::placeholder {
+      color: rgba(0, 0, 0, 0.6);
+      opacity: 1;
+    }
+  }
+
+  // Better spacing for the form field wrapper
+  .mat-mdc-form-field-infix {
+    padding: 16px 0;
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+  }
+
+  // Improved outline styling
+  .mat-mdc-form-field-outline {
+    .mat-mdc-form-field-outline-start,
+    .mat-mdc-form-field-outline-notch,
+    .mat-mdc-form-field-outline-end {
+      border-color: rgba(0, 0, 0, 0.23);
+      border-width: 1px;
+    }
+  }
+
+  &:hover .mat-mdc-form-field-outline {
+    .mat-mdc-form-field-outline-start,
+    .mat-mdc-form-field-outline-notch,
+    .mat-mdc-form-field-outline-end {
+      border-color: rgba(0, 0, 0, 0.87);
+    }
+  }
+
+  &.mat-focused .mat-mdc-form-field-outline {
+    .mat-mdc-form-field-outline-start,
+    .mat-mdc-form-field-outline-notch,
+    .mat-mdc-form-field-outline-end {
+      border-color: #1976d2;
+      border-width: 2px;
+    }
+  }
+}
+
+// RTL specific overrides with enhanced spacing
+::ng-deep [dir='rtl'] .login-form-field.mat-form-field-appearance-outline {
+  .mat-mdc-form-field-prefix {
+    margin-inline-start: 16px !important;
+    margin-inline-end: 0 !important;
+    display: flex;
+    align-items: center;
+    padding-inline-start: 0 !important;
+    padding-inline-end: 0 !important;
+  }
+
+  .mat-icon.form-icon {
+    margin-inline-start: 0 !important;
+    margin-inline-end: 0 !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    font-size: 20px;
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  input.mat-mdc-input-element {
+    padding-inline-start: 12px !important;
+    padding-inline-end: 4px !important;
+    text-align: right !important;
+    direction: rtl;
+
+    &::placeholder {
+      text-align: right;
+      color: rgba(0, 0, 0, 0.6);
+      opacity: 1;
+    }
+  }
+}
+
+// Loading state
+.mat-mdc-raised-button.mat-mdc-button-disabled {
+  background-color: rgba(0, 0, 0, 0.12) !important;
+  color: rgba(0, 0, 0, 0.38) !important;
+}
+
+// Additional improvements for better visual consistency
+::ng-deep .login-form-field {
+  margin-bottom: 20px;
+
+  &.mat-form-field-appearance-outline {
+    .mat-mdc-form-field-flex {
+      align-items: center;
+      min-height: 56px;
+    }
+  }
+}
+
+// Focus and active states for better UX
+::ng-deep .login-form-field.mat-form-field-appearance-outline {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+  &.mat-focused {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.15);
+  }
+}

@@ -1,0 +1,128 @@
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.actions-spaced {
+    margin-top: 16px;
+}
+
+.ml-2 {
+    margin-left: 8px;
+}
+
+/* Empty state banner styles */
+.empty-state {
+    padding: 20px;
+    background: #ffffff;
+}
+
+.empty-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 0 12px;
+    justify-content: center;
+    text-align: center;
+}
+
+.empty-icon {
+    font-size: 40px;
+    color: #6c757d;
+}
+
+.empty-text .title {
+    font-weight: 600;
+    font-size: 18px;
+    color: #6c757d;
+}
+
+.empty-text .subtitle {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.empty-text .subtitle.ar {
+    direction: rtl;
+}
+
+.top-border {
+    border-top: 1px solid #dee2e6;
+    margin-top: 8px;
+}
+
+/* Make the add-comment form visually smaller */
+.add-comment-card {
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.reply-header {
+    font-weight: 600;
+    font-size: 16px;
+    color: #000;
+    margin-bottom: 10px;
+}
+
+.reply-textarea {
+    width: 100%;
+    min-height: 100px;
+    resize: vertical;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 10px;
+    outline: none;
+    font: inherit;
+}
+
+.reply-textarea:focus {
+    border-color: #80bdff;
+}
+
+.reply-textarea.ng-invalid.ng-touched {
+    border-color: #f44336;
+}
+
+.reply-hint {
+    color: #f44336;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+/* Removed: attach-row, attach-btn, attach-help */
+
+/* replaced by .submit-btn Material button styles */
+.btn-primary {
+    display: none;
+}
+
+.submit-btn {
+    min-width: 160px;
+    height: 48px;
+    border-radius: 24px;
+    font-weight: 600;
+    background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+    box-shadow: 0 4px 16px rgba(25, 118, 210, 0.3);
+}
+
+.submit-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+    box-shadow: 0 6px 20px rgba(25, 118, 210, 0.4);
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+}
+
+.btn-secondary {
+    background: #f8f9fa;
+    color: #007bff;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.btn-secondary:hover {
+    background: #e9ecef;
+}

@@ -1,0 +1,25 @@
+<div class="matero-page-header-inner">
+  <div class="d-flex align-items-center">
+    <h1 class="matero-page-title">
+      {{ title | translate }}
+      <small>{{ subtitle }}</small>
+    </h1>
+    @if (addLink) {
+      <a
+        mat-mini-fab
+        color="primary"
+        [routerLink]="[addLink]"
+        class="add-icon ms-3"
+        [matTooltip]="addTooltip"
+      >
+        <mat-icon>{{ addIcon }}</mat-icon>
+      </a>
+    }
+    @if (!hideBreadcrumb) {
+      <breadcrumb [nav]="nav" />
+    }
+  </div>
+  <div>
+    <ng-content />
+  </div>
+</div>

@@ -1,0 +1,41 @@
+{
+  "menu": [
+    {
+      "route": "dashboard",
+      "name": "dashboard",
+      "type": "link",
+      "icon": "dashboard"
+    },
+    {
+      "route": "tickets",
+      "name": "tickets",
+      "type": "link",
+      "customIcon": "assets/images/svgs/menu/installations.svg",
+      "permissions": {
+        "only": [],
+        "except": []
+      }
+    },
+    {
+      "route": "organizations",
+      "name": "organizations",
+      "type": "link",
+      "exact": true,
+      "customIcon": "assets/images/svgs/menu/contractor.svg",
+      "permissions": {
+        "only": [],
+        "except": []
+      }
+    },
+    {
+      "route": "organizations/customers",
+      "name": "menu.organizations.customers",
+      "type": "link",
+      "icon": "group",
+      "permissions": {
+        "only": [],
+        "except": []
+      }
+    }
+  ]
+}

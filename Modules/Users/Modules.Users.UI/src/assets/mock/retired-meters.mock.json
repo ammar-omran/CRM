@@ -1,0 +1,32 @@
+[
+  {
+    "meterSerial": "12345XYZ",
+    "status": "on Stock",
+    "retiredBy": "Contractor A",
+    "oldMeterSerial": "54321ABC"
+  },
+  {
+    "meterSerial": "67890XYZ",
+    "status": "on Agent",
+    "retiredBy": "Contractor B",
+    "oldMeterSerial": "09876DEF"
+  },
+  {
+    "meterSerial": "11223XYZ",
+    "status": "on Stock",
+    "retiredBy": "Contractor C",
+    "oldMeterSerial": "32109GHI"
+  },
+  {
+    "meterSerial": "11223XYZ",
+    "status": "on Stock",
+    "retiredBy": "Contractor C",
+    "oldMeterSerial": "32109GHI"
+  },
+  {
+    "meterSerial": "11223XYZ",
+    "status": "on Stock",
+    "retiredBy": "Contractor D",
+    "oldMeterSerial": "32109GHI"
+  }
+]

@@ -1,0 +1,83 @@
+<form [formGroup]="filterForm" (ngSubmit)="onSubmit()" class="filter">
+  <div class="controls row">
+    @for (control of controls; track control.label) {
+      <div class="field-wrapper">
+        @switch (control.type) {
+          @case ('text') {
+            <mat-form-field class="small" appearance="outline">
+              <mat-label>{{ control.label }}</mat-label>
+              <input matInput [formControlName]="control.formControlName" />
+            </mat-form-field>
+          }
+
+          @case ('select') {
+            <mat-form-field
+              appearance="outline"
+              class="small"
+              [color]="isPrimary ? 'primary' : 'accent'"
+            >
+              <mat-label>{{ control.label }}</mat-label>
+              <mat-select [formControlName]="control.formControlName">
+                <mat-option *ngIf="showAllOption" value="0">All</mat-option>
+                @for (option of control.options; track option.value) {
+                  <mat-option [value]="option.value">
+                    {{ option.label }}
+                  </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          }
+
+          @case ('autocomplete') {
+            <mat-form-field class="small" appearance="outline">
+              <mat-label>{{ control.label }}</mat-label>
+              <input
+                type="text"
+                matInput
+                [matAutocomplete]="auto"
+                [formControlName]="control.formControlName"
+              />
+              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn(control)">
+                @for (option of control.options; track option.value) {
+                  <mat-option [value]="option.value">
+                    {{ option.label }}
+                  </mat-option>
+                }
+              </mat-autocomplete>
+            </mat-form-field>
+          }
+
+          @case ('date') {
+            <mat-form-field class="small" appearance="outline">
+              <mat-label>{{ control.label }}</mat-label>
+              <input
+                matInput
+                [matDatepicker]="picker"
+                [formControlName]="control.formControlName"
+              />
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          }
+
+          @case ('checkbox') {
+            <mat-checkbox [formControlName]="control.formControlName">
+              {{ control.label }}
+            </mat-checkbox>
+          }
+        }
+      </div>
+    }
+  </div>
+
+  <div class="buttons">
+    <button mat-raised-button [color]="isPrimary ? 'primary' : 'accent'" type="submit">
+      Filter
+    </button>
+    @if (resetBtn) {
+      <button mat-flat-button [color]="isPrimary ? 'primary' : 'accent'" (click)="resetForm()">
+        Reset
+      </button>
+    }
+  </div>
+</form>

@@ -1,0 +1,16 @@
+<ng-container *ngIf="loading; else content">
+  <mat-spinner diameter="30"></mat-spinner>
+</ng-container>
+
+<ng-template #content>
+  <ng-container *ngIf="error; else historyList">
+    <p class="text-danger">{{ error }}</p>
+  </ng-container>
+
+  <ng-template #historyList>
+    <div class="m-3" *ngFor="let record of history">
+      <app-ticket-history-record [record]="record"></app-ticket-history-record>
+    </div>
+    <p *ngIf="history.length === 0" class="placeholder">No history found.</p>
+  </ng-template>
+</ng-template>

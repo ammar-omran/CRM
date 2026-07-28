@@ -1,0 +1,36 @@
+@use '../../../../../styles/helpers/variables' as *;
+.otp-confirmation-container {
+  flex-direction: column;
+  justify-content: center;
+  margin: auto;
+  .otp-confirmation-box {
+    border: 1px solid $primary-color;
+    border-radius: 0;
+    width: 900px;
+    mat-card-header {
+      padding: 16px 0;
+      text-align: center;
+      mat-card-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+      }
+    }
+    mat-card-content {
+      padding: 27px 40px;
+      background-color: #fff;
+    }
+  }
+  .button{
+    width: 290px;
+    height: 60px;
+    font-size: 15px;
+    margin-bottom: 30px;
+  }
+  .card{
+    padding: 20px;
+  }
+  .spacer-d1{
+    margin: auto;
+    margin: 100px;
+  }
+}

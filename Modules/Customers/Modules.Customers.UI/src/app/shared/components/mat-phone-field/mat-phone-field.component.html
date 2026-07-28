@@ -1,0 +1,29 @@
+<label for="phone">{{'phone' | translate}}<span style="color: red;">*</span></label>
+<div class="mat-form-field mat-form-field-appearance-outline custom-phone-field">
+  <ngx-intl-tel-input
+                      [preferredCountries]="['us', 'eg']"
+                      [enableAutoCountrySelect]="true"
+                      [enablePlaceholder]="true"
+                      [searchCountryFlag]="true"
+                      [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+                      [selectFirstCountry]="false"
+                      [selectedCountryISO]="CountryISO.Egypt"
+                      [minlength]="10"
+                      [maxLength]="12"
+                      [dir]="'auto'"
+                      [phoneValidation]="true"
+                      [separateDialCode]="true"
+                      [ariaPlaceholder]="'phone' | translate"
+                      [formControl]="control"
+                      name="phone">
+  </ngx-intl-tel-input>
+
+  <div *ngIf="control?.touched && control?.invalid">
+    <small class="text-danger" *ngIf="control?.errors?.['required']">
+      {{'phone_required' | translate}}
+    </small>
+    <small class="text-danger" *ngIf="!control?.errors?.['required']">
+      {{'invalid_phone_format' | translate}}
+    </small>
+  </div>
+</div>

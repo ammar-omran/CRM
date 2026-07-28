@@ -1,0 +1,23 @@
+@use '../../../../styles/helpers/variables' as *;
+.list-actions {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+
+  .list-filter-icon {
+    background-color: #aeaeae;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+    &.active {
+      background-color: $primary-color;
+    }
+    mat-icon {
+      color: #fff;
+    }
+  }
+}

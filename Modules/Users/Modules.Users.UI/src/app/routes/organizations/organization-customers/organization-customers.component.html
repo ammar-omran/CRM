@@ -1,0 +1,42 @@
+<page-header [title]="'organizationCustomers.title' | translate">
+  <app-list-actions [showFilter]="true" (filterToggled)="toggleFilter()"></app-list-actions>
+</page-header>
+
+
+<div class="filter-container" [class.active]="filterVisible">
+  <app-filter
+    [isPrimary]="true"
+    [controls]="filterControls"
+    [resetBtn]="true"
+    (filterChanged)="onFilterChanged($event)"
+  ></app-filter>
+</div>
+
+
+<div class="customers-table-wrapper">
+
+  <div *ngIf="!isLoading && customers.length === 0" class="empty-state">
+    <mat-icon class="empty-icon">group_off</mat-icon>
+    <p class="empty-title">{{ 'organizationCustomers.empty_message' | translate }}</p>
+  </div>
+
+
+  <mtx-grid
+    *ngIf="customers.length > 0 || isLoading"
+    [data]="customers"
+    [columns]="columns"
+    [loading]="isLoading"
+    [columnResizable]="true"
+    [rowHover]="true"
+    [columnHideable]="true"
+    [columnSortable]="true"
+    [showPaginator]="true"
+    [pageSizeOptions]="pageSizeOptions"
+    [pageIndex]="pageIndex"
+    [pageSize]="pageSize"
+    [pageOnFront]="false"
+    [length]="totalCount"
+    (page)="onPageChange($event)"
+  ></mtx-grid>
+
+</div>

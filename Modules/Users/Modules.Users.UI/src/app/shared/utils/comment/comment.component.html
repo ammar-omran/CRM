@@ -1,0 +1,13 @@
+<div class="comment-container">
+  <div class="comment-header">
+    <div class="comment-author">
+      <strong>{{ author }}</strong>
+      <span class="role-badge" *ngIf="role">{{ role }}</span>
+    </div>
+    <div class="comment-date" style="margin-left: 20px;margin-right: 20px;">{{ date | date:'yyyy-MM-dd HH:mm:ss' }}</div>
+  </div>
+
+  <div class="comment-body">
+    {{ description }}
+  </div>
+</div>

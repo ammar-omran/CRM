@@ -1,0 +1,100 @@
+﻿@CustomerManagement.API_HostAddress = https://localhost:51377/api
+
+/// # Customer Management API - Registration Tests - Predefined Scenarios
+
+### ✅ Valid Registration
+POST {{CustomerManagement.API_HostAddress}}/Customer/register
+Content-Type: application/json
+
+{
+  "name": "Ammar Ahmed",
+  "email": "ammar.ahmed@example.com",
+  "phoneNumber": {
+    "number": "1234567890",
+    "countryCode": "+1"
+  },
+  "password": "Str0ngP@ssw0rd!"
+}
+
+### ❌ Invalid Email
+POST {{CustomerManagement.API_HostAddress}}/Customer/register
+Content-Type: application/json
+
+{
+  "name": "Jane ahmed",
+  "email": "jane.ahmedexample.com",
+  "phoneNumber": {
+    "number": "1234567890",
+    "countryCode": "+1"
+  },
+  "password": "Str0ngP@ssw0rd!"
+}
+
+### ❌ Weak Password
+POST {{CustomerManagement.API_HostAddress}}/Customer/register
+Content-Type: application/json
+
+{
+  "name": "Ahmed Ammar",
+  "email": "ammar@example.com",
+  "phoneNumber": {
+    "number": "1234567890",
+    "countryCode": "+44"
+  },
+  "password": "weakassword"
+}
+
+### ❌ Phone Number Too Short
+POST {{CustomerManagement.API_HostAddress}}/Customer/register
+Content-Type: application/json
+
+{
+  "name": "Ahmed Ammar",
+  "email": "ahmed@example.com",
+  "phoneNumber": {
+    "number": "12345",
+    "countryCode": "+91"
+  },
+  "password": "Str0ngP@ssw0rd!"
+}
+
+### ❌ Missing Country Code Format
+POST {{CustomerManagement.API_HostAddress}}/Customer/register
+Content-Type: application/json
+
+{
+  "name": "Test Test",
+  "email": "test@example.com",
+  "phoneNumber": {
+    "number": "1234567890",
+    "countryCode": "91"  
+  },
+  "password": "Str0ngP@ssw0rd!"
+}
+
+### ❌ Missing Phone Number (Required)
+POST {{CustomerManagement.API_HostAddress}}/Customer/register
+Content-Type: application/json
+
+{
+  "name": "Test Test",
+  "email": "Test@example.com",
+  "phoneNumber": {
+    "number": ""
+  },
+  "password": "Str0ngP@ssw0rd!"
+}
+
+### ❌ Name Too Long
+POST {{CustomerManagement.API_HostAddress}}/Customer/register
+Content-Type: application/json
+
+{
+  "name": "This name is way too long and should definitely exceed one hundred characters to trigger a max length validation error on the server side.",
+  "email": "toolong@example.com",
+  "phoneNumber": {
+    "number": "1234567890",
+    "countryCode": "+1"
+  },
+  "password": "Str0ngP@ssw0rd!"
+}

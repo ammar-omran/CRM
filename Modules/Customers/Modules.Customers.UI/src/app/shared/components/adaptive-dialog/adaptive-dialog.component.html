@@ -1,0 +1,32 @@
+<h2 mat-dialog-title>{{ data.title }}</h2>
+<div mat-dialog-content>
+  @if (data.mode === 'form') {
+    <form [formGroup]="form" class="mt-3">
+      @for (field of data.fields; track field) {
+        @if (field.type === 'select') {
+          <mat-form-field appearance="outline">
+            <mat-label>{{ field.label }}</mat-label>
+            <mat-select [formControlName]="field.formControlName">
+              @for (option of field.options; track option) {
+                <!-- don't forget to make the value to option id when API is ready .... -->
+                <mat-option [value]="option.id">
+                  {{ option.name }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        }
+      }
+    </form>
+  }
+
+  @if (data.mode === 'confirmation') {
+    <p>{{ data.message }}</p>
+  }
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="onConfirm()">
+    Confirm
+  </button>
+</div>

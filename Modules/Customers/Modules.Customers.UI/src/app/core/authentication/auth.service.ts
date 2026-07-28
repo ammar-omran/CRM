@@ -1,0 +1,127 @@
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, iif, merge, of } from 'rxjs';
+import { catchError, map, share, switchMap, tap } from 'rxjs/operators';
+import { filterObject, isEmptyObject } from './helpers';
+import { Token, User } from './interface';
+import { LoginService } from './login.service';
+import { TokenService } from './token.service';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthService {
+  private user$ = new BehaviorSubject<User>({});
+  private change$ = merge(
+    this.tokenService.change()
+    // this.tokenService.refresh().pipe(switchMap(() => this.refresh()))
+  ).pipe(
+    switchMap(() => this.assignUser()),
+    share()
+  );
+
+  constructor(
+    private loginService: LoginService,
+    private tokenService: TokenService
+  ) {}
+
+  init() {
+    return new Promise<void>(resolve => this.change$.subscribe(() => resolve()));
+  }
+
+  change() {
+    return this.change$;
+  }
+
+  check() {
+    return this.tokenService.valid();
+  }
+
+  login(email: string, password: string) {
+    return this.loginService.login(email, password).pipe(
+      tap(res => {
+        const baseToken: Token = {
+          accessToken: (res as any).token,
+        };
+        this.tokenService.set(baseToken);
+        // Persist customer info from API response directly
+        const { customerId, customerName, customerEmail } = (res as any) || {};
+        if (customerId) {
+          try { localStorage.setItem('customerId', String(customerId)); } catch {}
+        }
+        if (customerName) {
+          try { localStorage.setItem('customerName', String(customerName)); } catch {}
+        }
+        if (customerEmail) {
+          try { localStorage.setItem('customerEmail', String(customerEmail)); } catch {}
+        }
+      }),
+      map(() => this.check())
+    );
+  }
+
+  loginWithPhone(dto: { phoneNumber: string; countryCode: string; password: string }) {
+    return this.loginService.loginWithPhone(dto).pipe(
+      tap(res => {
+        const baseToken: Token = {
+          accessToken: (res as any).token,
+        };
+        this.tokenService.set(baseToken);
+        // Persist customer info from API response directly
+        const { customerId, customerName, customerEmail } = (res as any) || {};
+        if (customerId) {
+          try { localStorage.setItem('customerId', String(customerId)); } catch {}
+        }
+        if (customerName) {
+          try { localStorage.setItem('customerName', String(customerName)); } catch {}
+        }
+        if (customerEmail) {
+          try { localStorage.setItem('customerEmail', String(customerEmail)); } catch {}
+        }
+      }),
+      map(() => this.check())
+    );
+  }
+
+  refresh() {
+    return this.loginService
+      .refresh(filterObject({ refresh_token: this.tokenService.getRefreshToken() }))
+      .pipe(
+        catchError(() => of(undefined)),
+        tap(token => this.tokenService.set(token)),
+        map(() => this.check())
+      );
+  }
+
+  logout() {
+    return this.loginService.logout().pipe(
+      tap(() => {
+        this.tokenService.clear();
+        try {
+          localStorage.removeItem('customerId');
+          localStorage.removeItem('customerName');
+        } catch {}
+      }),
+      map(() => !this.check())
+    );
+  }
+
+  user() {
+    return this.user$.pipe(share());
+  }
+
+  menu() {
+    return iif(() => this.check(), this.loginService.menu(), of([]));
+  }
+
+  private assignUser() {
+    if (!this.check()) {
+      return of({}).pipe(tap(user => this.user$.next(user)));
+    }
+
+    if (!isEmptyObject(this.user$.getValue())) {
+      return of(this.user$.getValue());
+    }
+
+    return this.loginService.me().pipe(tap(user => this.user$.next(user)));
+  }
+}

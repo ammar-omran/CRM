@@ -1,0 +1,7 @@
+.organizations-tabs {
+  width: 100%;
+
+  ::ng-deep .mat-mdc-tab-body-content {
+    padding-top: 16px;
+  }
+}

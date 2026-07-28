@@ -1,0 +1,237 @@
+<div class="ticket-list-container">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-card class="loading-card">
+      <mat-card-content>
+        <div class="loading-content">
+          <mat-icon class="loading-spinner">hourglass_empty</mat-icon>
+          <h3>{{ 'loading' | translate }}</h3>
+          <p>{{ 'loadingDescription' | translate }}</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="!isLoading && errorMessage" class="error-container">
+    <mat-card class="error-card">
+      <mat-card-content>
+        <div class="error-content">
+          <mat-icon class="error-icon">error_outline</mat-icon>
+          <h3>{{ 'tickets.errorTitle' | translate }}</h3>
+          <p>{{ errorMessage }}</p>
+          <div class="error-actions">
+            <button mat-raised-button color="primary" (click)="getTickets()">
+              <mat-icon>refresh</mat-icon>
+              {{ 'tryAgain' | translate }}
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Tickets Table -->
+  <div *ngIf="!isLoading && !errorMessage && tickets.length > 0" class="tickets-table-container">
+    <mat-card class="tickets-card">
+      <mat-card-header class="tickets-header">
+        <div class="header-content">
+          <div class="header-info">
+            <div mat-card-avatar class="tickets-avatar">
+              <mat-icon>support</mat-icon>
+            </div>
+            <div class="header-text">
+              <mat-card-title>{{ 'yourTickets' | translate }}</mat-card-title>
+              <mat-card-subtitle>{{ 'ticketsFound' | translate:{ count: tickets.length } }}</mat-card-subtitle>
+            </div>
+          </div>
+          <div class="header-actions" style="display: flex; gap: 8px;">
+            <!-- Refresh button removed -->
+            <button mat-raised-button color="accent" class="create-ticket-btn" (click)="navigateToCreateTicket()">
+              <mat-icon>add</mat-icon>
+              {{ 'createNew' | translate }}
+            </button>
+          </div>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="table-wrapper">
+          <table mat-table [dataSource]="tickets" class="modern-tickets-table">
+            <!-- ID -->
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef>
+                <div class="header-cell">
+                  <mat-icon>confirmation_number</mat-icon>
+                  {{ 'reference' | translate }}
+                </div>
+              </th>
+              <td mat-cell *matCellDef="let ticket">
+                <div class="cell-content">
+                  <span class="ticket-id">#{{ ticket.id }}</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Status -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>
+                <div class="header-cell">
+                  <mat-icon>info</mat-icon>
+                  {{ 'status' | translate }}
+                </div>
+              </th>
+              <td mat-cell *matCellDef="let ticket">
+                <div class="cell-content">
+                  <span class="status-badge" [ngClass]="'status-' + (ticket.statusName || ticket.status || 'unknown').toLowerCase()">
+                    {{ ticket.statusName || ticket.status || ('unknown' | translate) }}
+                  </span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Severity -->
+            <ng-container matColumnDef="severity">
+              <th mat-header-cell *matHeaderCellDef>
+                <div class="header-cell">
+                  <mat-icon>priority_high</mat-icon>
+                  {{ 'severity' | translate }}
+                </div>
+              </th>
+              <td mat-cell *matCellDef="let ticket">
+                <div class="cell-content">
+                  <span class="severity-badge"
+                    [ngClass]="ticket.severityName ? 'severity-' + ticket.severityName.toLowerCase() : 'severity-none'">
+                    {{ ticket.severityName || ('N/A') }}
+                  </span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Title -->
+            <ng-container matColumnDef="title">
+              <th mat-header-cell *matHeaderCellDef>
+                <div class="header-cell">
+                  <mat-icon>subject</mat-icon>
+                  {{ 'title' | translate }}
+                </div>
+              </th>
+              <td mat-cell *matCellDef="let ticket">
+                <div class="cell-content">
+                  <span class="ticket-title" [title]="ticket.title || ticket.subject">
+                    {{ (ticket.title || ticket.subject || 'No title') }}
+                  </span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Description -->
+            <ng-container matColumnDef="description">
+              <th mat-header-cell *matHeaderCellDef>
+                <div class="header-cell">
+                  <mat-icon>description</mat-icon>
+                  {{ 'description' | translate }}
+                </div>
+              </th>
+              <td mat-cell *matCellDef="let ticket">
+                <div class="cell-content">
+                  <span class="ticket-description" [title]="ticket.description">
+                    {{ (ticket.description || 'No description').length > 50 ? (ticket.description || 'No description').substring(0,
+                    50) + '...' : (ticket.description || 'No description') }}
+                  </span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Created At -->
+            <ng-container matColumnDef="Date submitted">
+              <th mat-header-cell *matHeaderCellDef>
+                <div class="header-cell">
+                  <mat-icon>schedule</mat-icon>
+                  {{ 'createdDate' | translate }}
+                </div>
+              </th>
+              <td mat-cell *matCellDef="let ticket">
+                <div class="cell-content">
+                  <span class="date-text">{{ ticket.createdAt | date: 'MMM d, y' }}</span>
+                  <small class="time-text">{{ ticket.createdAt | date: 'h:mm a' }}</small>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Last Update -->
+            <ng-container matColumnDef="last update">
+              <th mat-header-cell *matHeaderCellDef>
+                <div class="header-cell">
+                  <mat-icon>update</mat-icon>
+                  {{ 'updated' | translate }}
+                </div>
+              </th>
+              <td mat-cell *matCellDef="let ticket">
+                <div class="cell-content">
+                  <span class="date-text">{{ ticket.updatedDate | date: 'MMM d, y' }}</span>
+                  <small class="time-text">{{ ticket.updatedDate | date: 'h:mm a' }}</small>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Assigned To -->
+            <ng-container matColumnDef="assignedTo">
+              <th mat-header-cell *matHeaderCellDef>
+                <div class="header-cell">
+                  <mat-icon>person</mat-icon>
+                  {{ 'assignedTo' | translate }}
+                </div>
+              </th>
+              <td mat-cell *matCellDef="let ticket">
+                <div class="cell-content">
+                  <span class="assignee unassigned">
+                    {{ 'unassigned' | translate }}
+                  </span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Actions -->
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef>
+                <div class="header-cell"></div>
+              </th>
+              <td mat-cell *matCellDef="let ticket">
+                <div class="cell-content actions-cell">
+                  <button mat-raised-button color="primary" (click)="viewDetails(ticket)" class="action-btn">
+                    <mat-icon>visibility</mat-icon>
+                    {{ 'viewDetails' | translate }}
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Header and Row Definitions -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns" class="table-header"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row"></tr>
+          </table>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && !errorMessage && noTickets" class="empty-state-container">
+    <mat-card class="empty-state-card">
+      <mat-card-content>
+        <div class="empty-state-content">
+          <mat-icon class="empty-icon">inbox</mat-icon>
+          <h3>{{ 'noTicketsTitle' | translate }}</h3>
+          <p>{{ 'noTicketsDescription' | translate }}</p>
+          <div class="empty-actions">
+            <button mat-raised-button color="primary" routerLink="/tickets/{{ customerId }}/create">
+              <mat-icon>add</mat-icon>
+              {{ 'createFirstTicket' | translate }}
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

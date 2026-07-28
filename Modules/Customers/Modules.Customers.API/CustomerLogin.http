@@ -1,0 +1,47 @@
+@CustomerManagement_API_HostAddress = https://localhost:55760/api
+
+
+### ? Valid Login
+POST {{CustomerManagement_API_HostAddress}}/Customer/login
+Content-Type: application/json
+
+{
+  "email": "user@gmail.com",
+  "password": "User@1234567"
+}
+
+### ? Invalid Email
+POST {{CustomerManagement_API_HostAddress}}/Customer/login
+Content-Type: application/json
+
+{
+  "email": "notanemail",
+  "password": "Magdy@83@0!"
+}
+
+### ? Wrong Password
+POST {{CustomerManagement_API_HostAddress}}/Customer/login
+Content-Type: application/json
+
+{
+  "email": "magdy@example.com",
+  "password": "WrongPassword123"
+}
+
+### ? Empty Password
+POST {{CustomerManagement_API_HostAddress}}/Customer/login
+Content-Type: application/json
+
+{
+  "email": "magdy@example.com",
+  "password": ""
+}
+
+### ? Empty Email
+POST {{CustomerManagement_API_HostAddress}}/Customer/login
+Content-Type: application/json
+
+{
+  "email": "",
+  "password": "Magdy@83@0!"
+}

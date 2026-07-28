@@ -1,0 +1,168 @@
+<h2 mat-dialog-title class="dialog-title">
+  <mat-icon class="title-icon">person_add</mat-icon>
+  {{
+    (dialogData?.useNewAgentTitle
+      ? 'organizations.agent.dialog_title_new'
+      : 'organizations.agent.dialog_title'
+    ) | translate
+  }}
+  <span class="dialog-subtitle">{{
+    (dialogData?.useNewAgentTitle
+      ? 'organizations.agent.dialog_subtitle_new'
+      : 'organizations.agent.dialog_subtitle'
+    ) | translate
+  }}</span>
+</h2>
+
+<div mat-dialog-content class="dialog-content">
+  <!-- Duplicate email warning banner -->
+  <app-info-banner
+    *ngIf="duplicateAgent"
+    type="info"
+    [title]="'organizations.agent.duplicate_email_title' | translate"
+    [message]="
+      'organizations.agent.duplicate_email_message' | translate: { name: duplicateAgent.name }
+    "
+    [confirmLabel]="'organizations.agent.add_to_org_button' | translate"
+    confirmIcon="add"
+    [cancelLabel]="'organizations.agent.cancel_button' | translate"
+    (confirmed)="confirmAddExisting()"
+    (cancelled)="dismissDuplicate()"
+  />
+
+  <form [formGroup]="form" [class.dimmed]="!!duplicateAgent">
+    <!-- Agent Name -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ 'organizations.agent.name' | translate }}</mat-label>
+      <mat-icon matPrefix>badge</mat-icon>
+      <input
+        matInput
+        formControlName="name"
+        [placeholder]="'organizations.agent.name_placeholder' | translate"
+      />
+      <mat-hint>{{ 'organizations.agent.name_hint' | translate }}</mat-hint>
+      <mat-error *ngIf="form.get('name')?.hasError('required')">
+        {{
+          'validations.required_field'
+            | translate: { fieldName: fieldLabel('organizations.agent.name') }
+        }}
+      </mat-error>
+      <mat-error *ngIf="form.get('name')?.hasError('pattern')">
+        {{
+          'validations.invalid_field'
+            | translate: { fieldName: fieldLabel('organizations.agent.name') }
+        }}
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Email + Phone row -->
+    <div class="two-col">
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'organizations.agent.email' | translate }}</mat-label>
+        <mat-icon matPrefix>mail</mat-icon>
+        <input
+          matInput
+          formControlName="email"
+          type="email"
+          [placeholder]="'organizations.agent.email_placeholder' | translate"
+        />
+        <mat-error *ngIf="form.get('email')?.hasError('required')">
+          {{
+            'validations.required_field'
+              | translate: { fieldName: fieldLabel('organizations.agent.email') }
+          }}
+        </mat-error>
+        <mat-error *ngIf="form.get('email')?.hasError('email')">
+          {{
+            'validations.invalid_field'
+              | translate: { fieldName: fieldLabel('organizations.agent.email') }
+          }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'organizations.agent.phone' | translate }}</mat-label>
+        <mat-icon matPrefix>phone</mat-icon>
+        <input
+          matInput
+          formControlName="phone"
+          type="tel"
+          [placeholder]="'organizations.agent.phone_placeholder' | translate"
+        />
+        <mat-error *ngIf="form.get('phone')?.hasError('required')">
+          {{
+            'validations.required_field'
+              | translate: { fieldName: fieldLabel('organizations.agent.phone') }
+          }}
+        </mat-error>
+        <mat-error *ngIf="form.get('phone')?.hasError('pattern')">
+          {{
+            'validations.invalid_field'
+              | translate: { fieldName: fieldLabel('organizations.agent.phone') }
+          }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Role -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ 'organizations.agent.role' | translate }}</mat-label>
+      <mat-icon matPrefix>manage_accounts</mat-icon>
+      <mat-select formControlName="role">
+        <mat-option *ngFor="let role of roles" [value]="role.value">
+          {{ role.labelKey | translate }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('role')?.hasError('required')">
+        {{
+          'validations.required_field'
+            | translate: { fieldName: fieldLabel('organizations.agent.role') }
+        }}
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Password -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ 'organizations.agent.password' | translate }}</mat-label>
+      <mat-icon matPrefix>lock</mat-icon>
+      <input
+        matInput
+        formControlName="password"
+        [type]="showPassword ? 'text' : 'password'"
+        [placeholder]="'organizations.agent.password_placeholder' | translate"
+      />
+      <button mat-icon-button matSuffix type="button" (click)="showPassword = !showPassword">
+        <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      <mat-hint>{{ 'organizations.agent.password_hint' | translate }}</mat-hint>
+      <mat-error *ngIf="form.get('password')?.hasError('required')">
+        {{
+          'validations.required_field'
+            | translate: { fieldName: fieldLabel('organizations.agent.password') }
+        }}
+      </mat-error>
+      <mat-error *ngIf="form.get('password')?.hasError('pattern')">
+        {{
+          'validations.invalid_field'
+            | translate: { fieldName: fieldLabel('organizations.agent.password') }
+        }}
+      </mat-error>
+    </mat-form-field>
+  </form>
+  <div mat-dialog-actions align="end">
+    <button mat-stroked-button type="button" (click)="cancel()">
+      {{ 'organizations.agent.cancel_button' | translate }}
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      class="ms-2"
+      type="button"
+      (click)="save()"
+      [disabled]="isSaving || !!duplicateAgent"
+    >
+      <mat-icon>save</mat-icon>
+      {{ 'organizations.agent.create_button' | translate }}
+    </button>
+  </div>
+</div>

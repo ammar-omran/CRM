@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Yarp.ReverseProxy" Version="2.3.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="../SharedKernel/CRM.SharedKernel.Domain/CRM.SharedKernel.Domain.csproj" />
+        <ProjectReference Include="../SharedKernel/CRM.SharedKernel.Application/CRM.SharedKernel.Application.csproj" />
+        <ProjectReference Include="../SharedKernel/CRM.SharedKernel.API/CRM.SharedKernel.API.csproj" />
+    </ItemGroup>
+
+</Project>

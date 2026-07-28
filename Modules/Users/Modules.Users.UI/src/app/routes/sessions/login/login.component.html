@@ -1,0 +1,101 @@
+<div class="d-flex w-full h-full login-container">
+  <div class="logo mb-5">
+    <img src="assets/images/svgs/Logo.svg" alt="Ghana Electrometer Logo" />
+  </div>
+
+  <!-- Language Toggle Button -->
+  <div class="language-toggle">
+    <button
+      mat-icon-button
+      (click)="toggleLanguage()"
+      class="lang-btn"
+      [attr.aria-label]="'Switch to ' + (currentLanguage === 'en-US' ? 'Arabic' : 'English')"
+    >
+      <img
+        *ngIf="currentLanguage === 'en-US'"
+        src="assets/images/svgs/flags/ar-flag.svg"
+        alt="Arabic"
+        class="flag-icon"
+        aria-hidden="true"
+      />
+      <img
+        *ngIf="currentLanguage !== 'en-US'"
+        src="assets/images/svgs/flags/en-flag.svg"
+        alt="English"
+        class="flag-icon"
+        aria-hidden="true"
+      />
+    </button>
+  </div>
+
+  <mat-card class="login-box">
+    <mat-card-header class="center-elem bg-primary">
+      <mat-card-title>{{ getTranslation('login_title', 'Admin Portal Login') }}</mat-card-title>
+      <mat-card-subtitle>{{
+        getTranslation('login_subtitle', 'Enter your credentials to access the admin portal')
+      }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form class="form-field-full" [formGroup]="loginForm" autocomplete="off">
+        <div class="form-field mb-3">
+          <mat-form-field appearance="outline" hideRequiredMarker="true" class="login-form-field">
+            <mat-label>{{ getTranslation('username', 'Username') }}</mat-label>
+            <input
+              type="text"
+              matInput
+              formControlName="username"
+              autocomplete="off"
+              placeholder=""
+            />
+            <mat-icon matPrefix class="form-icon">person_outline</mat-icon>
+            @if (username.hasError('required') && username.touched) {
+              <mat-error>{{
+                getTranslation('validations.required', 'This field is required')
+              }}</mat-error>
+            }
+            @if (username.hasError('remote')) {
+              <mat-error>{{ username.getError('remote') }}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="form-field mb-3">
+          <mat-form-field appearance="outline" hideRequiredMarker="true" class="login-form-field">
+            <mat-label>{{ getTranslation('password', 'Password') }}</mat-label>
+            <input
+              type="password"
+              matInput
+              formControlName="password"
+              autocomplete="new-password"
+              placeholder=""
+            />
+            <mat-icon matPrefix class="form-icon">lock_outline</mat-icon>
+            @if (password.hasError('required') && password.touched) {
+              <mat-error>{{
+                getTranslation('validations.required', 'This field is required')
+              }}</mat-error>
+            }
+            @if (password.hasError('remote')) {
+              <mat-error>{{ password.getError('remote') }}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <button
+          class="w-full"
+          mat-raised-button
+          color="primary"
+          [disabled]="loginForm.invalid || isSubmitting"
+          [loading]="isSubmitting"
+          (click)="login()"
+        >
+          @if (isSubmitting) {
+            {{ getTranslation('logging_in', 'Logging in...') }}
+          } @else {
+            {{ getTranslation('login', 'Login') }}
+          }
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

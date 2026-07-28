@@ -1,0 +1,143 @@
+$themes: (
+  info: (
+    bg: #eff6ff,
+    border: #bfdbfe,
+    icon: #3b82f6,
+    title: #1e40af,
+    text: #374151,
+    btn-border: #93c5fd,
+    confirm-bg: #ef4444,
+    confirm-hover: #dc2626,
+  ),
+  warning: (
+    bg: #fffbeb,
+    border: #fde68a,
+    icon: #f59e0b,
+    title: #92400e,
+    text: #374151,
+    btn-border: #fcd34d,
+    confirm-bg: #f59e0b,
+    confirm-hover: #d97706,
+  ),
+  error: (
+    bg: #fef2f2,
+    border: #fecaca,
+    icon: #ef4444,
+    title: #991b1b,
+    text: #374151,
+    btn-border: #fca5a5,
+    confirm-bg: #ef4444,
+    confirm-hover: #dc2626,
+  ),
+  success: (
+    bg: #f0fdf4,
+    border: #bbf7d0,
+    icon: #22c55e,
+    title: #14532d,
+    text: #374151,
+    btn-border: #86efac,
+    confirm-bg: #22c55e,
+    confirm-hover: #16a34a,
+  ),
+);
+
+.info-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border-radius: 10px;
+  border: 1px solid;
+  padding: 14px 16px;
+  overflow: hidden;
+
+  .banner-icon {
+    flex-shrink: 0;
+    margin-top: 1px;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .banner-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .banner-title {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .banner-message {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .banner-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .banner-cancel {
+    height: 34px;
+    font-size: 13px;
+    padding: 0 14px;
+  }
+
+  .banner-confirm {
+    height: 34px;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 0 16px;
+    color: #fff !important;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+@each $name, $t in $themes {
+  .info-banner.#{$name} {
+    background-color: map-get($t, bg);
+    border-color: map-get($t, border);
+
+    .banner-icon mat-icon {
+      color: map-get($t, icon);
+    }
+
+    .banner-title {
+      color: map-get($t, title);
+    }
+
+    .banner-message {
+      color: map-get($t, text);
+    }
+
+    .banner-cancel {
+      border-color: map-get($t, btn-border) !important;
+      color: map-get($t, title) !important;
+    }
+
+    .banner-confirm {
+      background-color: map-get($t, confirm-bg) !important;
+
+      &:hover {
+        background-color: map-get($t, confirm-hover) !important;
+      }
+    }
+  }
+}

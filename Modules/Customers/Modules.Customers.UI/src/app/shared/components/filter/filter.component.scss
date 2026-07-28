@@ -1,0 +1,25 @@
+@use '../../../../styles/helpers/variables' as *;
+
+form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  align-items: center;
+
+ .controls {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  .buttons {
+    grid-column: span 4;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+
+    button {
+      width: 108px;
+      height: 32px;
+    }
+  }
+}

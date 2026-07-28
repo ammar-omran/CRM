@@ -1,0 +1,16 @@
+{
+  "menu": [
+    {
+      "route": "dashboard",
+      "name": "dashboard",
+      "type": "link",
+      "icon": "dashboard"
+    },
+    {
+      "route": "tickets",
+      "name": "tickets",
+      "type": "link",
+      "customIcon": "assets/images/svgs/menu/installations.svg"
+    }
+  ]
+}

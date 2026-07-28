@@ -1,0 +1,51 @@
+@CustomerManagement_API_HostAddress = https://localhost:55760/api
+
+### ? Valid Login
+POST {{CustomerManagement_API_HostAddress}}/Customer/login-with-phone
+Content-Type: application/json
+
+{
+  "countrycode": "+20",
+  "phoneNumber": "1963033550877",
+  "password": "Useer@1234567"
+}
+
+### ? Invalid Phone Format
+POST {{CustomerManagement_API_HostAddress}}/Customer/login-with-phone
+Content-Type: application/json
+
+{
+  "countrycode": "20",
+  "phoneNumber": "notaphone",
+  "password": "Useer@1234567"
+}
+
+### ? Wrong Password
+POST {{CustomerManagement_API_HostAddress}}/Customer/login-with-phone
+Content-Type: application/json
+
+{
+  "countrycode": "+20",
+  "phoneNumber": "1963033550877",
+  "password": "WrongPassword123"
+}
+
+### ? Empty Password
+POST {{CustomerManagement_API_HostAddress}}/Customer/login-with-phone
+Content-Type: application/json
+
+{
+  "countrycode": "+20",
+  "phoneNumber": "1963033550877",
+  "password": ""
+}
+
+### ? Empty Phone Number
+POST {{CustomerManagement_API_HostAddress}}/Customer/login-with-phone
+Content-Type: application/json
+
+{
+  "countrycode": "",
+  "phoneNumber": "",
+  "password": "Useer@1234567"
+}

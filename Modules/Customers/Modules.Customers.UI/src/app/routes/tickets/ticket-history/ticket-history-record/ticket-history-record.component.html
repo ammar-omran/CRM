@@ -1,0 +1,11 @@
+<mat-card class="history-card">
+  <div class="header">
+    <mat-icon color="primary">sync_alt</mat-icon>
+    <span class="title">{{ record.title }}</span>
+  </div>
+  <div class="description">{{ record.description }}</div>
+  <div class="footer">
+    <span class="author">by {{ record.changedByName }}</span>
+    <span class="time">{{ record.changeDate | date:'MMM d, y, h:mm a' }}</span>
+  </div>
+</mat-card>

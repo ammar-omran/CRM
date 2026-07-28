@@ -1,0 +1,15 @@
+[submodule "SharedKernel"]
+	path = ./SharedKernel
+	url = https://sewedy-cloud@dev.azure.com/sewedy-cloud/CRM/_git/crm.sharedkernel
+[submodule "Modules/Organizations"]
+	path = ./Modules/Organizations
+	url = https://sewedy-cloud@dev.azure.com/sewedy-cloud/CRM/_git/crm.modules.oraganizations
+[submodule "Modules/Tickets"]
+	path = ./Modules/Tickets
+	url = https://sewedy-cloud@dev.azure.com/sewedy-cloud/CRM/_git/crm.modules.ticketing
+[submodule "Modules/Customers"]
+	path = ./Modules/Customers
+	url = https://sewedy-cloud@dev.azure.com/sewedy-cloud/CRM/_git/crm.modules.customers
+[submodule "Modules/Users"]
+	path = ./Modules/Users
+	url = https://sewedy-cloud@dev.azure.com/sewedy-cloud/CRM/_git/crm.modules.users

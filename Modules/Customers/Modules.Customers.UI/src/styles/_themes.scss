@@ -1,0 +1,115 @@
+@use '@angular/material' as mat;
+@use 'app-theme';
+
+// New palette based on #024F82 to replace $custom-red
+$custom-blue-primary: mat.define-palette(
+  (
+    50: #e6f0f7,   // Very light shade
+    100: #b3d2e8,  // Lighter shade
+    200: #80b3d9,  // Light shade
+    300: #4d94ca,  // Medium-light shade
+    400: #2679b5,  // Slightly darker than base
+    500: #024F82,  // Base color (#024F82)
+    600: #024876,  // Slightly darker
+    700: #013e67,  // Darker
+    800: #013559,  // Very dark
+    900: #012541,  // Darkest
+    A100: #80c1ff, // Accent light
+    A200: #4da6ff, // Accent medium
+    A400: #1a8cff, // Accent dark
+    A700: #007bff, // Accent darkest
+    contrast: (
+      50: rgba(0, 0, 0, 0.87),   // Dark text for light backgrounds
+      100: rgba(0, 0, 0, 0.87),
+      200: rgba(0, 0, 0, 0.87),
+      300: rgba(0, 0, 0, 0.87),
+      400: rgba(255, 255, 255, 0.87), // White text for mid-range
+      500: rgba(255, 255, 255, 0.87), // White text for base color
+      600: rgba(255, 255, 255, 0.87),
+      700: rgba(255, 255, 255, 0.87),
+      800: rgba(255, 255, 255, 0.87),
+      900: rgba(255, 255, 255, 0.87),
+      A100: rgba(0, 0, 0, 0.87),
+      A200: rgba(0, 0, 0, 0.87),
+      A400: rgba(0, 0, 0, 0.87),
+      A700: rgba(255, 255, 255, 0.87),
+    ),
+  )
+);
+
+// Existing $custom-blue palette for accent (unchanged)
+$custom-blue: mat.define-palette(
+  (
+    50: #e5e7eb,
+    100: #c5c8d3,
+    200: #a1a4b8,
+    300: #7c809e,
+    400: #606387,
+    500: #475073,
+    600: #404868,
+    700: #373d5a,
+    800: #2f344c,
+    900: #202435,
+    A100: #7884a3,
+    A200: #5b6d8f,
+    A400: #3c4e74,
+    A700: #2e3b5c,
+    contrast: (
+      50: rgba(0, 0, 0, 0.87),
+      100: rgba(0, 0, 0, 0.87),
+      200: rgba(0, 0, 0, 0.87),
+      300: rgba(255, 255, 255, 1),
+      400: rgba(255, 255, 255, 1),
+      500: rgba(255, 255, 255, 1),
+      600: rgba(255, 255, 255, 1),
+      700: rgba(255, 255, 255, 1),
+      800: rgba(255, 255, 255, 1),
+      900: rgba(255, 255, 255, 1),
+      A100: rgba(255, 255, 255, 1),
+      A200: rgba(255, 255, 255, 1),
+      A400: rgba(255, 255, 255, 1),
+      A700: rgba(255, 255, 255, 1),
+    ),
+  )
+);
+
+//
+// Light theme
+//
+
+$primary: $custom-blue-primary; // Updated to use new palette
+$accent: $custom-blue;
+$theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $primary,
+      accent: $accent,
+    ),
+    typography: mat.define-typography-config(),
+    density: -1,
+  )
+);
+
+@include app-theme.theme($theme);
+
+//
+// Dark theme
+//
+.theme-dark {
+  color-scheme: dark;
+
+  $primary: $custom-blue-primary; // Updated to use new palette
+  $accent: $custom-blue;
+  $theme: mat.define-dark-theme(
+    (
+      color: (
+        primary: $primary,
+        accent: $accent,
+      ),
+      typography: null,
+      density: -1,
+    )
+  );
+
+  @include app-theme.theme($theme);
+}

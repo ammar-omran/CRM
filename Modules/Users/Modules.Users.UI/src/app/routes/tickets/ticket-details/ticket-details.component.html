@@ -1,0 +1,135 @@
+<div class="flex justify-end mb-3">
+  <mat-button-toggle-group [value]="currentLang" (change)="setLang($event.value)"
+                           appearance="legacy" class="lang-toggle">
+    <mat-button-toggle value="en-US">En</mat-button-toggle>
+    <mat-button-toggle value="ar-EG">AR</mat-button-toggle>
+    <mat-button-toggle value="ar-EG">AR</mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+
+<!-- ✅ Page Header -->
+<page-header [title]="'TICKET_DETAILS.TITLE' | translate"></page-header>
+
+<div class="header-actions mb-3"></div>
+
+<ng-container *ngIf="ticket; else noData">
+  <!-- Compact Card Layout -->
+  <mat-card class="ticket-card mat-elevation-z3" [dir]="currentLang === 'ar-EG' ? 'rtl' : 'ltr'">
+  <mat-card class="ticket-card mat-elevation-z3" [dir]="currentLang === 'ar-EG' ? 'rtl' : 'ltr'">
+    <mat-card-title>{{ 'TICKET_DETAILS.TITLE' | translate }}</mat-card-title>
+    <mat-card-content>
+      <!-- Line 1 -->
+      <div class="ticket-line" [ngClass]="{ 'rtl-text': currentLang === 'ar-EG' }"></div>      <div class="ticket-line" [ngClass]="{ 'rtl-text': currentLang === 'ar-EG' }">
+        <div>
+          <strong>{{ 'TICKET_DETAILS.REFERENCE' | translate }}:</strong> {{ ticket.id }}
+        </div>
+        <div>
+          <strong>{{ 'TICKET_DETAILS.STATUS' | translate }}:</strong> {{ ticket.status }}
+        </div>
+        <div>
+          <strong>{{ 'TICKET_DETAILS.SEVERITY' | translate }}:</strong> {{ ticket.severity ||
+          ('TICKETS_LIST.UNKNOWN'
+          | translate) }}
+        </div>
+      </div>
+
+      <!-- Line 2 -->
+      <div class="ticket-line" [ngClass]="{ 'rtl-text': currentLang === 'ar-EG' }"></div>
+      <div class="ticket-line" [ngClass]="{ 'rtl-text': currentLang === 'ar-EG' }">
+        <div style="flex: 1">
+          <strong>{{ 'TICKET_DETAILS.DESCRIPTION' | translate }}:</strong> {{ ticket.description ||
+          ('TICKETS_LIST.UNKNOWN'
+          | translate) }}
+        </div>
+      </div>
+
+      <!-- Line 3 -->
+      <div class="ticket-line" [ngClass]="{ 'rtl-text': currentLang === 'ar-EG' }">
+        <div>
+          <strong>{{ 'TICKET_DETAILS.CREATED_AT' | translate }}:</strong> {{ ticket.createdAt | date: 'medium'
+          }}
+        </div>
+        <div>
+          <strong>{{ 'TICKET_DETAILS.UPDATED_AT' | translate }}:</strong> {{ ticket.lastUpdate | date: 'medium'
+          }}
+        </div>
+        <div>
+          <strong>{{ 'TICKET_DETAILS.ASSIGNED_TO' | translate }}:</strong> {{ ticket.assignedTo ||
+          ('TICKETS_LIST.UNASSIGNED'
+          | translate) }}
+        </div>
+        <div>
+          <strong>{{ 'TICKET_DETAILS.TYPE' | translate }}:</strong> {{ ticket.type ||
+          ('TICKETS_LIST.UNKNOWN'
+          | translate) }}
+        </div>
+        <div>
+          <strong>{{ 'TICKET_DETAILS.SERVICE' | translate }}:</strong> {{ ticket.service ||
+          ('TICKETS_LIST.UNKNOWN'
+          | translate) }}
+        </div>
+        <div>
+          <strong>{{ 'TICKET_DETAILS.CATEGORY' | translate }}:</strong> {{ ticket.category ||
+          ('TICKETS_LIST.UNKNOWN'
+          | translate) }}
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</mat-card>
+
+  <!-- Ticket History -->
+  <mat-card class="m-3 shadow">
+    <mat-tab-group (selectedTabChange)="onTabChange($event)">
+      <mat-tab label="Comments" *hasPermission="'4.2'">
+        <!-- Show existing comments when present -->
+        <ng-container *ngIf="ticketComments && ticketComments.length > 0; else noCommentsBlock">
+          <div *ngFor="let comment of ticketComments">
+            <div>
+              <div *ngIf="comment.role == 'Support'" class="support-box">
+                <app-comment [author]="comment.author" [role]="comment.role"
+                             [date]="comment.createdDate" [description]="comment.description">
+                </app-comment>
+              </div>
+              <div *ngIf="comment.role != 'Support'" class="customer-box">
+                <app-comment [author]="comment.author" [role]="comment.role"
+                             [date]="comment.createdDate" [description]="comment.description">
+                </app-comment>
+              </div>
+            </div>
+          </div>
+          <!-- Add comment form — only visible to users with 4.1 permission -->
+          <ng-container *hasPermission="'4.1'">
+            <app-add-comment [ticketId]="ticketId"
+                             [showNoComments]="false"
+                             (commentAdded)="handleCommentAdded()"></app-add-comment>
+          </ng-container>
+        </ng-container>
+
+        <!-- No comments yet: show add-comment form only if user can add -->
+        <ng-template #noCommentsBlock>
+          <ng-container *hasPermission="'4.1'">
+            <app-add-comment [ticketId]="ticketId"
+                             [showNoComments]="true"
+                             (commentAdded)="handleCommentAdded()"></app-add-comment>
+          </ng-container>
+        </ng-template>
+      </mat-tab>
+
+      <!-- History tab — only visible to users with TicketHistory.View permission -->
+      <mat-tab label="{{ 'history' | translate }}" *hasPermission="'3.2'">
+        <ng-container *ngIf="showHistoryTab">
+          <app-ticket-history [ticketId]="ticketId"></app-ticket-history>
+        </ng-container>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card>
+</ng-container>
+
+<ng-template #noData>
+  <mat-card>
+    <mat-card-content>
+      <p>{{ 'ticket_not_found' | translate }}</p>
+    </mat-card-content>
+  </mat-card>
+</ng-template>

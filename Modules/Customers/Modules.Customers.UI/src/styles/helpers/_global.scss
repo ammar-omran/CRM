@@ -1,0 +1,189 @@
+@use 'variables' as *;
+
+.center-elem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #777777;
+}
+
+.bg-primary {
+  color: #fff;
+  background-color: $primary-color !important;
+}
+
+.color-primary {
+  color: $primary-color;
+}
+
+.color-secondary {
+  color: $secondary-color;
+}
+
+// maybe it will be refined in the future
+.text-primary {
+  color: $primary-color;
+}
+
+.text-secondary {
+  color: $text-secondary-color;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: $primary-color;
+}
+
+.card-border {
+  border: 1px solid $text-secondary-color;
+  border-left: 3px solid $secondary-color !important;
+}
+
+.secondary-title {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: $secondary-color;
+}
+
+.custom-form {
+  mat-card {
+    padding: 10px 30px;
+    border-radius: 0 !important;
+
+    mat-card-title {
+      margin-bottom: 15px;
+    }
+
+    mat-card-content {
+      display: flex;
+      flex-direction: column;
+      padding: 0 !important;
+    }
+
+    button {
+      width: fit-content;
+    }
+
+    mat-form-field {
+      width: 100%;
+      margin-bottom: 15px;
+    }
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+// Dialog Global Classes to be used later
+.details-item {
+  span {
+    display: block;
+    font-size: 0.875rem;
+    line-height: 1;
+    color: #000;
+  }
+
+  strong {
+    margin-bottom: 4px;
+    font-size: 0.75rem;
+    font-weight: 400;
+    line-height: 1;
+    color: $text-secondary-color;
+  }
+}
+
+.dialog-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 13px 0;
+  margin-bottom: 0;
+  font-size: 1.5rem;
+  color: #000;
+
+  .close-btn {
+    cursor: pointer;
+    background: none;
+    border: none;
+
+    mat-icon {
+      color: #707070;
+    }
+  }
+
+  & + .top-separator {
+    width: 100%;
+    height: 1px;
+    margin: 9px 0;
+    color: #b0b0b0;
+  }
+}
+
+app-admin-layout {
+  flex-grow: 1;
+  padding-bottom: $footer-height;
+}
+
+// global subtitle to be used with two spans ( ex: for contractor : contr.name )
+.subtitle {
+  margin-top: 5px;
+
+  span:first-child {
+    color: $text-secondary-color;
+  }
+
+  span {
+    color: #000;
+  }
+}
+
+html.cdk-global-scrollblock {
+  position: static !important;
+  width: 100% !important;
+  overflow: hidden !important;
+}
+
+/*
+global btn custom action style
+this can be used in the page header
+for the export btn or any other btn
+of any component
+*/
+.btn-custom-action {
+  border-radius: 25px;
+  padding: 12px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 7px;
+}
+
+/*
+global style of the filter container class in case
+we used the filter icon in the page header of any
+component.
+
+*/
+
+.filter-container {
+  max-height: 0;
+  opacity: 0;
+  transition:
+    max-height 0.5s ease,
+    opacity 0.5s ease;
+  border: 1px solid grey;
+  app-filter {
+    padding: 20px;
+    display: block;
+  }
+  background-color: #fff;
+}
+
+.filter-container.active {
+  max-height: 500px;
+  opacity: 1;
+}

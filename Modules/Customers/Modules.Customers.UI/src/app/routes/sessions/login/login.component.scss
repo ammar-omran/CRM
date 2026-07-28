@@ -1,0 +1,235 @@
+@use '../../../../styles/helpers/variables' as *;
+
+.login-container {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  .login-box {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 527px;
+    max-width: 100%;
+    position: relative;
+    z-index: 1;
+    mat-card-header {
+      padding: 16px 0;
+      text-align: center;
+
+      .header-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+
+        .login-title {
+          font-size: 2.5rem;
+          font-weight: 700;
+          margin: 0;
+        }
+      }
+      .lngbtn {
+        position: absolute;
+        right: 15px;
+      }
+    }
+
+    mat-card-content {
+      padding: 37px 40px;
+      background-color: #fff;
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+      overflow: hidden;
+
+      .login-tabs {
+        ::ng-deep .mat-mdc-tab-group {
+          .mat-mdc-tab-header {
+            border-bottom: 1px solid #e0e0e0;
+
+            .mat-mdc-tab-label-container {
+              .mat-mdc-tab-label {
+                font-size: 16px;
+                font-weight: 500;
+                color: #666;
+                min-width: 120px;
+                padding: 12px 24px;
+                border-radius: 8px 8px 0 0;
+                transition: all 0.3s ease;
+                margin-right: 4px;
+
+                &.mat-mdc-tab-label-active {
+                  color: white;
+                  font-weight: 600;
+                  background-color: $primary-color;
+                  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                }
+
+                &:not(.mat-mdc-tab-label-active):hover {
+                  background-color: rgba(0, 0, 0, 0.04);
+                  color: $primary-color;
+                }
+              }
+
+              .mat-mdc-tab-header-pagination {
+                display: none;
+              }
+            }
+
+            .mat-mdc-ink-bar {
+              display: none;
+            }
+          }
+
+          .mat-mdc-tab-body-wrapper {
+            .mat-mdc-tab-body {
+              .mat-mdc-tab-body-content {
+                padding: 20px 0 0 0;
+
+                .tab-content {
+                  opacity: 1;
+                  transform: none;
+                  transition: none;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .password-toggle-icon {
+        user-select: none;
+        transition: color 0.2s ease;
+
+        &.text-grey {
+          color: #9e9e9e;
+        }
+
+        &.text-primary {
+          color: $primary-color;
+        }
+
+        &.cursor-pointer {
+          cursor: pointer;
+        }
+
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+
+      .error-message {
+        text-align: center;
+
+        mat-error {
+          color: #f44336;
+          font-size: 14px;
+        }
+      }
+
+      .form-field {
+        margin-top: 1.5rem;
+        mat-form-field {
+          width: 100%;
+        }
+      }
+
+      .forgot-password-link {
+        text-align: right;
+
+        .forgot-password-text {
+          color: $primary-color;
+          text-decoration: none;
+          font-size: 14px;
+          transition: all 0.2s ease;
+
+          &.hover-underline:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+
+      .signup-link {
+        text-align: center;
+        font-size: 14px;
+
+        span {
+          color: #666;
+        }
+
+        .signup-text {
+          text-decoration: none;
+          font-weight: 500;
+          transition: color 0.2s ease;
+
+          &.text-blue-custom {
+            color: #024f82;
+          }
+
+          &.text-blue-custom:hover {
+            color: #013559;
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+
+  .icon-left-card {
+    position: absolute;
+    display: flex;
+    bottom: 0;
+    right: -95px;
+    height: 320px;
+    pointer-events: none;
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+
+  .logo-header {
+    color: $primary-color;
+    margin-top: 10px;
+    padding-bottom: 10px;
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+
+  ::ng-deep .mat-mdc-form-field-has-icon-prefix .mat-mdc-text-field-wrapper {
+    --mat-mdc-form-field-label-offset-x: 0px !important;
+  }
+
+  ::ng-deep .email-label-offset.mat-mdc-form-field .mat-mdc-text-field-wrapper,
+  ::ng-deep .password-label-offset.mat-mdc-form-field .mat-mdc-text-field-wrapper {
+    --mat-mdc-form-field-label-offset-x: -20px !important;
+  }
+
+  ::ng-deep .phone-label-offset.mat-mdc-form-field .mat-mdc-text-field-wrapper {
+    --mat-mdc-form-field-label-offset-x: 0px !important;
+  }
+
+  ::ng-deep .phone-label-offset.mat-mdc-form-field .mat-mdc-text-field-wrapper,
+  ::ng-deep .phone-password-label-offset.mat-mdc-form-field .mat-mdc-text-field-wrapper {
+    --mat-mdc-form-field-label-offset-x: 30px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .login-box {
+    padding: 10px;
+
+    .header-container {
+      flex-direction: column;
+      gap: 10px;
+
+      .login-title {
+        font-size: 1.8rem;
+      }
+
+      .lang-dropdown {
+        width: 100%;
+      }
+    }
+  }
+}

@@ -1,0 +1,36 @@
+.custom-phone-field {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-bottom: 16px;
+
+  .mat-label {
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.6);
+    margin-bottom: 4px;
+  }
+
+  ::ng-deep .ngx-intl-tel-input {
+    display: block;
+    width: 100%;
+  }
+
+  ::ng-deep .ngx-intl-tel-input input {
+    font-size: 16px;
+    padding: 14px;
+    border: 1px solid rgba(0, 0, 0, 0.23);
+    border-radius: 4px;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+  }
+
+  ::ng-deep .ngx-intl-tel-input input:focus {
+    border: 2px solid #D32F2F;
+  }
+
+  ::ng-deep .iti {
+    width: 100%;
+  }
+}

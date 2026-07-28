@@ -1,0 +1,146 @@
+<ng-container *ngIf="ticket; else noData">
+  <!-- Compact Card Layout -->
+  <mat-card class="ticket-card mat-elevation-z4" [dir]="currentLang === 'ar-EG' ? 'rtl' : 'ltr'">
+    <mat-card-header>
+      <mat-card-title>{{ 'TICKET_DETAILS.TITLE' | translate }}</mat-card-title>
+      <mat-card-subtitle>
+        {{ 'TICKET_DETAILS.REFERENCE' | translate }}:
+        <strong>{{ ticket.id }}</strong>
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-divider></mat-divider>
+
+    <mat-card-content>
+      <!-- Status & Severity -->
+      <div class="ticket-section">
+        <div class="ticket-field">
+          <span class="label">{{ 'TICKET_DETAILS.STATUS' | translate }}</span>
+          <span class="value">{{ ticket.status }}</span>
+        </div>
+        <div class="ticket-field">
+          <span class="label">{{ 'TICKET_DETAILS.SEVERITY' | translate }}</span>
+          <span class="value">
+            {{ ticket.severity || ('TICKETS_LIST.UNKNOWN' | translate) }}
+          </span>
+        </div>
+      </div>
+
+        <!-- Title -->
+      <div class="ticket-section">
+        <div class="ticket-field full-width">
+          <span class="label">{{ 'TICKET_DETAILS.TICKET_TITLE' | translate }}</span>
+          <span class="value">
+            {{ ticket.title || ('TICKETS_LIST.UNKNOWN' | translate) }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="ticket-section">
+        <div class="ticket-field full-width">
+          <span class="label">{{ 'TICKET_DETAILS.DESCRIPTION' | translate }}</span>
+          <span class="value">
+            {{ ticket.description || ('TICKETS_LIST.UNKNOWN' | translate) }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Dates & Assignment -->
+      <div class="ticket-section">
+        <div class="ticket-field">
+          <span class="label">{{ 'TICKET_DETAILS.CREATED_AT' | translate }}</span>
+          <span class="value">{{ ticket.createdAt | date: 'medium' }}</span>
+        </div>
+        <div class="ticket-field">
+          <span class="label">{{ 'TICKET_DETAILS.UPDATED_AT' | translate }}</span>
+          <span class="value">{{ ticket.lastUpdate | date: 'medium' }}</span>
+        </div>
+        <div class="ticket-field">
+          <span class="label">{{ 'TICKET_DETAILS.ASSIGNED_TO' | translate }}</span>
+          <span class="value">
+            {{ ticket.assignedTo || ('TICKETS_LIST.UNASSIGNED' | translate) }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Type / Category -->
+      <div class="ticket-section">
+        <div class="ticket-field">
+          <span class="label">{{ 'TICKET_DETAILS.TYPE' | translate }}</span>
+          <span class="value">{{ ticket.type || ('TICKETS_LIST.UNKNOWN' | translate) }}</span>
+        </div>
+        <div class="ticket-field">
+          <span class="label">{{ 'TICKET_DETAILS.CATEGORY' | translate }}</span>
+          <span class="value">{{ ticket.category || ('TICKETS_LIST.UNKNOWN' | translate) }}</span>
+        </div>
+      </div>
+    </mat-card-content>
+
+    <mat-divider></mat-divider>
+
+    <!-- Attachment Actions -->
+    <mat-card-actions align="end">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="openAttachmentInNewTab()"
+        [disabled]="!hasTicketAttachments"
+      >
+        {{ 'open_attachment' | translate: { default: 'Open Attachment' } }}
+      </button>
+      <button
+        mat-stroked-button
+        color="primary"
+        (click)="downloadAttachment()"
+        [disabled]="!hasTicketAttachments"
+      >
+        {{ 'download' | translate: { default: 'Download' } }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card class="m-3 shadow">
+    <mat-tab-group class="custom-tab" (selectedTabChange)="onTabChange($event)">
+      <mat-tab label="Comments">
+        <div *ngFor="let comment of ticketComments" class="mb-3">
+          <!-- Card wrapper -->
+          <mat-card class="comment-card" [ngClass]="comment.role == 'Support' ? 'support-box' : 'customer-box'">
+            <!-- Comment content -->
+            <app-comment [author]="comment.author" [role]="comment.role" [date]="comment.createdDate" [description]="comment.description">
+            </app-comment>
+
+            <!-- Attachments actions -->
+            <mat-card-actions class="attachment-actions" *ngIf="comment.HaveAttachments">
+              <button mat-stroked-button color="primary" (click)="viewCommentAttachment(comment)">
+                {{ 'open_attachment' | translate: { default: 'Open Attachment' } }}
+              </button>
+              <button mat-stroked-button color="primary" (click)="downloadCommentAttachment(comment)">
+                {{ 'download' | translate: { default: 'Download' } }}
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+
+        <!-- Add new comment -->
+        <app-add-comment class="mt-3" [ticketIdOverride]="ticketId" [showHeader]="false" [showEmptyState]="ticketComments.length === 0"
+          (commentAdded)="getComments()">
+        </app-add-comment>
+      </mat-tab>
+      <mat-tab label="History">
+        <ng-container *ngIf="showHistoryTab">
+          <app-ticket-history [ticketId]="ticketId"></app-ticket-history>
+        </ng-container>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card>
+</ng-container>
+
+<!-- 🛠 Correct position of noData template -->
+<ng-template #noData>
+  <mat-card>
+    <mat-card-content>
+      <p>Ticket not found or no data available.</p>
+    </mat-card-content>
+  </mat-card>
+</ng-template>

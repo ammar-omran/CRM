@@ -1,0 +1,31 @@
+<mat-toolbar class="matero-toolbar">
+  @if (showToggle) {
+  <button mat-icon-button (click)="toggleSidenav.emit()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  } @if (showBranding) {
+  <app-branding></app-branding>
+  }
+
+  <span class="flex-fill"></span>
+
+  <button mat-icon-button class="hide-small" (click)="toggleFullscreen()">
+    <mat-icon>fullscreen</mat-icon>
+  </button>
+
+  <button class="lngbtn" mat-raised-button [matMenuTriggerFor]="menu" color="primary">
+    <span>Lng</span>
+    <mat-icon>language</mat-icon>
+  </button>
+
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="setLang('ar-EG')">
+      <span>Ar</span>
+    </button>
+    <button mat-menu-item (click)="setLang('en-US')">
+      <span>En</span>
+    </button>
+  </mat-menu>
+
+  <app-user></app-user>
+</mat-toolbar>

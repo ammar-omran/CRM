@@ -1,0 +1,165 @@
+<div class="container-fluid">
+
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+      <mat-card class="modern-ticket-form-card elevation-2">
+        <mat-card-header class="form-header">
+          <div mat-card-avatar class="header-icon">
+            <mat-icon>support_agent</mat-icon>
+          </div>
+          <mat-card-title>{{ 'CREATE_TICKET.TITLE' | translate }}</mat-card-title>
+          <mat-card-subtitle>{{ 'CREATE_TICKET.SUBTITLE' | translate }}</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content class="form-content">
+          <form [formGroup]="ticketForm" (ngSubmit)="onSubmit()" class="modern-ticket-form">
+            <!-- Form Section 1: Ticket Classification -->
+            <div class="form-section">
+              <h3 class="section-title">
+                <mat-icon class="section-icon">category</mat-icon>
+                {{ 'CREATE_TICKET.SECTION_CLASSIFICATION' | translate }}
+              </h3>
+
+              <div class="form-row">
+                <!-- Ticket Type -->
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>{{ 'CREATE_TICKET.TICKET_TYPE_LABEL' | translate }}</mat-label>
+                  <mat-icon matPrefix>label</mat-icon>
+                  <mat-select formControlName="typeId" required>
+                    <mat-option value="">{{ 'CREATE_TICKET.TICKET_TYPE_PLACEHOLDER' | translate }}</mat-option>
+                    <mat-option *ngFor="let type of ticketTypes" [value]="type.id">
+                      <mat-icon>{{ type.id === 1 ? 'report_problem' : 'help_outline' }}</mat-icon>
+                      {{ type.name }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-hint>{{ 'CREATE_TICKET.TICKET_TYPE_HINT' | translate }}</mat-hint>
+                  <mat-error *ngIf="getFieldError('typeId')">
+                    {{ getFieldError('typeId') }}
+                  </mat-error>
+                </mat-form-field>
+
+                <!-- Ticket Category -->
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>{{ 'CREATE_TICKET.CATEGORY_LABEL' | translate }}</mat-label>
+                  <mat-icon matPrefix>folder</mat-icon>
+                  <mat-select formControlName="categoryId" required>
+                    <mat-option value="">
+                      {{ isCategoriesLoading ? ('CREATE_TICKET.CATEGORY_LOADING' | translate) : ('CREATE_TICKET.CATEGORY_PLACEHOLDER' | translate) }}
+                    </mat-option>
+                    <mat-option *ngFor="let category of ticketCategories" [value]="category.id">
+                      <mat-icon>{{ getCategoryIcon(category.name) }}</mat-icon>
+                      {{ category.name }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-hint>{{ 'CREATE_TICKET.CATEGORY_HINT' | translate }}</mat-hint>
+                  <mat-error *ngIf="getFieldError('categoryId')">{{
+                    getFieldError('categoryId')
+                  }}</mat-error>
+                </mat-form-field>
+              </div>
+
+              <!-- Title Dropdown — populated after category is selected -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>{{ 'CREATE_TICKET.TITLE_LABEL' | translate }}</mat-label>
+                <mat-icon matPrefix>title</mat-icon>
+                <mat-select formControlName="titleId" required>
+                  <mat-option value="">
+                    <ng-container *ngIf="isTitlesLoading">{{ 'CREATE_TICKET.TITLE_LOADING' | translate }}</ng-container>
+                    <ng-container *ngIf="!isTitlesLoading && filteredTitles.length === 0">{{ 'CREATE_TICKET.TITLE_SELECT_CATEGORY_FIRST' | translate }}</ng-container>
+                    <ng-container *ngIf="!isTitlesLoading && filteredTitles.length > 0">{{ 'CREATE_TICKET.TITLE_PLACEHOLDER' | translate }}</ng-container>
+                  </mat-option>
+                  <mat-option *ngFor="let title of filteredTitles" [value]="title.id">
+                    <mat-icon>{{ title.isOther ? 'edit_note' : 'article' }}</mat-icon>
+                    {{ title.title }}
+                  </mat-option>
+                </mat-select>
+                <mat-hint>{{ 'CREATE_TICKET.TITLE_HINT' | translate }}</mat-hint>
+                <mat-error *ngIf="getFieldError('titleId')">{{ getFieldError('titleId') }}</mat-error>
+              </mat-form-field>
+
+              <!-- Custom Title — shown only when "Other" is selected -->
+              <mat-form-field appearance="outline" class="full-width" *ngIf="isOtherSelected">
+                <mat-label>{{ 'CREATE_TICKET.CUSTOM_TITLE_LABEL' | translate }}</mat-label>
+                <mat-icon matPrefix>edit</mat-icon>
+                <input
+                  matInput
+                  formControlName="customTitle"
+                  [placeholder]="'CREATE_TICKET.CUSTOM_TITLE_PLACEHOLDER' | translate"
+                  maxlength="200"
+                  required
+                />
+                <mat-hint align="end">
+                  {{ ticketForm.get('customTitle')?.value?.length || 0 }}/200 characters
+                </mat-hint>
+                <mat-error *ngIf="getFieldError('customTitle')">{{
+                  getFieldError('customTitle')
+                }}</mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Form Section 2: Issue Details -->
+            <div class="form-section">
+              <h3 class="section-title">
+                <mat-icon class="section-icon">description</mat-icon>
+                {{ 'CREATE_TICKET.SECTION_DETAILS' | translate }}
+              </h3>
+
+
+
+              <!-- Description -->
+              <mat-form-field appearance="outline" class="full-width description-field">
+                <mat-label>{{ 'CREATE_TICKET.DESCRIPTION_LABEL' | translate }}</mat-label>
+                <mat-icon matPrefix>notes</mat-icon>
+                <textarea
+                  matInput
+                  formControlName="description"
+                  [placeholder]="'CREATE_TICKET.DESCRIPTION_PLACEHOLDER' | translate"
+                  rows="8"
+                  maxlength="1000"
+                          required>
+                </textarea>
+                <mat-hint align="start">{{ 'CREATE_TICKET.DESCRIPTION_HINT' | translate }}</mat-hint>
+                <mat-hint align="end">
+                  {{ ticketForm.get('description')?.value?.length || 0 }}/1000 characters
+                </mat-hint>
+                <mat-error *ngIf="getFieldError('description')">
+                  {{ getFieldError('description') }}
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+              <!-- Attachment Uploader as child -->
+              <app-attachment-uploader class="me-auto"
+                [attachmentFor]="attachmentType"
+                [refId]="ticketId"
+                      (attachmentsChange)="onAttachmentsChanged($event)">
+              </app-attachment-uploader>
+              <button
+                type="button"
+                mat-stroked-button
+                color="warn"
+                (click)="onCancel()"
+                [disabled]="isSubmitting"
+                      class="cancel-btn">
+                <mat-icon>close</mat-icon>
+                {{ 'CREATE_TICKET.CANCEL' | translate }}
+              </button>
+              <button
+                type="submit"
+                mat-raised-button
+                color="primary"
+                [disabled]="isSubmitting || ticketForm.invalid"
+                      class="submit-btn">
+                <mat-icon *ngIf="!isSubmitting">send</mat-icon>
+                <mat-icon *ngIf="isSubmitting" class="spinning">hourglass_empty</mat-icon>
+                {{ isSubmitting ? ('CREATE_TICKET.SUBMITTING' | translate) : ('CREATE_TICKET.SUBMIT' | translate) }}
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,48 @@
+@use '../../../../styles/helpers/variables' as *;
+
+.detailed-contractor-container {
+  border: 1px solid $text-secondary-color;
+  border-left: 3px solid $secondary-color;
+  background-color: #fff;
+  padding: 15px 13px;
+  .title {
+    color: $secondary-color;
+    font-size: 1.5rem;
+    font-weight: 400;
+  }
+}
+
+table {
+  width: 100%;
+  font-size: 0.75rem;
+  border: 1px solid #dddddd;
+  margin-top: 22px;
+
+  tr td:first-child {
+    text-align: start;
+  }
+
+  th,
+  td {
+    text-align: center;
+    border: 1px solid #dddddd;
+    font-weight: 400;
+  }
+
+  thead th:first-child {
+    text-align: start;
+  }
+
+  th {
+    &.header-group:not(.mat-column-blank-space) {
+      text-align: start;
+      font-weight: 600;
+      border-bottom: 1px solid #000;
+    }
+  }
+
+  .mat-mdc-row,
+  .mat-mdc-header-row {
+    height: 30px;
+  }
+}

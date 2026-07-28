@@ -1,0 +1,12 @@
+.upload-wrapper {
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.file-name {
+  color: #555;
+  font-size: 0.9rem;
+}

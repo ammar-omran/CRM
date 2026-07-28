@@ -1,0 +1,23 @@
+<div class="meter-stats-card">
+  <div class="stats-text">
+    <h3 class="text-secondary mb-2">{{ title }}</h3>
+    <h1
+      class="mb-4"
+      [ngClass]="{ 'color-primary': type === 'primary', 'color-secondary': type === 'secondary' }"
+    >
+      {{ total | number }}
+    </h1>
+    <table class="stats-table">
+      @for (item of stats; track item) {
+        <tr>
+          <td class="d-flex align-items-center me-1">
+            <span [style.background]="item.color" class="color-box"></span>
+            <span class="text-secondary" [style.color]="item.color">{{ item.label }}:</span>
+          </td>
+          <td>{{ values[item.key] | number }}</td>
+        </tr>
+      }
+    </table>
+  </div>
+  <app-dynamic-chart [chartOptions]="chartOptions" [chartId]="chartId"></app-dynamic-chart>
+</div>

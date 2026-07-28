@@ -1,0 +1,9 @@
+:host ::ng-deep .mtx-grid {
+  .disabled-state {
+    background-color: #f2e6e6 !important;
+  }
+
+  .mat-mdc-icon-button .mat-mdc-button-persistent-ripple::before {
+    background-color: transparent !important;
+  }
+}

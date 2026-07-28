@@ -1,0 +1,27 @@
+[
+  {
+    "meterSerial": "C001",
+    "status": "On Customer",
+    "assignedTo": "Contractor 1"
+  },
+  {
+    "meterSerial": "C002",
+    "status": "On Agent",
+    "assignedTo": "Contractor 2"
+  },
+  {
+    "meterSerial": "C003",
+    "status": "On Customer",
+    "assignedTo": "Contractor 3"
+  },
+  {
+    "meterSerial": "C005",
+    "status": "On Stock",
+    "assignedTo": "Contractor 4"
+  },
+  {
+    "meterSerial": "C004",
+    "status": "On Customer",
+    "assignedTo": "Contractor51"
+  }
+]

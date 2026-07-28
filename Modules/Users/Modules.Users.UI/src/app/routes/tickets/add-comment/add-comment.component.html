@@ -1,0 +1,43 @@
+<div class="add-comment-container">
+    <!-- Comments Section (Top) -->
+    <div class="card comments-section" *ngIf="showNoComments">
+        <div class="no-comments">
+            <h3 class="no-comments-title">{{ 'no_comments_yet' | translate }}</h3>
+            <p class="no-comments-subtitle">{{ 'be_first_to_comment' | translate }}</p>
+            <p class="no-comments-subtitle-ar">{{ 'no_comments_yet' | translate }}</p>
+        </div>
+        <div class="card-divider"></div>
+    </div>
+
+    <!-- Reply to Customer Section (Bottom) -->
+    <div class="card reply-section">
+        <h3 class="reply-title">{{ 'reply_to_customer' | translate }}</h3>
+
+        <form [formGroup]="commentForm" (ngSubmit)="onSubmit()" class="reply-form">
+            <mat-form-field appearance="outline" class="reply-textarea">
+                <textarea
+                          matInput
+                          formControlName="content"
+                          [placeholder]="'write_reply_placeholder' | translate"
+                          rows="6"
+                          class="reply-input"></textarea>
+            </mat-form-field>
+
+            <div class="reply-actions">
+              <app-attachment-uploader class="me-auto"
+              [attachmentFor]="attachmentType"
+              [refId]="commentId"
+              (attachmentsChange)="onAttachmentsChanged($event)"></app-attachment-uploader>
+                <button
+                        type="submit"
+                        mat-raised-button
+                        color="primary"
+                        class="send-reply-btn"
+                        [disabled]="isSubmitting">
+                    <mat-icon>send</mat-icon>
+                    {{ isSubmitting ? ('sending' | translate) : ('send_reply' | translate) }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

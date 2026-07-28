@@ -1,0 +1,56 @@
+/** Override Material styles */
+
+.mat-mdc-card {
+  margin-bottom: var(--gutter);
+}
+
+.mat-mdc-accordion {
+  display: block;
+  margin-bottom: var(--gutter);
+}
+
+.form-field-full {
+  .mat-mdc-form-field {
+    width: 100%;
+  }
+}
+
+/* Table Headers Nowrap */
+.mtx-grid .mat-header-cell-inner {
+  white-space: nowrap;
+}
+
+/* Small Fields (Input/DatePicker/Select) */
+.small {
+  width: 155px;
+  height: 32px;
+
+  .mat-mdc-form-field-infix {
+    width: fit-content;
+    min-width: 100px;
+    min-height: 32px;
+    padding: 4px 0 !important;
+  }
+
+  .mat-mdc-select-value-text {
+    min-width: 95px;
+    margin-right: 16px;
+  }
+
+  .mat-mdc-text-field-wrapper
+    .mat-mdc-form-field-flex
+    .mat-mdc-floating-label:not(.mdc-floating-label--float-above) {
+    top: 15px !important;
+  }
+
+  .mdc-text-field--outlined {
+    height: 32px !important;
+  }
+
+  mat-datepicker-toggle .mdc-icon-button {
+    right: 3px;
+    width: 24px !important;
+    height: 24px !important;
+    padding: 0 !important;
+  }
+}
