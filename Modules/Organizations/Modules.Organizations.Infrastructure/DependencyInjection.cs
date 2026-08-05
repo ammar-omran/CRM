@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Modules.Organizations.Domain.Repositories;
 using Modules.Organizations.Infrastructure.Database;
 using Modules.Organizations.Infrastructure.Repositories;
-using CRM.SharedKernel.Infrastructure;
 using CRM.SharedKernel.Infrastructure.Database;
 using Modules.Organizations.Domain.Modules;
 
@@ -16,7 +15,7 @@ public static class DependencyInjection
 		this IServiceCollection services,
 		IConfiguration configuration)
 	{
-		services.AddCoreInfrastructure(configuration, ["Organizations"]);
+		services.AddCoreInfrastructure(configuration, "organizations");
 		services.AddModuleManifest<OrganizationsModuleManifest>();
 
 		services.AddDatabase(configuration);

@@ -12,18 +12,18 @@ public static class OrganizationsModuleRegistration
 	public static IServiceCollection AddOrganizationsModule(this IServiceCollection services, IConfiguration configuration)
 	{
 		return services
-			.AddOrganizationsModuleApi(configuration)
-			.AddOrganizationsInfrastructure(configuration);
+			.AddOrganizationsInfrastructure(configuration)
+			.AddOrganizationsModuleApi(configuration);
 	}
 
 	private static IServiceCollection AddOrganizationsModuleApi(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddScoped<IEventPublisher, EventPublisher>();
 		services.AddEmailSender(configuration);
+		services.AddModuleTracing("organizations", "/api/organizations", "/api/agents");
 		services.RegisterApiEndpointsFromAssemblyContaining(typeof(OrganizationsModuleRegistration));
 		services.RegisterHandlersFromAssemblyContaining(typeof(OrganizationsModuleRegistration));
 		services.AddValidatorsFromAssembly(typeof(OrganizationsModuleRegistration).Assembly);
-		services.AddModuleTracing("organizations", "/api/organizations", "/api/agents");
 
 		return services;
 	}

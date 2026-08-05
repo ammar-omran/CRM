@@ -4,6 +4,7 @@ using CRM.SharedKernel.Infrastructure.Database;
 using CRM.SharedKernel.Infrastructure.Policies;
 using Modules.Customers.Infrastructure.Database;
 using Modules.Customers.Infrastructure.Policies;
+using Modules.Customers.Domain.Modules;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -13,7 +14,8 @@ public static class DependencyInjection
 		this IServiceCollection services,
 		IConfiguration configuration)
 	{
-		services.AddCoreInfrastructure(configuration, ["customers"]);
+		services.AddModuleManifest<CustomersModuleManifest>();
+		services.AddCoreInfrastructure(configuration, "customers");
 		services.AddEmailSender(configuration);
 		services.AddDatabase(configuration);
 

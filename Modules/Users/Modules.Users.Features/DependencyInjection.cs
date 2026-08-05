@@ -10,29 +10,31 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class UsersModuleRegistration
 {
-    public static IServiceCollection AddUsersModule(this IServiceCollection services, IConfiguration configuration)
-    {
-        return services
-            .AddUsersModuleApi()
-            .AddUsersInfrastructure(configuration);
-    }
-    
-    private static IServiceCollection AddUsersModuleApi(this IServiceCollection services)
-    {
-        services.RegisterApiEndpointsFromAssemblyContaining(typeof(UsersModuleRegistration));
-        
-        services.RegisterHandlersFromAssemblyContaining(typeof(UsersModuleRegistration));
-        
-        services.AddValidatorsFromAssembly(typeof(UsersModuleRegistration).Assembly);
+	public static IServiceCollection AddUsersModule(this IServiceCollection services, IConfiguration configuration)
+	{
+		return services
+			.AddUsersInfrastructure(configuration)
+			.AddUsersModuleApi();
+	}
 
-        return services;
-    }
+	private static IServiceCollection AddUsersModuleApi(this IServiceCollection services)
+	{
+
+		services.AddModuleTracing("users", "/api/users");
+		services.RegisterApiEndpointsFromAssemblyContaining(typeof(UsersModuleRegistration));
+
+		services.RegisterHandlersFromAssemblyContaining(typeof(UsersModuleRegistration));
+
+		services.AddValidatorsFromAssembly(typeof(UsersModuleRegistration).Assembly);
+
+		return services;
+	}
 }
 
 public class StocksMiddlewareConfigurator : IModuleMiddlewareConfigurator
 {
-    public IApplicationBuilder Configure(IApplicationBuilder app)
-    {
-        return app.UseMiddleware<CheckRevocatedTokensMiddleware>();
-    }
+	public IApplicationBuilder Configure(IApplicationBuilder app)
+	{
+		return app.UseMiddleware<CheckRevocatedTokensMiddleware>();
+	}
 }

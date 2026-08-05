@@ -6,7 +6,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using CRM.SharedKernel.Infrastructure.Configuration;
 using CRM.SharedKernel.Infrastructure.Policies;
-using Npgsql;
 using OpenTelemetry.Resources;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using OpenTelemetry.Trace;
@@ -32,7 +31,7 @@ public static class DependencyInjection
 	public static IServiceCollection AddCoreInfrastructure(
 		this IServiceCollection services,
 		IConfiguration configuration,
-		string[] activityModuleNames)
+		string activityModuleNames)
 	{
 		services.AddMemoryCache();
 
@@ -49,20 +48,23 @@ public static class DependencyInjection
 
 	private static IServiceCollection AddHostOpenTelemetry(
 		this IServiceCollection services,
-		params string[] activityModuleNames)
+		string activityModuleName)
 	{
 		services
 			.AddOpenTelemetry()
-			.ConfigureResource(resource => resource.AddService("CRM"))
+			.ConfigureResource(resource => resource.AddService("CRM " + activityModuleName))
 			.WithTracing(tracing =>
 			{
 				tracing
+					.AddSource(activityModuleName)
 					.AddAspNetCoreInstrumentation()
 					.AddHttpClientInstrumentation()
-					.AddNpgsql()
-					.AddSource(activityModuleNames);
-
-				tracing.AddOtlpExporter();
+					.AddSqlClientInstrumentation(options =>
+					{
+						// Optional but useful during development
+						options.RecordException = true;
+					})
+					.AddOtlpExporter();
 			});
 
 		services.AddHealthChecks()

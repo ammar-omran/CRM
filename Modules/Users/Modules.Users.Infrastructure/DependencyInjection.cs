@@ -19,7 +19,7 @@ public static class DependencyInjection
 	{
 		services.AddDatabase(configuration);
 		services.AddModuleManifest<UsersModuleManifest>();
-		services.AddCoreInfrastructure(configuration, ["users"]);
+		services.AddCoreInfrastructure(configuration, "users");
 
 		services.AddScoped<IClientAuthorizationService, ClientAuthorizationService>();
 
