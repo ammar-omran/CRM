@@ -19,8 +19,6 @@ public static class UsersModuleRegistration
 
 	private static IServiceCollection AddUsersModuleApi(this IServiceCollection services)
 	{
-
-		services.AddModuleTracing("users", "/api/users");
 		services.RegisterApiEndpointsFromAssemblyContaining(typeof(UsersModuleRegistration));
 
 		services.RegisterHandlersFromAssemblyContaining(typeof(UsersModuleRegistration));

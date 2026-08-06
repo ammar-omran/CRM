@@ -154,11 +154,14 @@ public sealed class ManifestValidator : IModuleValidator
 	{
 		var api = manifest.Api!;
 
-		if (string.IsNullOrWhiteSpace(api.RoutePrefix))
+		foreach (var prefix in api.RoutePrefixs)
 		{
-			report.AddError("ManifestValidator",
-				"Api.RoutePrefix is required when Api is specified.",
-				"MISSING_ROUTE_PREFIX");
+			if (string.IsNullOrWhiteSpace(prefix))
+			{
+				report.AddError("ManifestValidator",
+					"Api.RoutePrefix is required when Api is specified.",
+					"MISSING_ROUTE_PREFIX");
+			}
 		}
 
 		if (string.IsNullOrWhiteSpace(api.OpenApiEndpoint))

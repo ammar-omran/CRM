@@ -10,7 +10,7 @@ public sealed record ModuleApi
 	/// The module's namespace in the URL space (e.g., "/api/users").
 	/// All routes declared in OpenAPI are relative to this prefix.
 	/// </summary>
-	public required string RoutePrefix { get; init; }
+	public required string[] RoutePrefixs { get; init; }
 
 	/// <summary>
 	/// Path to the OpenAPI specification endpoint (e.g., "/swagger/v1/swagger.json").

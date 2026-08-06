@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using CRM.SharedKernel.Domain.Modules;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 
@@ -7,14 +8,14 @@ namespace CRM.SharedKernel.API.Tracing;
 public sealed class TracingMiddleware : IDisposable
 {
 	private readonly RequestDelegate _next;
-	private readonly TracingOptions _options;
 	private readonly ActivitySource _activitySource;
+	private readonly IModuleManifest _manifest;
 
-	public TracingMiddleware(RequestDelegate next, IOptions<TracingOptions> options)
+	public TracingMiddleware(RequestDelegate next, IModuleManifest manifest)
 	{
 		_next = next;
-		_options = options.Value;
-		_activitySource = new ActivitySource(_options.ModuleName);
+		_manifest = manifest;
+		_activitySource = new ActivitySource(_manifest.Identity.ModuleId);
 	}
 
 	public async Task InvokeAsync(HttpContext context)
@@ -28,9 +29,9 @@ public sealed class TracingMiddleware : IDisposable
 		}
 
 		var operationName = GetOperationName(context);
-		using var activity = _activitySource.StartActivity($"{_options.ModuleName}.{operationName}");
+		using var activity = _activitySource.StartActivity($"{_manifest.Identity.ModuleId}.{operationName}");
 
-		activity?.SetTag("module", _options.ModuleName);
+		activity?.SetTag("module", _manifest.Identity.ModuleId);
 		activity?.SetTag("http.method", context.Request.Method);
 		activity?.SetTag("http.path", context.Request.Path);
 		activity?.SetTag("operation", operationName);
@@ -54,7 +55,7 @@ public sealed class TracingMiddleware : IDisposable
 
 	private bool MatchesPathPrefix(PathString path)
 	{
-		foreach (var prefix in _options.PathPrefixes)
+		foreach (var prefix in _manifest.Api?.RoutePrefixs ?? [])
 		{
 			if (path.StartsWithSegments(prefix, StringComparison.Ordinal))
 				return true;

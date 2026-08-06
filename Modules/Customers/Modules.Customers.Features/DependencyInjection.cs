@@ -15,7 +15,6 @@ public static class CustomersModuleRegistration
 
 	private static IServiceCollection AddCustomersModuleApi(this IServiceCollection services)
 	{
-		services.AddModuleTracing("crganizations", "/api/customers");
 		services.RegisterApiEndpointsFromAssemblyContaining(typeof(CustomersModuleRegistration));
 		services.RegisterHandlersFromAssemblyContaining(typeof(CustomersModuleRegistration));
 		services.AddValidatorsFromAssembly(typeof(CustomersModuleRegistration).Assembly);

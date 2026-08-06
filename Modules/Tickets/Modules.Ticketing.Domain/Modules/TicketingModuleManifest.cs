@@ -62,7 +62,7 @@ public sealed class TicketingModuleManifest : IModuleManifest
 	/// <inheritdoc />
 	public ModuleApi? Api { get; } = new()
 	{
-		RoutePrefix = "/api/tickets",
+		RoutePrefixs = ["/api/tickets", "/api/attachments"],
 		OpenApiEndpoint = "/swagger/v1/swagger.json"
 	};
 

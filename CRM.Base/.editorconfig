@@ -1,6 +1,9 @@
 root = true
 
 [*.cs]
+indent_style = space
+indent_size = 4
+tab_width = 4
 trim_trailing_whitespace = true
 insert_final_newline = true
 end_of_line = lf
@@ -10,7 +13,6 @@ indent_style = tab
 indent_size = 2
 tab_width = 2
 end_of_line = lf
-
 [*.cshtml]
 indent_style = tab
 indent_size = 4
@@ -455,7 +457,6 @@ dotnet_diagnostic.S2696.severity = none
 resharper_csharp_braces_for_lock=required
 resharper_csharp_braces_for_using=required
 resharper_csharp_braces_for_while=required
-resharper_csharp_braces_for_foreach=required
 resharper_csharp_braces_for_for=required
 resharper_csharp_braces_for_fixed=required
 resharper_csharp_braces_for_ifelse=required

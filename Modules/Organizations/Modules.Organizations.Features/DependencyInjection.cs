@@ -20,7 +20,6 @@ public static class OrganizationsModuleRegistration
 	{
 		services.AddScoped<IEventPublisher, EventPublisher>();
 		services.AddEmailSender(configuration);
-		services.AddModuleTracing("organizations", "/api/organizations", "/api/agents");
 		services.RegisterApiEndpointsFromAssemblyContaining(typeof(OrganizationsModuleRegistration));
 		services.RegisterHandlersFromAssemblyContaining(typeof(OrganizationsModuleRegistration));
 		services.AddValidatorsFromAssembly(typeof(OrganizationsModuleRegistration).Assembly);

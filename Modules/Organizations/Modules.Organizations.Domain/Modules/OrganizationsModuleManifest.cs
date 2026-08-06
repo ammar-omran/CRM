@@ -70,7 +70,7 @@ public sealed class OrganizationsModuleManifest : IModuleManifest
 	/// <inheritdoc />
 	public ModuleApi? Api { get; } = new()
 	{
-		RoutePrefix = "/api/organizations",
+		RoutePrefixs = ["/api/organizations", "/api/agents"],
 		OpenApiEndpoint = "/swagger/v1/swagger.json"
 	};
 

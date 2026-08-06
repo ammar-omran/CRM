@@ -31,14 +31,17 @@ public sealed class RouteValidator : IModuleValidator
 
 		var existingPrefixes = _getRegisteredManifests()
 			.Where(m => m.Api is not null)
-			.Select(m => m.Api!.RoutePrefix)
+			.SelectMany(m => m.Api!.RoutePrefixs)
 			.ToList();
 
-		if (existingPrefixes.Contains(manifest.Api.RoutePrefix, StringComparer.OrdinalIgnoreCase))
+		foreach (var prefix in manifest.Api.RoutePrefixs)
 		{
-			report.AddError("RouteValidator",
-				$"Route prefix '{manifest.Api.RoutePrefix}' is already claimed by another module.",
-				"ROUTE_PREFIX_CONFLICT");
+			if (existingPrefixes.Contains(prefix, StringComparer.OrdinalIgnoreCase))
+			{
+				report.AddError("RouteValidator",
+					$"Route prefix '{prefix}' is already claimed by another module.",
+					"ROUTE_PREFIX_CONFLICT");
+			}
 		}
 
 		// Validate anonymous paths are within the declared route prefix
@@ -46,11 +49,14 @@ public sealed class RouteValidator : IModuleValidator
 		{
 			foreach (var path in manifest.Api.AnonymousPaths)
 			{
-				if (!path.StartsWith(manifest.Api.RoutePrefix, StringComparison.OrdinalIgnoreCase))
+				foreach (var prefix in manifest.Api.RoutePrefixs)
 				{
-					report.AddWarning("RouteValidator",
-						$"Anonymous path '{path}' is outside the declared route prefix " +
-						$"'{manifest.Api.RoutePrefix}'. This may cause unexpected behavior.");
+					if (!path.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+					{
+						report.AddWarning("RouteValidator",
+							$"Anonymous path '{path}' is outside the declared route prefix " +
+							$"'{prefix}'. This may cause unexpected behavior.");
+					}
 				}
 			}
 		}

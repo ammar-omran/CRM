@@ -62,7 +62,7 @@ public sealed class CustomersModuleManifest : IModuleManifest
 	/// <inheritdoc />
 	public ModuleApi? Api { get; } = new()
 	{
-		RoutePrefix = "/api/customers",
+		RoutePrefixs = ["/api/customers"],
 		OpenApiEndpoint = "/swagger/v1/swagger.json",
 		AnonymousPaths =
 		[
