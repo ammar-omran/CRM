@@ -1,5 +1,5 @@
-using CRM.SharedKernel.API.Abstractions;
-using CRM.SharedKernel.API.Extensions;
+using CRM.SharedKernel.Application.API.Abstractions;
+using CRM.SharedKernel.Application.API.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Modules.Ticketing.Features.Ticket.Shared.Responses;

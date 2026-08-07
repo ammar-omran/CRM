@@ -19,22 +19,15 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class DependencyInjection
 {
-	public static IServiceCollection AddEmailSender(
+	public static IServiceCollection AddCoreInfrastructure(
 		this IServiceCollection services,
 		IConfiguration configuration)
 	{
-		services.Configure<EmailOptions>(configuration.GetSection(EmailOptions.SectionName));
-		services.AddScoped<IEmailSender, SmtpEmailSender>();
-
-		return services;
-	}
-	public static IServiceCollection AddCoreInfrastructure(
-		this IServiceCollection services,
-		IConfiguration configuration,
-		string activityModuleNames)
-	{
 		services.AddMemoryCache();
 
+
+		var provider = services.BuildServiceProvider();
+		var activityModuleNames = provider.GetService<IModuleManifest>().Identity.ModuleId;
 		services.AddHostOpenTelemetry(activityModuleNames);
 
 		services.AddJwtAuthentication(configuration);
@@ -52,7 +45,7 @@ public static class DependencyInjection
 	{
 		services
 			.AddOpenTelemetry()
-			.ConfigureResource(resource => resource.AddService("CRM " + activityModuleName))
+			.ConfigureResource(resource => resource.AddService(activityModuleName))
 			.WithTracing(tracing =>
 			{
 				tracing
@@ -103,6 +96,16 @@ public static class DependencyInjection
 			{
 				options.TokenValidationParameters = tokenValidationParameters;
 			});
+
+		return services;
+	}
+
+	public static IServiceCollection AddEmailSender(
+		this IServiceCollection services,
+		IConfiguration configuration)
+	{
+		services.Configure<EmailOptions>(configuration.GetSection(EmailOptions.SectionName));
+		services.AddScoped<IEmailSender, SmtpEmailSender>();
 
 		return services;
 	}

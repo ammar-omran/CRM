@@ -1,4 +1,4 @@
-using CRM.SharedKernel.API.Extensions;
+using CRM.SharedKernel.Application.API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

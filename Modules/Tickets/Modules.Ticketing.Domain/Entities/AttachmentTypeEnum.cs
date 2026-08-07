@@ -1,4 +1,4 @@
-﻿namespace TicketManagement.Domain.Entities;
+namespace TicketManagement.Domain.OrganizationAggregate.
 
 public enum AttachmentTypeEnum
 {

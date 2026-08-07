@@ -2,8 +2,8 @@ using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using CRM.SharedKernel.API.Abstractions;
-using CRM.SharedKernel.API.Extensions;
+using CRM.SharedKernel.Application.API.Abstractions;
+using CRM.SharedKernel.Application.API.Extensions;
 using Modules.Users.Features.Users.Shared.Routes;
 
 namespace Modules.Users.Features.Users.RegisterUser;

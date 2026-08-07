@@ -1,4 +1,4 @@
-using TicketManagement.Domain.Entities;
+using TicketManagement.Domain.OrganizationAggregate.
 
 namespace TicketManagement.Domain.Configurations;
 

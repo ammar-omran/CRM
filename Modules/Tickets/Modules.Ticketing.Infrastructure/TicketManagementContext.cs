@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
-using TicketManagement.Domain.Entities;
+using TicketManagement.Domain.OrganizationAggregate.
 
 namespace TicketManagement.Infrastructure
 {

@@ -1,5 +1,5 @@
 using CRM.SharedKernel.Domain;
-using Modules.Users.Domain.Users;
+using Modules.Users.Domain.UserAggregate;
 
 namespace Modules.Users.Domain.Tokens;
 

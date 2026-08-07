@@ -1,4 +1,4 @@
-﻿using TicketManagement.Domain.Entities;
+using TicketManagement.Domain.OrganizationAggregate.
 using TicketManagement.Application.Services;
 using TicketManagement.Infrastructure.Repositories;
 using Microsoft.Extensions.Logging;

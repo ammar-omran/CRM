@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TicketManagement.Domain.Entities;
+using TicketManagement.Domain.OrganizationAggregate.
 
-namespace Modules.Ticketing.Infrastructure.Database.Configurations;
+namespace Modules.Ticketing.Infrastructure.Database.Mapping.OrganizationAggregate;
 
 public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
 {

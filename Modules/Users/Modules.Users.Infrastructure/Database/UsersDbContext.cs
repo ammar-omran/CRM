@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Modules.Users.Domain.Tokens;
-using Modules.Users.Domain.Users;
+using Modules.Users.Domain.UserAggregate;
 
 namespace Modules.Users.Infrastructure.Database;
 
@@ -10,7 +10,7 @@ public class UsersDbContext : IdentityDbContext<User, Role, string,
 	RoleClaim, UserToken>
 {
 	public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
-	
+
 	public UsersDbContext(DbContextOptions<UsersDbContext> options) : base(options)
 	{
 	}
@@ -19,8 +19,11 @@ public class UsersDbContext : IdentityDbContext<User, Role, string,
 	{
 		base.OnModelCreating(modelBuilder);
 
-		modelBuilder.HasDefaultSchema(DbConsts.Schema);
+		modelBuilder.HasDefaultSchema(DbConsts.UsersSchema);
 
-		modelBuilder.ApplyConfigurationsFromAssembly(typeof(UsersDbContext).Assembly);
+		// Only apply configurations that exist in the OrganizationAggregate namespace/folder
+		modelBuilder.ApplyConfigurationsFromAssembly(
+				typeof(OrganizationsDbContext).Assembly,
+				type => type.Namespace != null && type.Namespace.Contains("UsersAggregate"));
 	}
 }

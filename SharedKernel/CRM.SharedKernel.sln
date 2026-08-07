@@ -1,7 +1,5 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedKernel.API", "CRM.SharedKernel.API\CRM.SharedKernel.API.csproj", "{4418E84F-BF2B-4D52-A2C4-A9041FE0C594}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedKernel.Domain", "CRM.SharedKernel.Domain\CRM.SharedKernel.Domain.csproj", "{D9363122-CD3D-43E7-8AB9-C28991B2852A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedKernel.Application", "CRM.SharedKernel.Application\CRM.SharedKernel.Application.csproj", "{C54C0482-6CF3-46D8-90BB-34544A0AA443}"

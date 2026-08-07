@@ -50,6 +50,20 @@ public sealed class UsersModuleManifest : IModuleManifest
 			DisplayName = "Role-Based Access Control",
 			Description = "User roles and permission management.",
 			Category = "Authorization"
+		},
+		new ModuleCapability
+		{
+			CapabilityId = "organization-management",
+			DisplayName = "Organization Management",
+			Description = "Create, read, and manage organizations.",
+			Category = "Organization"
+		},
+		new ModuleCapability
+		{
+			CapabilityId = "agent-management",
+			DisplayName = "Agent Management",
+			Description = "Assign and manage agents within organizations.",
+			Category = "Organization"
 		}
 	];
 
@@ -57,12 +71,19 @@ public sealed class UsersModuleManifest : IModuleManifest
 	public IReadOnlyList<ModuleCapability>? RequiredCapabilities { get; } = null;
 
 	/// <inheritdoc />
-	public IReadOnlyList<ModuleDependency>? ModuleDependencies { get; } = null;
+	public IReadOnlyList<ModuleDependency>? ModuleDependencies { get; } = [
+		new ModuleDependency
+		{
+			ModuleId = "crm.customers",
+			IsRequired = false,
+			Purpose = "Fetch customer data for organization-customer relationships."
+		}
+	];
 
 	/// <inheritdoc />
 	public ModuleApi? Api { get; } = new()
 	{
-		RoutePrefixs = ["/api/users"],
+		RoutePrefixs = ["/api/users", "/api/organizations", "/api/agents"],
 		OpenApiEndpoint = "/swagger/v1/swagger.json",
 		AnonymousPaths =
 		[
@@ -82,7 +103,11 @@ public sealed class UsersModuleManifest : IModuleManifest
 	];
 
 	/// <inheritdoc />
-	public ModuleEvents? Events { get; } = null;
+	public ModuleEvents? Events { get; } = new()
+	{
+		Published = ["OrganizationCreatedEvent"]
+	};
+
 
 	/// <inheritdoc />
 	public ModuleHealth Health { get; } = new()

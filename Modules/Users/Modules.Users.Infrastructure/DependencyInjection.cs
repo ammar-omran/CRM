@@ -4,11 +4,14 @@ using Microsoft.Extensions.Configuration;
 using CRM.SharedKernel.Infrastructure.Database;
 using CRM.SharedKernel.Infrastructure.Policies;
 using Modules.Users.Domain.Authentication;
-using Modules.Users.Domain.Users;
+using Modules.Users.Domain.UserAggregate;
 using Modules.Users.Infrastructure.Authorization;
 using Modules.Users.Infrastructure.Database;
 using Modules.Users.Infrastructure.Policies;
 using Modules.Users.Domain.Modules;
+using Modules.Users.Domain.Repositories;
+using Modules.Users.Infrastructure.Repositories;
+using CRM.SharedKernel.Domain.Interfaces;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -19,11 +22,16 @@ public static class DependencyInjection
 	{
 		services.AddDatabase(configuration);
 		services.AddModuleManifest<UsersModuleManifest>();
-		services.AddCoreInfrastructure(configuration, "users");
+		services.AddCoreInfrastructure(configuration);
 
 		services.AddScoped<IClientAuthorizationService, ClientAuthorizationService>();
 
 		services.AddSingleton<IPolicyFactory, UsersPolicyFactory>();
+
+		services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+		services.AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));
+		services.AddScoped<ICustomerRepository, CustomerRepository>();
+		services.AddHttpClient("Modules.CustomersApi");
 
 		return services;
 	}
@@ -39,11 +47,26 @@ public static class DependencyInjection
 			options
 				.UseSqlServer(connectionString, mssqlOptions =>
 				{
-					mssqlOptions.MigrationsHistoryTable(DbConsts.MigrationTableName, DbConsts.Schema);
+					mssqlOptions.MigrationsHistoryTable(DbConsts.MigrationTableName, DbConsts.UsersSchema);
 				})
 				.AddInterceptors(interceptor)
 				.UseSnakeCaseNamingConvention();
 		});
+
+		services.AddDbContext<OrganizationsDbContext>((provider, options) =>
+		{
+			var interceptor = provider.GetRequiredService<AuditableInterceptor>();
+
+			options
+				.UseSqlServer(connectionString, mssqlOptions =>
+				{
+					mssqlOptions.MigrationsHistoryTable(DbConsts.MigrationTableName, DbConsts.OrgSchema);
+				})
+				.AddInterceptors(interceptor);
+		});
+
+		services.AddScoped<IApplicationDbContext>(sp =>
+			sp.GetRequiredService<OrganizationsDbContext>());
 
 		services.AddScoped<IModuleDatabaseMigrator, UsersDatabaseMigrator>();
 

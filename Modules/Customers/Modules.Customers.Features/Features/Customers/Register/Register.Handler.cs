@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using CRM.SharedKernel.Domain.Handlers;
 using CRM.SharedKernel.Domain.Results;
 using CRM.SharedKernel.Infrastructure.Services;
-using Modules.Customers.Domain.Entities;
+using Modules.Customers.Domain.OrganizationAggregate.
 using Modules.Customers.Domain.Errors;
 using Modules.Customers.Infrastructure.Database;
 using System.Security.Cryptography;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,7 +8,7 @@ using SharedKernel.JWT;
 using TicketManagement.Application.DTOs;
 using TicketManagement.Application.Interfaces.Repositories;
 using TicketManagement.Application.Services;
-using TicketManagement.Domain.Entities;
+using TicketManagement.Domain.OrganizationAggregate.
 using Xunit;
 
 namespace TicketManagement.Test.Services.TicketService

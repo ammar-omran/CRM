@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using CRM.SharedKernel.API.Abstractions;
-using CRM.SharedKernel.API.Extensions;
+using CRM.SharedKernel.Application.API.Abstractions;
+using CRM.SharedKernel.Application.API.Extensions;
 using Modules.Customers.Features.Customers.Shared;
 using Modules.Customers.Features.Customers.Shared.Routes;
 

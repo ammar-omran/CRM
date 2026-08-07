@@ -1,23 +1,13 @@
-﻿using CRM.SharedKernel.API.Extensions;
+﻿using CRM.SharedKernel.Application.API.ErrorHandling;
+using CRM.SharedKernel.Application.API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// core registering services
-builder.Services.AddCoreWebApiInfrastructure("Modules.Users");
 
 // Module registration
 builder.Services.AddUsersModule(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
-
-builder.Services.AddCors(options =>
-{
-	options.AddPolicy("AllowAll", policy =>
-	{
-		policy.AllowAnyOrigin()
-			  .AllowAnyHeader()
-			  .AllowAnyMethod();
-	});
-});
+builder.Services.AddSwagger();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>().AddProblemDetails();
 
 var app = builder.Build();
 
@@ -28,7 +18,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("AllowAll");
 
 app.UseAuthentication();
 app.UseAuthorization();

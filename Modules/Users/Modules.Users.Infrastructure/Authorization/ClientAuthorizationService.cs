@@ -12,7 +12,7 @@ using CRM.SharedKernel.Infrastructure.Configuration;
 using Modules.Users.Domain.Authentication;
 using Modules.Users.Domain.Errors;
 using Modules.Users.Domain.Tokens;
-using Modules.Users.Domain.Users;
+using Modules.Users.Domain.UserAggregate;
 using Modules.Users.Infrastructure.Database;
 
 namespace Modules.Users.Infrastructure.Authorization;

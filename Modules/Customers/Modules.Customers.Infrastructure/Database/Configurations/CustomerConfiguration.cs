@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Modules.Customers.Domain.Entities;
+using Modules.Customers.Domain.OrganizationAggregate.
 
-namespace Modules.Customers.Infrastructure.Database.Configurations;
+namespace Modules.Customers.Infrastructure.Database.Mapping.OrganizationAggregate;
 
 public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
 {

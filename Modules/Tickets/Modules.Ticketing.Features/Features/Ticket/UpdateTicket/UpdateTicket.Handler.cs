@@ -3,8 +3,8 @@ using Microsoft.Extensions.Logging;
 using CRM.SharedKernel.Domain.Handlers;
 using CRM.SharedKernel.Domain.Results;
 using Modules.Ticketing.Infrastructure.Database;
-using TicketManagement.Domain.Entities;
-using TicketEntity = TicketManagement.Domain.Entities.Ticket;
+using TicketManagement.Domain.OrganizationAggregate.
+using TicketEntity = TicketManagement.Domain.OrganizationAggregate.Ticket;
 
 namespace Modules.Ticketing.Features.Ticket.UpdateTicket;
 

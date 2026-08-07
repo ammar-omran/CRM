@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using CRM.SharedKernel.Domain.Handlers;
 using CRM.SharedKernel.Domain.Results;
 using Modules.Users.Domain.Errors;
-using Modules.Users.Domain.Users;
+using Modules.Users.Domain.UserAggregate;
 using Modules.Users.Features.Users.Shared;
 
 namespace Modules.Users.Features.Users.UpdateUser;

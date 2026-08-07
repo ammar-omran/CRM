@@ -4,8 +4,8 @@ using CRM.SharedKernel.Domain.Handlers;
 using CRM.SharedKernel.Domain.Results;
 using Modules.Ticketing.Features.Ticket.Shared.Responses;
 using Modules.Ticketing.Infrastructure.Database;
-using TicketManagement.Domain.Entities;
-using TicketEntity = TicketManagement.Domain.Entities.Ticket;
+using TicketManagement.Domain.OrganizationAggregate.
+using TicketEntity = TicketManagement.Domain.OrganizationAggregate.Ticket;
 
 namespace Modules.Ticketing.Features.Ticket.GetTicketById;
 

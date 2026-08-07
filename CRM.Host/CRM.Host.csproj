@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CRM.Base\CRM.Base.csproj" />
-    <ProjectReference Include="..\Modules\Organizations\Modules.Organizations.API\Modules.Organizations.API.csproj" />
     <ProjectReference Include="..\Modules\Users\Modules.Users.API\Modules.Users.API.csproj" />
     <ProjectReference Include="..\Modules\Customers\Modules.Customers.API\Modules.Customers.API.csproj" />
     <ProjectReference Include="..\Modules\Tickets\Modules.Ticketing.API\TicketManagement.API.csproj" />
