@@ -1,6 +1,6 @@
 using CRM.SharedKernel.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
-using TicketManagement.Domain.OrganizationAggregate.
+using TicketManagement.Domain.Entities;
 
 namespace Modules.Ticketing.Infrastructure.Database;
 

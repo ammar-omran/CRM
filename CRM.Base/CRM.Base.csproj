@@ -19,7 +19,6 @@
     <ItemGroup>
         <ProjectReference Include="../SharedKernel/CRM.SharedKernel.Domain/CRM.SharedKernel.Domain.csproj" />
         <ProjectReference Include="../SharedKernel/CRM.SharedKernel.Application/CRM.SharedKernel.Application.csproj" />
-        <ProjectReference Include="../SharedKernel/CRM.SharedKernel.API/CRM.SharedKernel.API.csproj" />
     </ItemGroup>
 
 </Project>

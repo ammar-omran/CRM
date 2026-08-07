@@ -1,4 +1,4 @@
-using TicketManagement.Domain.OrganizationAggregate.
+using TicketManagement.Domain.Entities;
 using Xunit;
 
 namespace TicketManagement.Test.Domain;

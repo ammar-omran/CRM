@@ -24,9 +24,7 @@ public static class UsersModuleRegistration
 		services.AddScoped<IEventPublisher, EventPublisher>();
 		services.AddEmailSender(configuration);
 		services.RegisterApiEndpointsFromAssemblyContaining(typeof(UsersModuleRegistration));
-
 		services.RegisterHandlersFromAssemblyContaining(typeof(UsersModuleRegistration));
-
 		services.AddValidatorsFromAssembly(typeof(UsersModuleRegistration).Assembly);
 
 		return services;

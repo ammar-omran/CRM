@@ -15,7 +15,7 @@ public static class DependencyInjection
 		IConfiguration configuration)
 	{
 		services.AddModuleManifest<CustomersModuleManifest>();
-		services.AddCoreInfrastructure(configuration, "customers");
+		services.AddCoreInfrastructure(configuration);
 		services.AddEmailSender(configuration);
 		services.AddDatabase(configuration);
 

@@ -15,9 +15,9 @@ public static class DependencyInjection
 		this IServiceCollection services,
 		IConfiguration configuration)
 	{
-		services.AddModuleManifest<TicketingModuleManifest>();
-		services.AddCoreInfrastructure(configuration, "ticketing");
 		services.AddDatabase(configuration);
+		services.AddModuleManifest<TicketingModuleManifest>();
+		services.AddCoreInfrastructure(configuration);
 
 		services.AddSingleton<IPolicyFactory, TicketingPolicyFactory>();
 		services.AddScoped<IModuleDatabaseMigrator, TicketingDatabaseMigrator>();

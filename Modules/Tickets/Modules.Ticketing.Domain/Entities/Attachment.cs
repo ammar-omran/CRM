@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System;
 
-namespace TicketManagement.Domain.OrganizationAggregate.
+namespace TicketManagement.Domain.Entities;
 
 public class Attachment
 {

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Modules.Customers.Domain.OrganizationAggregate.
+namespace Modules.Customers.Domain.Entities;
 
 public class Customer
 {

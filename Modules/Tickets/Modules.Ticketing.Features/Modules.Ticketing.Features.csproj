@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="../../../SharedKernel/CRM.SharedKernel.Application/CRM.SharedKernel.Application.csproj" />
-    <ProjectReference Include="../../../SharedKernel/CRM.SharedKernel.API/CRM.SharedKernel.API.csproj" />
     <ProjectReference Include="../Modules.Ticketing.Infrastructure/Modules.Ticketing.Infrastructure.csproj" />
   </ItemGroup>
 

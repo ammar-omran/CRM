@@ -1,7 +1,7 @@
 using System.Net.Sockets;
 using TicketManagement.Domain.Configurations;
 
-namespace TicketManagement.Domain.OrganizationAggregate.
+namespace TicketManagement.Domain.Entities;
 
 public class TicketHistory
 {

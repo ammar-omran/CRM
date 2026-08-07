@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TicketManagement.Domain.OrganizationAggregate.
+using TicketManagement.Domain.Entities;
 
 namespace TicketManagement.Infrastructure.EntitiesConfiguration
 {

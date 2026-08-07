@@ -1,6 +1,6 @@
 using CRM.SharedKernel.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
-using Modules.Customers.Domain.OrganizationAggregate.
+using Modules.Customers.Domain.Entities;
 
 namespace Modules.Customers.Infrastructure.Database;
 

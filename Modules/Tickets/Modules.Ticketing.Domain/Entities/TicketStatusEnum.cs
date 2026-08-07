@@ -1,4 +1,4 @@
-namespace TicketManagement.Domain.OrganizationAggregate.
+namespace TicketManagement.Domain.Entities;
 
 public enum TicketStatusEnum
 {

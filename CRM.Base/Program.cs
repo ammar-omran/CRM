@@ -24,24 +24,24 @@ builder.Services
 					Title = $"CRM.Base.API",
 					Version = "v1"
 				});
-
-				builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-						.AddJwtBearer(options =>
-						{
-							options.TokenValidationParameters = new TokenValidationParameters
-							{
-								ValidateIssuer = true,
-								ValidateAudience = true,
-								ValidateLifetime = true,
-								ValidateIssuerSigningKey = true,
-								ValidIssuer = builder.Configuration["AuthConfiguration:Issuer"],
-								ValidAudience = builder.Configuration["AuthConfiguration:Audience"],
-								IssuerSigningKey = new SymmetricSecurityKey(
-											Encoding.UTF8.GetBytes(builder.Configuration["AuthConfiguration:Key"]
-													?? throw new InvalidOperationException("JWT key is not configured")))
-							};
-						});
 			});
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+		.AddJwtBearer(options =>
+		{
+			options.TokenValidationParameters = new TokenValidationParameters
+			{
+				ValidateIssuer = true,
+				ValidateAudience = true,
+				ValidateLifetime = true,
+				ValidateIssuerSigningKey = true,
+				ValidIssuer = builder.Configuration["AuthConfiguration:Issuer"],
+				ValidAudience = builder.Configuration["AuthConfiguration:Audience"],
+				IssuerSigningKey = new SymmetricSecurityKey(
+							Encoding.UTF8.GetBytes(builder.Configuration["AuthConfiguration:Key"]
+									?? throw new InvalidOperationException("JWT key is not configured")))
+			};
+		});
 
 builder.Services.AddAuthorization(options =>
 {
