@@ -22,8 +22,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseModuleMiddlewares();
 app.MapDefaultEndpoints();
 app.MapApiEndpoints();
+app.UseModuleMiddlewares();
 
 await app.RunAsync();

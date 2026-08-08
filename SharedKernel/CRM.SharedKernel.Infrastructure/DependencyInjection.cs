@@ -50,7 +50,8 @@ public static class DependencyInjection
 			{
 				tracing
 					.AddSource(activityModuleName)
-					.AddAspNetCoreInstrumentation()
+					// ignore default instuments, so controle what to show via middleware
+					// .AddAspNetCoreInstrumentation()
 					.AddHttpClientInstrumentation()
 					.AddSqlClientInstrumentation(options =>
 					{

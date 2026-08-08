@@ -6,6 +6,7 @@ using CRM.SharedKernel.Application.Extensions;
 using Modules.Users.Features.Middlewares;
 using CRM.SharedKernel.Domain.Events;
 using CRM.SharedKernel.Application;
+using CRM.SharedKernel.Application.API.Extensions;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -24,6 +25,8 @@ public static class UsersModuleRegistration
 		services.AddScoped<IEventPublisher, EventPublisher>();
 		services.AddEmailSender(configuration);
 		services.RegisterApiEndpointsFromAssemblyContaining(typeof(UsersModuleRegistration));
+		services.AddSharedKernelModuleMiddlewares();
+		services.RegisterModuleMiddlewaresFromAssemblyContaining(typeof(UsersModuleRegistration));
 		services.RegisterHandlersFromAssemblyContaining(typeof(UsersModuleRegistration));
 		services.AddValidatorsFromAssembly(typeof(UsersModuleRegistration).Assembly);
 

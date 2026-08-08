@@ -1,6 +1,7 @@
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using CRM.SharedKernel.Application.Extensions;
+using CRM.SharedKernel.Application.API.Extensions;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -16,6 +17,8 @@ public static class TicketingModuleRegistration
 	private static IServiceCollection AddTicketingModuleApi(this IServiceCollection services)
 	{
 		services.RegisterApiEndpointsFromAssemblyContaining(typeof(TicketingModuleRegistration));
+		services.AddSharedKernelModuleMiddlewares();
+		services.RegisterModuleMiddlewaresFromAssemblyContaining(typeof(TicketingModuleRegistration));
 		services.RegisterHandlersFromAssemblyContaining(typeof(TicketingModuleRegistration));
 		services.AddValidatorsFromAssembly(typeof(TicketingModuleRegistration).Assembly);
 
