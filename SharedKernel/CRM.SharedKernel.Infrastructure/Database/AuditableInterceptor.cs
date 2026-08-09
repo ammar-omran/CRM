@@ -18,11 +18,11 @@ public class AuditableInterceptor : SaveChangesInterceptor
 		{
 			if (entry.State == EntityState.Added)
 			{
-				entry.Entity.CreatedAtUtc = DateTime.UtcNow;
+				entry.Entity.CreatedAt = DateTime.Now;
 			}
 			else if (entry.State == EntityState.Modified)
 			{
-				entry.Entity.UpdatedAtUtc = DateTime.UtcNow;
+				entry.Entity.UpdatedAt = DateTime.Now;
 			}
 		}
 

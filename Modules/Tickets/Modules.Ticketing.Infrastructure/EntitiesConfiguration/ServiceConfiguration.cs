@@ -1,9 +1,9 @@
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TicketManagement.Domain.Entities;
+using Modules.Ticketing.Domain.Entities;
 
-namespace TicketManagement.Infrastructure.EntitiesConfiguration
+namespace Modules.Ticketing.Infrastructure.EntitiesConfiguration
 {
     public class ServiceConfiguration : IEntityTypeConfiguration<Service>
     {

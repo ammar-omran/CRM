@@ -3,10 +3,10 @@ using Moq;
 using SharedKernel.JWT;
 using TicketManagement.Application.Interfaces.Repositories;
 using TicketManagement.Application.Services;
-using TicketManagement.Domain.Entities;
+using Modules.Ticketing.Domain.Entities;
 using Xunit;
 
-namespace TicketManagement.Test.Services.TicketService;
+namespace Modules.Ticketing.Test.Services.TicketService;
 
 public class HistoryUnityTest
 {

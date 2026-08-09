@@ -7,7 +7,7 @@ using TicketManagement.Features.GetFilteredTickets;
 using TicketManagement.Application.Interfaces.Repositories;
 using TicketManagement.Application.Services;
 
-namespace TicketManagement.Test;
+namespace Modules.Ticketing.Test;
 
 public class TicketServiceTests // 🛠️ Fixed class name and made it public
 {

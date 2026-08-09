@@ -1,4 +1,4 @@
-using TicketManagement.Domain.Entities;
+using Modules.Ticketing.Domain.Entities;
 using TicketManagement.Application.Services;
 using TicketManagement.Infrastructure.Repositories;
 using Microsoft.Extensions.Logging;
@@ -7,7 +7,7 @@ using SharedKernel.JWT;
 using TicketManagement.Application.DTOs;
 using TicketManagement.Application.Interfaces.Repositories;
 
-namespace TicketManagement.Test.Services.TicketService;
+namespace Modules.Ticketing.Test.Services.TicketService;
 
 public class GetFilteredTicketsTest : IAsyncDisposable
 {

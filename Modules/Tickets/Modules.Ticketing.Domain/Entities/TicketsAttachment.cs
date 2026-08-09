@@ -1,26 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+namespace Modules.Ticketing.Domain.Entities;
 
-namespace TicketManagement.Domain.Entities
+public class TicketsAttachment
 {
-    public class TicketsAttachment
-    {
-        public int Id { get; set; }
-        public int TicketId { get; set; }
-        public string FileType {  get; set; }
-        public string FileName {  get; set; }
-        public string FilePath { get; set; }
-        public string Description { get; set; }
-        public int CreatedBy { get; set; }
-
-        public string CreatedByName { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public Ticket Ticket { get; set; }
-    }
+	public int Id { get; set; }
+	public int TicketId { get; set; }
+	public string FileType { get; set; } = string.Empty;
+	public string FileName { get; set; } = string.Empty;
+	public string FilePath { get; set; } = string.Empty;
+	public string Description { get; set; } = string.Empty;
+	public int CreatedBy { get; set; }
+	public string CreatedByName { get; set; } = string.Empty;
+	public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+	public Ticket Ticket { get; set; } = default!;
 }

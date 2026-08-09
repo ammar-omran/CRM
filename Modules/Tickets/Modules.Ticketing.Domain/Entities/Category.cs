@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+namespace Modules.Ticketing.Domain.Entities;
 
-namespace TicketManagement.Domain.Entities
+public class Category
 {
-    public class Category
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public bool IsVisible { get; set; }
-        public int Sort { get; set; }
-        public ICollection<TicketTitle> TicketTitles { get; set; }
-    }
+	public int Id { get; set; }
+	public string Name { get; set; } = string.Empty;
+	public bool IsVisible { get; set; }
+	public int Sort { get; set; }
+	public ICollection<TicketTitle> TicketTitles { get; set; } = [];
 }

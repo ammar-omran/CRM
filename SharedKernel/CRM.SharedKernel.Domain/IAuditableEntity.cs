@@ -2,7 +2,7 @@ namespace CRM.SharedKernel.Domain;
 
 public interface IAuditableEntity
 {
-    DateTime CreatedAtUtc { get; set; }
+	DateTime CreatedAt { get; set; }
 
-    DateTime? UpdatedAtUtc { get; set; }
+	DateTime? UpdatedAt { get; set; }
 }

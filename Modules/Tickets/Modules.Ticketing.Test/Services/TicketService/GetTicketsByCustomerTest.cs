@@ -1,4 +1,4 @@
-using TicketManagement.Domain.Entities;
+using Modules.Ticketing.Domain.Entities;
 using TicketManagement.Application.Services;
 using TicketManagement.Infrastructure.Repositories;
 using SharedKernel.JWT;
@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using TicketManagement.Application.DTOs;
 using TicketManagement.Application.Interfaces.Repositories;
 
-namespace TicketManagement.Test.Services.TicketService;
+namespace Modules.Ticketing.Test.Services.TicketService;
 public class GetTicketsByCustomerTest : IAsyncDisposable
 {
     private readonly TicketRepository _ticketRepo;

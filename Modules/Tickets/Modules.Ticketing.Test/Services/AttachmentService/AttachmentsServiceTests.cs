@@ -6,10 +6,10 @@ using TicketManagement.Application.Configurations;
 using TicketManagement.Application.DTOs;
 using TicketManagement.Application.Interfaces.Repositories;
 using TicketManagement.Application.Services;
-using TicketManagement.Domain.Entities;
+using Modules.Ticketing.Domain.Entities;
 using Xunit;
 
-namespace TicketManagement.Test.Services.AttachmentService
+namespace Modules.Ticketing.Test.Services.AttachmentService
 {
     public class AttachmentsServiceTests
     {

@@ -1,4 +1,4 @@
-namespace TicketManagement.Domain.Entities;
+namespace Modules.Ticketing.Domain.Entities;
 
 public enum AttachmentTypeEnum
 {

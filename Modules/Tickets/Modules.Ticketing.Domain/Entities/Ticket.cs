@@ -1,85 +1,263 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+using CRM.SharedKernel.Domain;
+using CRM.SharedKernel.Domain.Results;
+using Modules.Ticketing.Domain.Configurations;
+using Modules.Ticketing.Domain.Errors;
 
-namespace TicketManagement.Domain.Entities
+namespace Modules.Ticketing.Domain.Entities;
+
+public class Ticket : IAuditableEntity
 {
-    public class Ticket
-    {
-        public int Id { get; set; }
-        public int CategoryId { get; set; }
-        public int? TitleId { get; set; }
-        public int TypeId { get; set; }
-        public int? SeverityId { get; set; }
-        public string Title { get; set; }
-        public string CustomerEmail { get; set; } 
-        public string Description { get; set; }
-        public TicketStatusEnum Status { get; set; } = TicketStatusEnum.Open; 
-        public int CustomerId { get; set; }
-        public string CustomerName { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public int CreatedBy { get; set; }
+	private const int TitleMaxLength = 100;
+	private const int DescriptionMaxLength = 1000;
 
-        public string CreatedByName { get; set; }
+	private static readonly Dictionary<TicketStatusEnum, TicketStatusEnum[]> AllowedStatusTransitions = new()
+	{
+		[TicketStatusEnum.Open] = [TicketStatusEnum.InProgress, TicketStatusEnum.Resolved, TicketStatusEnum.Closed],
+		[TicketStatusEnum.InProgress] = [TicketStatusEnum.Resolved, TicketStatusEnum.Closed],
+		[TicketStatusEnum.Resolved] = [TicketStatusEnum.Closed],
+		[TicketStatusEnum.Closed] = [],
+	};
 
-        public int UpdatedBy { get; set; }
-        public string UpdatedByName { get; set; }
-        public DateTime UpdatedDate { get; set; }
-        public List<TicketHistory> TicketHistories { get; set; } = [];
-        public List<TicketsAttachment> ticketAttachments { get; set; }
-        public List<TicketComment> ticketComments { get; set; } = [];
-        public Category category { get; set; }
-        public Severity Severity { get; set; }
-        public TicketTitle TicketTitle { get; set; }
-        public TicketType Type { get; set; }
+	private Ticket() { }
 
-        /// <summary>
-        /// validate ticket entity
-        /// </summary>
-        /// <returns></returns>
-        public bool validateTicket()
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(Title) || Title.Length > 100)
-                    return false;
+	public int Id { get; private set; }
+	public int CategoryId { get; private set; }
+	public int? TitleId { get; private set; }
+	public int TypeId { get; private set; }
+	public int? SeverityId { get; private set; }
+	public int? GroupId { get; private set; }
+	public string? OtherTitle { get; private set; }
+	public string? Title => TicketTitle?.Name ?? OtherTitle;
+	public string Description { get; private set; } = default!;
+	public TicketStatusEnum Status { get; private set; } = TicketStatusEnum.Open;
+	public DateTime CreatedAt { get; set; }
+	public DateTime? UpdatedAt { get; set; }
 
-                if (Description.Length > 1000)
-                    return false;
+	public List<TicketHistory> TicketHistories { get; private set; } = [];
+	public List<TicketComment> TicketComments { get; private set; } = [];
+	public List<TicketOperator> TicketOperators { get; private set; } = [];
 
-                if (!string.IsNullOrEmpty(CustomerName) && CustomerName.Length > 150)
-                    return false;
+	public Category Category { get; private set; } = default!;
+	public Severity Severity { get; private set; } = default!;
+	public TicketTitle? TicketTitle { get; private set; }
+	public TicketType Type { get; private set; } = default!;
 
-                if (!string.IsNullOrEmpty(CreatedByName) && CreatedByName.Length > 150)
-                    return false;
+	public static Result<Ticket> Create(
+		string? otherTitle,
+		string description,
+		Category category,
+		TicketType type,
+		Operator createdBy,
+		string? creatorRole = null,
+		Severity? severity = null,
+		TicketTitle? ticketTitle = null)
+	{
+		if (category is null)
+			return TicketErrors.CategoryRequired;
 
-                if (!string.IsNullOrEmpty(UpdatedByName) && UpdatedByName.Length > 150)
-                    return false;
-                //throw new ArgumentException("Subject should be less than 100 characters.");
+		if (type is null)
+			return TicketErrors.TypeRequired;
 
-                if (CategoryId == 0)
-                    return false;
+		if (createdBy is null)
+			return TicketErrors.OperatorRequired;
 
-                if (TypeId == 0)
-                    return false;
+		if (ticketTitle is not null && ticketTitle.CategoryId != category.Id)
+			return TicketErrors.InvalidTitleCategory;
 
-                if (CustomerId == 0 && CreatedBy == 0)
-                    return false;
+		var ticket = new Ticket
+		{
+			OtherTitle = ticketTitle is null ? otherTitle : null,
+			Description = description,
+			CategoryId = category.Id,
+			Category = category,
+			TypeId = type.Id,
+			Type = type,
+			SeverityId = severity?.Id,
+			Severity = severity!,
+			TitleId = ticketTitle?.Id,
+			TicketTitle = ticketTitle
+		};
 
-                return true;
+		var errors = ticket.Validate();
+		if (errors.Length > 0)
+			return errors;
 
-            }
-            catch (Exception)
-            {
+		ticket.CreatedAt = DateTime.UtcNow;
+		ticket.TicketHistories.Add(TicketHistory.ForCreated(ticket.Id, createdBy));
 
-                return false;
-            }
-            
-        }
-    }
+		if (!string.IsNullOrWhiteSpace(creatorRole))
+			ticket.TicketOperators.Add(new TicketOperator { TicketId = ticket.Id, OperatorId = createdBy.Id, Role = creatorRole, Operator = createdBy });
+
+		return ticket;
+	}
+
+	public Error[] Validate()
+	{
+		var errors = new List<Error>();
+
+		if (TitleId is null && string.IsNullOrWhiteSpace(OtherTitle))
+			errors.Add(TicketErrors.TitleRequired);
+
+		if (!string.IsNullOrWhiteSpace(OtherTitle) && OtherTitle.Length > TitleMaxLength)
+			errors.Add(Error.Validation("Ticket.InvalidTitle", $"Title must be {TitleMaxLength} characters or fewer."));
+
+		if (string.IsNullOrWhiteSpace(Description) || Description.Length > DescriptionMaxLength)
+			errors.Add(Error.Validation("Ticket.InvalidDescription", $"Description is required and must be {DescriptionMaxLength} characters or fewer."));
+
+		if (CategoryId <= 0)
+			errors.Add(TicketErrors.CategoryRequired);
+
+		if (TypeId <= 0)
+			errors.Add(TicketErrors.TypeRequired);
+
+		return errors.ToArray();
+	}
+
+	public Error? SetTitle(TicketTitle ticketTitle, Operator actedBy)
+	{
+		if (actedBy is null)
+			return TicketErrors.OperatorRequired;
+
+		if (ticketTitle is null)
+			return TicketErrors.TitleRequired;
+
+		if (ticketTitle.CategoryId != CategoryId)
+			return TicketErrors.InvalidTitleCategory;
+
+		var oldValue = Title;
+		TitleId = ticketTitle.Id;
+		TicketTitle = ticketTitle;
+		OtherTitle = null;
+		RecordChange(nameof(Title), oldValue, ticketTitle.Name, actedBy);
+		return null;
+	}
+
+	public Error? SetOtherTitle(string otherTitle, Operator actedBy)
+	{
+		if (actedBy is null)
+			return TicketErrors.OperatorRequired;
+
+		if (string.IsNullOrWhiteSpace(otherTitle) || otherTitle.Length > TitleMaxLength)
+			return Error.Validation("Ticket.InvalidTitle", $"Title is required and must be {TitleMaxLength} characters or fewer.");
+
+		var oldValue = Title;
+		OtherTitle = otherTitle;
+		TitleId = null;
+		TicketTitle = null;
+		RecordChange(nameof(Title), oldValue, otherTitle, actedBy);
+		return null;
+	}
+
+	public Error? SetDescription(string description, Operator actedBy)
+	{
+		if (actedBy is null)
+			return TicketErrors.OperatorRequired;
+
+		if (string.IsNullOrWhiteSpace(description) || description.Length > DescriptionMaxLength)
+			return Error.Validation("Ticket.InvalidDescription", $"Description is required and must be {DescriptionMaxLength} characters or fewer.");
+
+		var oldValue = Description;
+		Description = description;
+		RecordChange(nameof(Description), oldValue, description, actedBy);
+		return null;
+	}
+
+	public Error? SetCategory(Category category, Operator actedBy)
+	{
+		if (actedBy is null)
+			return TicketErrors.OperatorRequired;
+
+		if (category is null)
+			return TicketErrors.CategoryRequired;
+
+		if (TicketTitle is not null && TicketTitle.CategoryId != category.Id)
+			return TicketErrors.InvalidTitleCategory;
+
+		var oldValue = CategoryId.ToString();
+		CategoryId = category.Id;
+		Category = category;
+		RecordChange(nameof(CategoryId), oldValue, category.Name, actedBy);
+		return null;
+	}
+
+	public Error? SetType(TicketType type, Operator actedBy)
+	{
+		if (actedBy is null)
+			return TicketErrors.OperatorRequired;
+
+		if (type is null)
+			return TicketErrors.TypeRequired;
+
+		var oldValue = TypeId.ToString();
+		TypeId = type.Id;
+		Type = type;
+		RecordChange(nameof(TypeId), oldValue, type.Name, actedBy);
+		return null;
+	}
+
+	public Error? SetSeverity(Severity? severity, Operator actedBy)
+	{
+		if (actedBy is null)
+			return TicketErrors.OperatorRequired;
+
+		var oldValue = SeverityId?.ToString();
+		SeverityId = severity?.Id;
+		Severity = severity!;
+		RecordChange(nameof(SeverityId), oldValue, severity?.Name ?? string.Empty, actedBy);
+		return null;
+	}
+
+	public Error? ChangeStatus(TicketStatusEnum newStatus, Operator actedBy)
+	{
+		if (actedBy is null)
+			return TicketErrors.OperatorRequired;
+
+		if (newStatus == Status)
+			return null;
+
+		if (!AllowedStatusTransitions.TryGetValue(Status, out var allowed) || !allowed.Contains(newStatus))
+			return TicketErrors.InvalidStatusTransition;
+
+		var oldStatus = Status;
+		Status = newStatus;
+		RecordChange(nameof(Status), oldStatus.ToString(), newStatus.ToString(), actedBy);
+		return null;
+	}
+
+	public Error? AssignOperator(Operator assignee, string role, Operator actedBy)
+	{
+		if (actedBy is null)
+			return TicketErrors.OperatorRequired;
+
+		if (assignee is null)
+			return Error.Validation("Ticket.InvalidOperator", "Operator is required.");
+
+		if (TicketOperators.Any(o => o.OperatorId == assignee.Id))
+			return TicketErrors.AlreadyAssigned;
+
+		var roleValue = string.IsNullOrWhiteSpace(role) ? "Operator" : role;
+		TicketOperators.Add(new TicketOperator { TicketId = Id, OperatorId = assignee.Id, Role = roleValue, Operator = assignee });
+		RecordChange(TicketAuditHelper.OperatorsField, null, $"{assignee.Id} ({roleValue})", actedBy);
+		return null;
+	}
+
+	public Error? RemoveOperator(int operatorId, Operator actedBy)
+	{
+		if (actedBy is null)
+			return TicketErrors.OperatorRequired;
+
+		var ticketOperator = TicketOperators.FirstOrDefault(o => o.OperatorId == operatorId);
+		if (ticketOperator is null)
+			return Error.NotFound("Ticket.OperatorNotFound", $"Operator {operatorId} is not assigned to this ticket.");
+
+		TicketOperators.Remove(ticketOperator);
+		RecordChange(TicketAuditHelper.OperatorsField, operatorId.ToString(), string.Empty, actedBy);
+		return null;
+	}
+
+	private void RecordChange(string fieldName, string? oldValue, string newValue, Operator actedBy)
+	{
+		UpdatedAt = DateTime.Now;
+		TicketHistories.Add(TicketHistory.ForChange(fieldName, oldValue, newValue, actedBy));
+	}
 }

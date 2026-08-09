@@ -1,7 +1,7 @@
-using TicketManagement.Domain.Entities;
+using Modules.Ticketing.Domain.Entities;
 using Xunit;
 
-namespace TicketManagement.Test.Domain;
+namespace Modules.Ticketing.Test.Domain;
 
 public class TicketHistoryTests
 {

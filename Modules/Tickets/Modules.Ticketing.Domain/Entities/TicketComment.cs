@@ -1,45 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CRM.SharedKernel.Domain.Results;
 
-namespace TicketManagement.Domain.Entities
+namespace Modules.Ticketing.Domain.Entities;
+
+public class TicketComment
 {
-    public class TicketComment
-    {
-        public int Id { get; set; }
-        public int TicketId { get; set; }
-        public int? CreatedBy { get; set; }                                                                               
-        public string? CreatedByName { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
-        public Ticket Ticket { get; set; } = default!;
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
+	private const int ContentMaxLength = 1000;
 
+	private TicketComment() { }
 
-        /// <summary>
-        /// Validate TicketComment entity
-        /// </summary>
-        public bool ValidateTicketComment()
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(CreatedByName) || CreatedByName.Length > 150)
-                    return false;
+	public int Id { get; private set; }
+	public string Content { get; private set; } = string.Empty;
+	public int TicketId { get; private set; }
+	public int Commenter { get; set; }
+	public DateTime CreatedDate { get; private set; } = DateTime.Now;
 
-                if (string.IsNullOrEmpty(Description) || Description.Length > 1000)
-                    return false;
+	public Ticket Ticket { get; private set; } = default!;
 
-                if (TicketId <= 0)
-                    return false;
+	public static Result<TicketComment> Create(int ticketId, string content, int commenter)
+	{
+		var comment = new TicketComment
+		{
+			TicketId = ticketId,
+			Content = content,
+			Commenter = commenter,
+		};
 
-                return true;
-            }
-            catch (Exception)
-            {
+		var errors = comment.Validate();
+		return errors.Length > 0 ? errors : comment;
+	}
 
-                return false;
-            }
-        }
-    }
+	public Error[] Validate()
+	{
+		var errors = new List<Error>();
+
+		if (TicketId <= 0)
+			errors.Add(Error.Validation("Comment.InvalidTicket", "A comment must belong to a ticket."));
+
+		if (string.IsNullOrWhiteSpace(Content) || Content.Length > ContentMaxLength)
+			errors.Add(Error.Validation("Comment.InvalidContent", $"Content is required and must be {ContentMaxLength} characters or fewer."));
+
+		if (Commenter <= 0)
+			errors.Add(Error.Validation("Comment.InvalidAutherId", "A comment must belong to a Commenter."));
+
+		return errors.ToArray();
+	}
 }

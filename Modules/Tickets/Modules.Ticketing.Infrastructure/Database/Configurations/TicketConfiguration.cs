@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TicketManagement.Domain.Entities;
+using Modules.Ticketing.Domain.Entities;
 
 namespace Modules.Ticketing.Infrastructure.Database.Mapping.Entities;
 

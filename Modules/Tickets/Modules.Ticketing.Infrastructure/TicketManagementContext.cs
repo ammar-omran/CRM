@@ -1,9 +1,9 @@
 using System;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
-using TicketManagement.Domain.Entities;
+using Modules.Ticketing.Domain.Entities;
 
-namespace TicketManagement.Infrastructure
+namespace Modules.Ticketing.Infrastructure
 {
     public class TicketManagementContext : DbContext
     {

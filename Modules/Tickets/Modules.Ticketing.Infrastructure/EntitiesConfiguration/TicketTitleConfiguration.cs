@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TicketManagement.Domain.Entities;
+using Modules.Ticketing.Domain.Entities;
 
-namespace TicketManagement.Infrastructure.EntitiesConfiguration
+namespace Modules.Ticketing.Infrastructure.EntitiesConfiguration
 {
     public class TicketTitleConfiguration : IEntityTypeConfiguration<TicketTitle>
     {

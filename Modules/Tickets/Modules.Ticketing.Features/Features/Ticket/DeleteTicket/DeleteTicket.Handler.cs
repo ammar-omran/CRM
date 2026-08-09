@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using CRM.SharedKernel.Domain.Handlers;
 using CRM.SharedKernel.Domain.Results;
 using Modules.Ticketing.Infrastructure.Database;
-using TicketManagement.Domain.Entities;
+using Modules.Ticketing.Domain.Entities;
 
 namespace Modules.Ticketing.Features.Ticket.DeleteTicket;
 
