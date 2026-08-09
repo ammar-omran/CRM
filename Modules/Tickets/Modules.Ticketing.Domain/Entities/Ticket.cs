@@ -25,7 +25,7 @@ public class Ticket : IAuditableEntity
 	public int? TitleId { get; private set; }
 	public int TypeId { get; private set; }
 	public int? SeverityId { get; private set; }
-	public int? GroupId { get; private set; }
+	public string? GroupId { get; private set; }
 	public string? OtherTitle { get; private set; }
 	public string? Title => TicketTitle?.Name ?? OtherTitle;
 	public string Description { get; private set; } = default!;
@@ -50,7 +50,8 @@ public class Ticket : IAuditableEntity
 		Operator createdBy,
 		string? creatorRole = null,
 		Severity? severity = null,
-		TicketTitle? ticketTitle = null)
+		TicketTitle? ticketTitle = null,
+		string? groupId = null)
 	{
 		if (category is null)
 			return TicketErrors.CategoryRequired;
@@ -75,7 +76,8 @@ public class Ticket : IAuditableEntity
 			SeverityId = severity?.Id,
 			Severity = severity!,
 			TitleId = ticketTitle?.Id,
-			TicketTitle = ticketTitle
+			TicketTitle = ticketTitle,
+			GroupId = groupId,
 		};
 
 		var errors = ticket.Validate();
@@ -86,7 +88,13 @@ public class Ticket : IAuditableEntity
 		ticket.TicketHistories.Add(TicketHistory.ForCreated(ticket.Id, createdBy));
 
 		if (!string.IsNullOrWhiteSpace(creatorRole))
-			ticket.TicketOperators.Add(new TicketOperator { TicketId = ticket.Id, OperatorId = createdBy.Id, Role = creatorRole, Operator = createdBy });
+			ticket.TicketOperators.Add(new TicketOperator
+			{
+				TicketId = ticket.Id,
+				OperatorId = createdBy.Id,
+				Role = creatorRole,
+				Operator = createdBy
+			});
 
 		return ticket;
 	}

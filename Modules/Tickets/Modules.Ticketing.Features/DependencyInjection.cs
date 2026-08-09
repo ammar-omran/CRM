@@ -16,7 +16,6 @@ public static class TicketingModuleRegistration
 
 	private static IServiceCollection AddTicketingModuleApi(this IServiceCollection services)
 	{
-		services.RegisterApiEndpointsFromAssemblyContaining(typeof(TicketingModuleRegistration));
 		services.AddSharedKernelModuleMiddlewares();
 		services.RegisterModuleMiddlewaresFromAssemblyContaining(typeof(TicketingModuleRegistration));
 		services.RegisterHandlersFromAssemblyContaining(typeof(TicketingModuleRegistration));

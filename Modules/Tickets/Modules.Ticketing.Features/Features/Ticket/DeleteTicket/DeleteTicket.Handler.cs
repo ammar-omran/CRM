@@ -7,7 +7,7 @@ using Modules.Ticketing.Domain.Entities;
 
 namespace Modules.Ticketing.Features.Ticket.DeleteTicket;
 
-internal interface IDeleteTicketHandler : IHandler
+public interface IDeleteTicketHandler : IHandler
 {
     Task<Result<bool>> HandleAsync(int ticketId, CancellationToken cancellationToken);
 }

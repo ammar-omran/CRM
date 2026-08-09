@@ -17,4 +17,13 @@ public class TicketingDbContext : DbContext, IApplicationDbContext
     }
 
     public DbSet<Ticket> Tickets { get; set; } = null!;
+    public DbSet<Operator> Operators { get; set; } = null!;
+    public DbSet<TicketOperator> TicketOperators { get; set; } = null!;
+    public DbSet<TicketComment> TicketComments { get; set; } = null!;
+    public DbSet<TicketHistory> TicketHistories { get; set; } = null!;
+    public DbSet<Category> Categories { get; set; } = null!;
+    public DbSet<TicketType> TicketTypes { get; set; } = null!;
+    public DbSet<TicketTitle> TicketTitles { get; set; } = null!;
+    public DbSet<Severity> Severities { get; set; } = null!;
+    public DbSet<TicketsAttachment> TicketsAttachments { get; set; } = null!;
 }

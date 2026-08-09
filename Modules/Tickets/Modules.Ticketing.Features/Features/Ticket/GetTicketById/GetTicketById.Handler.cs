@@ -7,7 +7,7 @@ using Modules.Ticketing.Infrastructure.Database;
 
 namespace Modules.Ticketing.Features.Ticket.GetTicketById;
 
-internal interface IGetTicketByIdHandler : IHandler
+public interface IGetTicketByIdHandler : IHandler
 {
 	Task<Result<TicketResponse>> HandleAsync(int ticketId, CancellationToken cancellationToken);
 }
@@ -23,24 +23,32 @@ internal sealed class GetTicketByIdHandler(
 	{
 		var ticket = await context.Tickets
 				.AsNoTracking()
-				.FirstOrDefaultAsync(t => t.Id == ticketId, cancellationToken);
+				.Where(t => t.Id == ticketId)
+				.Select(t => new
+				{
+					t.Id,
+					t.OtherTitle,
+					ReferenceTitle = t.TicketTitle!.Name,
+					t.Description,
+					t.Status,
+					t.CreatedAt,
+					t.UpdatedAt
+				})
+				.FirstOrDefaultAsync(cancellationToken);
 
 		if (ticket is null)
 		{
 			logger.LogInformation("Ticket with ID {TicketId} not found", ticketId);
-			return CRM.SharedKernel.Domain.Results.Error.NotFound("Ticket.NotFound", $"Ticket with ID {ticketId} was not found.");
+			return Error.NotFound("Ticket.NotFound", $"Ticket with ID {ticketId} was not found.");
 		}
 
 		logger.LogInformation("Retrieved ticket with ID: {TicketId}", ticketId);
 		return new TicketResponse(
 				ticket.Id,
-				ticket.Title,
+				ticket.ReferenceTitle ?? ticket.OtherTitle,
 				ticket.Description,
 				ticket.Status.ToString(),
-				ticket.CustomerEmail,
-				ticket.CustomerName,
-				ticket.CreatedByName,
-				ticket.CreatedDate,
-				ticket.UpdatedDate);
+				ticket.CreatedAt,
+				ticket.UpdatedAt);
 	}
 }

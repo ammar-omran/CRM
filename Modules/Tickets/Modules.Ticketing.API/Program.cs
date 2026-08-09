@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTicketingModule(builder.Configuration);
 builder.Services.AddSwagger();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddControllers();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>().AddProblemDetails();
 
 var app = builder.Build();
@@ -23,7 +24,7 @@ app.UseAuthorization();
 
 app.UseModuleMiddlewares();
 
-app.MapApiEndpoints();
+app.MapControllers();
 app.MapDefaultEndpoints();
 
 await app.RunAsync();

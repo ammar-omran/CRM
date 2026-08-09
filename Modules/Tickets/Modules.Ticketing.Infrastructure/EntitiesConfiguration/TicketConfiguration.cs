@@ -1,52 +1,51 @@
-using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Modules.Ticketing.Domain.Entities;
 
-namespace Modules.Ticketing.Infrastructure.EntitiesConfiguration
+namespace Modules.Ticketing.Infrastructure.EntitiesConfiguration;
+
+public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
 {
-    public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
-    {
-        public void Configure(EntityTypeBuilder<Ticket> builder)
-        {
-            builder.HasKey(u => u.Id);
+	public void Configure(EntityTypeBuilder<Ticket> builder)
+	{
+		builder.HasKey(t => t.Id);
 
-            builder.Property(th => th.CategoryId).IsRequired();
-            builder.Property(th => th.TypeId).IsRequired();
-            builder.Property(th => th.SeverityId);
-            builder.HasOne(t => t.Severity)
-                   .WithMany()
-                   .HasForeignKey(t => t.SeverityId)
-                   .OnDelete(DeleteBehavior.SetNull);
-            builder.Property(th => th.TitleId);
-            builder.HasOne(t => t.TicketTitle)
-                   .WithMany()
-                   .HasForeignKey(t => t.TitleId)
-                   .OnDelete(DeleteBehavior.Restrict);
-            builder.Property(th => th.Title).HasMaxLength(100);
-            builder.Property(th => th.Description).IsRequired().HasMaxLength(1000);
-            builder.Property(th => th.Status).IsRequired();
-            builder.Property(th => th.CustomerId).IsRequired();
-            builder.Property(th => th.CustomerName).IsRequired().HasMaxLength(150);
+		builder.Property(t => t.OtherTitle).HasMaxLength(100);
+		builder.Property(t => t.Description).IsRequired().HasMaxLength(1000);
+		builder.Property(t => t.CategoryId).IsRequired();
+		builder.Property(t => t.TypeId).IsRequired();
+		builder.Property(t => t.Status).HasConversion<short>();
+		builder.Property(t => t.CreatedAt).HasDefaultValueSql("GETDATE()");
+		builder.Property(t => t.UpdatedAt);
 
-            builder.HasMany(t => t.TicketHistories)
-                   .WithOne(th => th.Ticket)
-                   .HasForeignKey(th => th.TicketId)
-                   .OnDelete(DeleteBehavior.Cascade);
+		builder.HasOne(t => t.Category)
+			.WithMany()
+			.HasForeignKey(t => t.CategoryId)
+			.OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasMany(t => t.ticketAttachments)
-                   .WithOne(th => th.Ticket)
-                   .HasForeignKey(th => th.TicketId)
-                   .OnDelete(DeleteBehavior.Cascade);
+		builder.HasOne(t => t.Type)
+			.WithMany()
+			.HasForeignKey(t => t.TypeId)
+			.OnDelete(DeleteBehavior.Restrict);
 
-            builder.Property(th => th.CreatedDate)
-            .HasDefaultValueSql("GETDATE()");
+		builder.HasOne(t => t.Severity)
+			.WithMany()
+			.HasForeignKey(t => t.SeverityId)
+			.OnDelete(DeleteBehavior.SetNull);
 
-            builder.Property(th => th.UpdatedDate)
-            .HasDefaultValueSql("GETDATE()");
+		builder.HasOne(t => t.TicketTitle)
+			.WithMany()
+			.HasForeignKey(t => t.TitleId)
+			.OnDelete(DeleteBehavior.Restrict);
 
-            builder.Property(t => t.Status)
-                .HasConversion<short>();
-        }
-    }
+		builder.HasMany(t => t.TicketHistories)
+			.WithOne(th => th.Ticket)
+			.HasForeignKey(th => th.TicketId)
+			.OnDelete(DeleteBehavior.Cascade);
+
+		builder.HasMany(t => t.TicketOperators)
+			.WithOne(to => to.Ticket)
+			.HasForeignKey(to => to.TicketId)
+			.OnDelete(DeleteBehavior.Cascade);
+	}
 }
