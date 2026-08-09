@@ -35,6 +35,7 @@ public static class DependencyInjection
 
 		services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
 		services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+		services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 		return services;
 	}
