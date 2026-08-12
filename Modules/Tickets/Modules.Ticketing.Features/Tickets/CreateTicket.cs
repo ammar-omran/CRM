@@ -8,7 +8,7 @@ using Modules.Ticketing.Domain.Entities;
 using TicketEntity = Modules.Ticketing.Domain.Entities.Ticket;
 using Microsoft.Extensions.Configuration;
 
-namespace Modules.Ticketing.Features.Ticket.CreateTicket;
+namespace Modules.Ticketing.Features.Tickets;
 
 public sealed record CreateTicketRequest(
 	string? OtherTitle,

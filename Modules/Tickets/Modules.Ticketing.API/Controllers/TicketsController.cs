@@ -3,11 +3,7 @@ using CRM.SharedKernel.Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Modules.Ticketing.Domain.Policies;
-using Modules.Ticketing.Features.Ticket.CreateTicket;
-using Modules.Ticketing.Features.Ticket.DeleteTicket;
-using Modules.Ticketing.Features.Ticket.GetTicketById;
-using Modules.Ticketing.Features.Ticket.GetTickets;
-using Modules.Ticketing.Features.Ticket.UpdateTicket;
+using Modules.Ticketing.Features.Tickets;
 
 namespace Modules.Ticketing.API.Controllers;
 

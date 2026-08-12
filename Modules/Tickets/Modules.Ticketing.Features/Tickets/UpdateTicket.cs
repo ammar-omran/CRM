@@ -6,7 +6,7 @@ using CRM.SharedKernel.Infrastructure.Services;
 using Modules.Ticketing.Infrastructure.Database;
 using Modules.Ticketing.Domain.Entities;
 
-namespace Modules.Ticketing.Features.Ticket.UpdateTicket;
+namespace Modules.Ticketing.Features.Tickets;
 
 public sealed record UpdateTicketRequest(
 		int Id,

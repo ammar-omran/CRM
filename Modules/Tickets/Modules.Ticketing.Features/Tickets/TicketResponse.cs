@@ -1,4 +1,4 @@
-namespace Modules.Ticketing.Features.Ticket.Shared.Responses;
+namespace Modules.Ticketing.Features.Tickets;
 
 public sealed record TicketResponse(
 	int Id,

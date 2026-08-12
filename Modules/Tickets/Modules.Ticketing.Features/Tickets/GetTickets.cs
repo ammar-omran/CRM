@@ -1,10 +1,10 @@
 using CRM.SharedKernel.Domain.Handlers;
 using CRM.SharedKernel.Domain.Results;
 using Modules.Ticketing.Infrastructure.Database;
-using Modules.Ticketing.Features.Ticket.Shared.Responses;
+using Modules.Ticketing.Features.Tickets;
 using Microsoft.EntityFrameworkCore;
 
-namespace Modules.Ticketing.Features.Ticket.GetTickets;
+namespace Modules.Ticketing.Features.Tickets;
 
 public interface IGetTicketsHandler : IHandler
 {

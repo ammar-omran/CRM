@@ -2,10 +2,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using CRM.SharedKernel.Domain.Handlers;
 using CRM.SharedKernel.Domain.Results;
-using Modules.Ticketing.Features.Ticket.Shared.Responses;
+using Modules.Ticketing.Features.Tickets;
 using Modules.Ticketing.Infrastructure.Database;
 
-namespace Modules.Ticketing.Features.Ticket.GetTicketById;
+namespace Modules.Ticketing.Features.Tickets;
 
 public interface IGetTicketByIdHandler : IHandler
 {
