@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text.Json;
 using CRM.SharedKernel.Application.API.Abstractions;
 using CRM.SharedKernel.Domain.Events;
@@ -97,6 +98,10 @@ public static class MapEndpointExtensions
 	{
 		var logger = loggerFactory.CreateLogger("InternalEvents");
 
+		var activity = Activity.Current;
+		activity?.SetTag("module.event", envelope.EventName);
+		activity?.SetTag("module.event.id", envelope.EventId);
+
 		var matchingHandlers = handlers
 			.Where(h => h.EventName.Equals(envelope.EventName, StringComparison.OrdinalIgnoreCase))
 			.ToList();
@@ -122,6 +127,18 @@ public static class MapEndpointExtensions
 				return Results.BadRequest(new { error = $"Payload could not be deserialized for event '{envelope.EventName}'." });
 			}
 		}
+
+		// Record the handled event on the receiving span (like an exception) so it
+		// appears in the span's Events panel in Aspire.
+		Activity.Current?.AddEvent(new ActivityEvent(
+			name: envelope.EventName,
+			timestamp: DateTimeOffset.UtcNow,
+			tags: new ActivityTagsCollection
+			{
+				["module.event.id"] = envelope.EventId.ToString(),
+				["module.event.handlers"] = matchingHandlers.Count.ToString(),
+				["module.event.outcome"] = "handled"
+			}));
 
 		return Results.Ok(new { envelope.EventName, envelope.EventId });
 	}

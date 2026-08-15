@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
@@ -33,6 +34,16 @@ public sealed class ModuleEventPublisher(
 			Guid.NewGuid(),
 			DateTime.UtcNow,
 			JsonSerializer.SerializeToElement(@event));
+
+		// Record the event on the span of the endpoint that triggered it (like an exception),
+		// so it appears in the span's Events panel in Aspire.
+		Activity.Current?.AddEvent(new ActivityEvent(
+			name: eventName,
+			timestamp: DateTimeOffset.UtcNow,
+			tags: new ActivityTagsCollection
+			{
+				["module.event.id"] = envelope.EventId.ToString()
+			}));
 
 		var client = httpClientFactory.CreateClient();
 		client.BaseAddress = new Uri(baseUrl.TrimEnd('/') + "/");
