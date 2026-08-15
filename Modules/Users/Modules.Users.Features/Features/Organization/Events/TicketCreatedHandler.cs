@@ -8,9 +8,9 @@ namespace Modules.Users.Features.Organization.Events;
 /// Agent assignment is not yet implemented — this only logs receipt.
 /// </summary>
 internal sealed class TicketCreatedHandler(ILogger<TicketCreatedHandler> logger)
-	: IModuleEventHandler<TicketCreatedEvent>
+	: ModuleEventHandler<TicketCreatedEvent>
 {
-	public Task HandleAsync(TicketCreatedEvent @event, CancellationToken cancellationToken = default)
+	protected override Task HandleAsync(TicketCreatedEvent @event, CancellationToken cancellationToken = default)
 	{
 		logger.LogInformation(
 			"[Stub] Ticket {TicketId} was created. Agent assignment is not yet implemented.",

@@ -1,6 +1,5 @@
 using System.Text.Json;
 using CRM.SharedKernel.Application.API.Abstractions;
-using CRM.SharedKernel.Application.Events;
 using CRM.SharedKernel.Domain.Events;
 using CRM.SharedKernel.Domain.Modules;
 using Microsoft.AspNetCore.Builder;
@@ -84,7 +83,7 @@ public static class MapEndpointExtensions
 		});
 
 		// Receives module events delivered by the platform and dispatches them to the
-		// matching local handler by event name (strategy pattern).
+		// matching local handlers by event name (strategy pattern).
 		app.MapPost("/internal/events", HandleInternalEvent);
 
 		return app;
@@ -92,39 +91,36 @@ public static class MapEndpointExtensions
 
 	private static async Task<IResult> HandleInternalEvent(
 		ModuleEventEnvelope envelope,
-		ModuleEventHandlerRegistry registry,
-		IServiceProvider services,
+		IEnumerable<IModuleEventHandler> handlers,
 		ILoggerFactory loggerFactory,
 		CancellationToken cancellationToken)
 	{
 		var logger = loggerFactory.CreateLogger("InternalEvents");
 
-		if (!registry.TryResolve(envelope.EventName, out var eventType))
+		var matchingHandlers = handlers
+			.Where(h => h.EventName.Equals(envelope.EventName, StringComparison.OrdinalIgnoreCase))
+			.ToList();
+
+		if (matchingHandlers.Count == 0)
 		{
 			logger.LogWarning("Ignoring event {EventName}: no handler registered.", envelope.EventName);
 			return Results.NotFound(new { error = $"No handler is registered for event '{envelope.EventName}'." });
 		}
 
-		var payload = envelope.Payload.Deserialize(eventType);
-		if (payload is null)
+		foreach (var handler in matchingHandlers)
 		{
-			logger.LogWarning("Ignoring event {EventName}: payload could not be deserialized.", envelope.EventName);
-			return Results.BadRequest(new { error = $"Payload could not be deserialized for event '{envelope.EventName}'." });
-		}
-
-		var handlerInterface = typeof(IModuleEventHandler<>).MakeGenericType(eventType);
-		var handlers = services.GetServices(handlerInterface).ToList();
-
-		if (handlers.Count == 0)
-		{
-			logger.LogWarning("Ignoring event {EventName}: no handler instance resolved.", envelope.EventName);
-			return Results.NotFound(new { error = $"No handler instance is registered for event '{envelope.EventName}'." });
-		}
-
-		var handleMethod = handlerInterface.GetMethod(nameof(IModuleEventHandler<IModuleEvent>.HandleAsync));
-		foreach (var handler in handlers)
-		{
-			await (Task)handleMethod.Invoke(handler, [payload, cancellationToken])!;
+			try
+			{
+				await handler.HandleAsync(envelope.Payload, cancellationToken);
+			}
+			catch (JsonException ex)
+			{
+				logger.LogWarning(
+					ex,
+					"Ignoring event {EventName}: payload could not be deserialized by {HandlerType}.",
+					envelope.EventName, handler.GetType().Name);
+				return Results.BadRequest(new { error = $"Payload could not be deserialized for event '{envelope.EventName}'." });
+			}
 		}
 
 		return Results.Ok(new { envelope.EventName, envelope.EventId });

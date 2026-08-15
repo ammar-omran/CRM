@@ -22,12 +22,14 @@ public sealed class ModuleEventPublisher(
 	public async Task PublishAsync<TEvent>(TEvent @event, CancellationToken cancellationToken = default)
 		where TEvent : IModuleEvent
 	{
+		var eventName = ModuleEventName.Of(typeof(TEvent));
+
 		var baseUrl = configuration[PlatformBaseUrlConfigKey]
 			?? throw new InvalidOperationException(
 				$"Configuration key '{PlatformBaseUrlConfigKey}' is not set. The module cannot reach the platform to publish events.");
 
 		var envelope = new ModuleEventEnvelope(
-			@event.EventName,
+			eventName,
 			Guid.NewGuid(),
 			DateTime.UtcNow,
 			JsonSerializer.SerializeToElement(@event));
@@ -41,10 +43,10 @@ public sealed class ModuleEventPublisher(
 		{
 			logger.LogError(
 				"Failed to publish module event {EventName}: platform returned {StatusCode}.",
-				@event.EventName, (int)request.StatusCode);
+				eventName, (int)request.StatusCode);
 			return;
 		}
 
-		logger.LogDebug("Published module event {EventName} ({EventId}).", @event.EventName, envelope.EventId);
+		logger.LogDebug("Published module event {EventName} ({EventId}).", eventName, envelope.EventId);
 	}
 }

@@ -1,7 +1,7 @@
-
 namespace CRM.SharedKernel.Domain.Events;
 
-public interface IModuleEvent
-{
-    string EventName { get; }
-}
+/// <summary>
+/// Marker interface for module events exchanged between modules through the platform.
+/// The platform-wide event name is declared via <see cref="ModuleEventAttribute"/>.
+/// </summary>
+public interface IModuleEvent;
