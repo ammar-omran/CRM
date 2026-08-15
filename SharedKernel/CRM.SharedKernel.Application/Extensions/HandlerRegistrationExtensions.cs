@@ -1,5 +1,7 @@
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using CRM.SharedKernel.Application.Events;
 using CRM.SharedKernel.Domain.Events;
 using CRM.SharedKernel.Domain.Handlers;
 
@@ -22,6 +24,12 @@ public static class HandlerRegistrationExtensions
 
 		// Register event handlers (IEventHandler implementations)
 		RegisterEventHandlers(services, assembly);
+
+		// Register module event handlers (IModuleEventHandler<TEvent> implementations)
+		RegisterModuleEventHandlers(services, assembly);
+
+		// The registry maps event names to local event DTO types based on the registered handlers.
+		services.TryAddSingleton<ModuleEventHandlerRegistry>(_ => new ModuleEventHandlerRegistry(services));
 
 		return services;
 	}
@@ -63,6 +71,26 @@ public static class HandlerRegistrationExtensions
 			foreach (var interfaceType in handlerInterfaces)
 			{
 				// Register as both the specific IEventHandler<T> and the non-generic IEventHandler
+				services.AddScoped(interfaceType, implementationType);
+			}
+		}
+	}
+
+	private static void RegisterModuleEventHandlers(IServiceCollection services, Assembly assembly)
+	{
+		var handlerTypes = assembly.GetTypes()
+			.Where(t => t is { IsClass: true, IsAbstract: false }
+				&& t.GetInterfaces().Any(i => i.IsGenericType
+					&& i.GetGenericTypeDefinition() == typeof(IModuleEventHandler<>)))
+			.ToList();
+
+		foreach (var implementationType in handlerTypes)
+		{
+			var handlerInterfaces = implementationType.GetInterfaces()
+				.Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IModuleEventHandler<>));
+
+			foreach (var interfaceType in handlerInterfaces)
+			{
 				services.AddScoped(interfaceType, implementationType);
 			}
 		}

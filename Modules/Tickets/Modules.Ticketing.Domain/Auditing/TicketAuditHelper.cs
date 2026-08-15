@@ -1,6 +1,6 @@
 using Modules.Ticketing.Domain.Entities;
 
-namespace Modules.Ticketing.Domain.Configurations;
+namespace Modules.Ticketing.Domain.Auditing;
 
 public static class TicketAuditHelper
 {

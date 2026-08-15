@@ -2,6 +2,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using CRM.SharedKernel.Application.API.Abstractions;
+using CRM.SharedKernel.Application.Events;
 using CRM.SharedKernel.Application.Extensions;
 using Modules.Users.Features.Middlewares;
 using CRM.SharedKernel.Domain.Events;
@@ -29,6 +30,10 @@ public static class UsersModuleRegistration
 		services.RegisterModuleMiddlewaresFromAssemblyContaining(typeof(UsersModuleRegistration));
 		services.RegisterHandlersFromAssemblyContaining(typeof(UsersModuleRegistration));
 		services.AddValidatorsFromAssembly(typeof(UsersModuleRegistration).Assembly);
+
+		// Module events: forward published events to the platform for delivery to subscribers.
+		services.AddHttpClient();
+		services.AddScoped<IModuleEventPublisher, ModuleEventPublisher>();
 
 		return services;
 	}

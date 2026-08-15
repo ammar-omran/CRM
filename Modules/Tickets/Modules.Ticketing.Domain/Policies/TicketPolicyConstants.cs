@@ -1,11 +1,11 @@
 namespace Modules.Ticketing.Domain.Policies;
 
-public static class TicketPolicyConstants
+public class TicketPolicyConstants
 {
-    public const string ViewPolicy = "ticketing:view";
-    public const string CreatePolicy = "ticketing:create";
-    public const string UpdatePolicy = "ticketing:update";
-    public const string DeletePolicy = "ticketing:delete";
-    public const string AssignPolicy = "ticketing:assign";
-    public const string ReplyPolicy = "ticketing:reply";
+	public const string ViewPolicy = "ticket:view";
+	public const string CreatePolicy = "ticket:create";
+	public const string UpdatePolicy = "ticket:update";
+	public const string DeletePolicy = "ticket:delete";
+	public const string AssignPolicy = "ticket:assign";
+	public const string ReplyPolicy = "ticket:reply";
 }

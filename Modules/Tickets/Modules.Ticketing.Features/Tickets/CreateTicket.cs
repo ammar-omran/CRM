@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using CRM.SharedKernel.Domain.Events;
 using CRM.SharedKernel.Domain.Handlers;
 using CRM.SharedKernel.Domain.Results;
 using CRM.SharedKernel.Infrastructure.Services;
+using Modules.Ticketing.Features.Tickets.Events;
 using Modules.Ticketing.Infrastructure.Database;
 using Modules.Ticketing.Domain.Entities;
 using TicketEntity = Modules.Ticketing.Domain.Entities.Ticket;
@@ -32,7 +34,8 @@ public interface ICreateTicketHandler : IHandler
 internal sealed class CreateTicketHandler(
 	TicketingDbContext context,
 	ILogger<CreateTicketHandler> logger,
-	IConfiguration configurations)
+	IConfiguration configurations,
+	IModuleEventPublisher moduleEventPublisher)
 	: ICreateTicketHandler
 {
 	public async Task<Result<CreateTicketResponse>> HandleAsync(
@@ -102,7 +105,7 @@ internal sealed class CreateTicketHandler(
 			currentUser.Role,
 			severity,
 			ticketTitle,
-			groupId.ToString());
+			groupId?.ToString() ?? "");
 
 		if (createResult.IsError)
 		{
@@ -114,6 +117,9 @@ internal sealed class CreateTicketHandler(
 		await context.SaveChangesAsync(cancellationToken);
 
 		logger.LogInformation("Ticket created with ID: {TicketId}", ticket.Id);
+
+		await moduleEventPublisher.PublishAsync(new TicketCreatedEvent(ticket.Id), cancellationToken);
+
 		return new CreateTicketResponse(ticket.Id, ticket.Title, ticket.Status.ToString());
 	}
 

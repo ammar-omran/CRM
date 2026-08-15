@@ -78,6 +78,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapModuleEndpoints();
+app.MapInternalEndpoints();
 app.MapReverseProxy();
 
 await app.RunAsync();

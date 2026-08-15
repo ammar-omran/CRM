@@ -1,4 +1,5 @@
 using CRM.Base.Modules.DependencyResolution;
+using CRM.Base.Modules.Events;
 using CRM.Base.Modules.Persistence;
 using CRM.Base.Modules.Registry;
 using CRM.Base.Modules.Registration;
@@ -44,6 +45,9 @@ public static class ModuleRegistrationExtensions
 
         // Runtime catalog (startup loader + in-memory cache)
         services.AddSingleton<ModuleCatalog>();
+
+        // Event dispatcher (delivers module events to subscribed modules)
+        services.AddSingleton<IPlatformEventDispatcher, PlatformEventDispatcher>();
 
         // In-memory registry (used by validators and registrar)
         services.AddSingleton<IModuleRegistry, ModuleRegistry>();

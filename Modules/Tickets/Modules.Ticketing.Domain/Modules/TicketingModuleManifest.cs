@@ -1,4 +1,6 @@
+using System.Reflection;
 using CRM.SharedKernel.Domain.Modules;
+using Modules.Ticketing.Domain.Policies;
 
 namespace Modules.Ticketing.Domain.Modules;
 
@@ -68,15 +70,20 @@ public sealed class TicketingModuleManifest : IModuleManifest
 
 	/// <inheritdoc />
 	public IReadOnlyList<ModulePolicy> Policies { get; } =
-	[
-		new ModulePolicy { Name = "tickets:view", Description = "Allows viewing ticket information." },
-		new ModulePolicy { Name = "tickets:create", Description = "Allows creating new tickets." },
-		new ModulePolicy { Name = "tickets:update", Description = "Allows updating ticket information." },
-		new ModulePolicy { Name = "tickets:delete", Description = "Allows deleting tickets." }
-	];
+		 typeof(TicketPolicyConstants)
+			.GetFields(BindingFlags.Public | BindingFlags.Static)
+			.Where(f => f.IsLiteral && f.FieldType == typeof(string))
+			.Select(f => new ModulePolicy
+			{
+				Name = (string)f.GetRawConstantValue()!
+			})
+		.ToArray();
 
 	/// <inheritdoc />
-	public ModuleEvents? Events { get; } = null;
+	public ModuleEvents? Events { get; } = new()
+	{
+		Published = ["ticketing.ticket-created"]
+	};
 
 	/// <inheritdoc />
 	public ModuleHealth Health { get; } = new()

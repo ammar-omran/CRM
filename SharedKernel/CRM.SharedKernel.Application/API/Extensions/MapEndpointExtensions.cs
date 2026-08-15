@@ -1,10 +1,14 @@
+using System.Text.Json;
 using CRM.SharedKernel.Application.API.Abstractions;
+using CRM.SharedKernel.Application.Events;
+using CRM.SharedKernel.Domain.Events;
 using CRM.SharedKernel.Domain.Modules;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -79,6 +83,50 @@ public static class MapEndpointExtensions
 				: Results.Ok(manifest);
 		});
 
+		// Receives module events delivered by the platform and dispatches them to the
+		// matching local handler by event name (strategy pattern).
+		app.MapPost("/internal/events", HandleInternalEvent);
+
 		return app;
+	}
+
+	private static async Task<IResult> HandleInternalEvent(
+		ModuleEventEnvelope envelope,
+		ModuleEventHandlerRegistry registry,
+		IServiceProvider services,
+		ILoggerFactory loggerFactory,
+		CancellationToken cancellationToken)
+	{
+		var logger = loggerFactory.CreateLogger("InternalEvents");
+
+		if (!registry.TryResolve(envelope.EventName, out var eventType))
+		{
+			logger.LogWarning("Ignoring event {EventName}: no handler registered.", envelope.EventName);
+			return Results.NotFound(new { error = $"No handler is registered for event '{envelope.EventName}'." });
+		}
+
+		var payload = envelope.Payload.Deserialize(eventType);
+		if (payload is null)
+		{
+			logger.LogWarning("Ignoring event {EventName}: payload could not be deserialized.", envelope.EventName);
+			return Results.BadRequest(new { error = $"Payload could not be deserialized for event '{envelope.EventName}'." });
+		}
+
+		var handlerInterface = typeof(IModuleEventHandler<>).MakeGenericType(eventType);
+		var handlers = services.GetServices(handlerInterface).ToList();
+
+		if (handlers.Count == 0)
+		{
+			logger.LogWarning("Ignoring event {EventName}: no handler instance resolved.", envelope.EventName);
+			return Results.NotFound(new { error = $"No handler instance is registered for event '{envelope.EventName}'." });
+		}
+
+		var handleMethod = handlerInterface.GetMethod(nameof(IModuleEventHandler<IModuleEvent>.HandleAsync));
+		foreach (var handler in handlers)
+		{
+			await (Task)handleMethod.Invoke(handler, [payload, cancellationToken])!;
+		}
+
+		return Results.Ok(new { envelope.EventName, envelope.EventId });
 	}
 }

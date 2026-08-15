@@ -105,7 +105,8 @@ public sealed class UsersModuleManifest : IModuleManifest
 	/// <inheritdoc />
 	public ModuleEvents? Events { get; } = new()
 	{
-		Published = ["OrganizationCreatedEvent"]
+		Published = ["users.organization-created"],
+		Subscribed = ["ticketing.ticket-created"]
 	};
 
 

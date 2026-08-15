@@ -1,4 +1,4 @@
-using Modules.Ticketing.Domain.Configurations;
+using Modules.Ticketing.Domain.Auditing;
 
 namespace Modules.Ticketing.Domain.Entities;
 

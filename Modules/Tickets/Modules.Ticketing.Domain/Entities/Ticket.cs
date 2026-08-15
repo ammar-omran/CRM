@@ -1,6 +1,6 @@
 using CRM.SharedKernel.Domain;
 using CRM.SharedKernel.Domain.Results;
-using Modules.Ticketing.Domain.Configurations;
+using Modules.Ticketing.Domain.Auditing;
 using Modules.Ticketing.Domain.Errors;
 
 namespace Modules.Ticketing.Domain.Entities;
