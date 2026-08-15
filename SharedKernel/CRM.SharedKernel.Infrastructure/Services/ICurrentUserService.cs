@@ -1,7 +1,7 @@
 namespace CRM.SharedKernel.Infrastructure.Services;
 
 public sealed record CurrentUser(
-	int? UserId,
+	string? UserId,
 	string? Name,
 	string? Email,
 	string? Role,

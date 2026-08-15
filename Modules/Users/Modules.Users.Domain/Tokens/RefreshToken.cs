@@ -17,18 +17,6 @@ public class RefreshToken : IAuditableEntity
 
     public User User { get; set; } = null!;
 
-    public DateTime CreatedAtUtc { get; set; }
-    public DateTime? UpdatedAtUtc { get; set; }
-
-    public DateTime CreatedAt
-    {
-        get => CreatedAtUtc;
-        set => CreatedAtUtc = value;
-    }
-
-    public DateTime? UpdatedAt
-    {
-        get => UpdatedAtUtc;
-        set => UpdatedAtUtc = value;
-    }
+    public DateTime CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 }

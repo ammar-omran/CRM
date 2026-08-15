@@ -44,7 +44,6 @@ internal sealed class CreateTicketHandler(
 		CancellationToken cancellationToken)
 	{
 		var category = await context.Categories
-			.AsNoTracking()
 			.FirstOrDefaultAsync(c => c.Id == request.CategoryId, cancellationToken);
 
 		if (category is null)
@@ -53,7 +52,6 @@ internal sealed class CreateTicketHandler(
 		}
 
 		var type = await context.TicketTypes
-			.AsNoTracking()
 			.FirstOrDefaultAsync(t => t.Id == request.TypeId, cancellationToken);
 
 		if (type is null)
@@ -65,7 +63,6 @@ internal sealed class CreateTicketHandler(
 		if (request.TitleId is not null)
 		{
 			ticketTitle = await context.TicketTitles
-				.AsNoTracking()
 				.FirstOrDefaultAsync(t => t.Id == request.TitleId, cancellationToken);
 
 			if (ticketTitle is null)
@@ -78,7 +75,6 @@ internal sealed class CreateTicketHandler(
 		if (request.SeverityId is not null)
 		{
 			severity = await context.Severities
-				.AsNoTracking()
 				.FirstOrDefaultAsync(s => s.Id == request.SeverityId, cancellationToken);
 
 			if (severity is null)
@@ -133,7 +129,7 @@ internal sealed class CreateTicketHandler(
 		}
 
 		var @operator = await context.Operators
-			.FirstOrDefaultAsync(o => o.RefId == currentUser.UserId.Value, cancellationToken);
+			.FirstOrDefaultAsync(o => o.RefId == currentUser.UserId, cancellationToken);
 
 		if (@operator is not null)
 		{
@@ -142,7 +138,7 @@ internal sealed class CreateTicketHandler(
 
 		@operator = new Operator
 		{
-			RefId = currentUser.UserId.Value,
+			RefId = currentUser.UserId,
 			Name = currentUser.Name ?? string.Empty,
 			Email = currentUser.Email ?? string.Empty
 		};

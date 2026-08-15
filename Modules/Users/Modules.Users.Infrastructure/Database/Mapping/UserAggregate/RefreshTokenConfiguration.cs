@@ -16,8 +16,8 @@ public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
 		builder.Property(e => e.ExpiryDate).IsRequired();
 		builder.Property(e => e.Invalidated).IsRequired();
 		builder.Property(e => e.UserId).IsRequired();
-		builder.Property(e => e.CreatedAtUtc).IsRequired();
-		builder.Property(e => e.UpdatedAtUtc);
+		builder.Property(e => e.CreatedAt).IsRequired();
+		builder.Property(e => e.UpdatedAt);
 
 		builder.HasOne(e => e.User)
 				.WithMany()

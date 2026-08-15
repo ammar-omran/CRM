@@ -1,7 +1,7 @@
 {
   "$schema": "https://www.schemastore.org/launchsettings.json",
   "profiles": {
-    "TicketManagement.API": {
+    "Modules.Ticketing.API": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

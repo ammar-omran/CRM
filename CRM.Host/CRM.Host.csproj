@@ -17,7 +17,7 @@
     <ProjectReference Include="..\CRM.Base\CRM.Base.csproj" />
     <ProjectReference Include="..\Modules\Users\Modules.Users.API\Modules.Users.API.csproj" />
     <ProjectReference Include="..\Modules\Customers\Modules.Customers.API\Modules.Customers.API.csproj" />
-    <ProjectReference Include="..\Modules\Tickets\Modules.Ticketing.API\TicketManagement.API.csproj" />
+    <ProjectReference Include="..\Modules\Tickets\Modules.Ticketing.API\Modules.Ticketing.API.csproj" />
     <ProjectReference Include="../SharedKernel/CRM.SharedKernel.Infrastructure/CRM.SharedKernel.Infrastructure.csproj" IsAspireProjectResource="false" />
   </ItemGroup>
 

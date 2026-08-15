@@ -92,7 +92,7 @@ internal sealed class UpdateTicketHandler(
 		}
 
 		var @operator = await context.Operators
-			.FirstOrDefaultAsync(o => o.RefId == currentUser.UserId.Value, cancellationToken);
+			.FirstOrDefaultAsync(o => o.RefId == currentUser.UserId, cancellationToken);
 
 		if (@operator is not null)
 		{
@@ -101,7 +101,7 @@ internal sealed class UpdateTicketHandler(
 
 		@operator = new Operator
 		{
-			RefId = currentUser.UserId.Value,
+			RefId = currentUser.UserId,
 			Name = currentUser.Name ?? string.Empty,
 			Email = currentUser.Email ?? string.Empty
 		};

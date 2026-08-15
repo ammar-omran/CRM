@@ -29,14 +29,13 @@ public sealed class CurrentUserService : ICurrentUserService
 
 			var rawToken = GetRawToken(_httpContextAccessor.HttpContext!);
 
-			var rawId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
-			int? userId = int.TryParse(rawId, out var parsedId) ? parsedId : null;
+			var userId = principal.FindFirstValue("userid");
 
 			return new CurrentUser(
 				userId,
 				principal.FindFirstValue(ClaimTypes.Name),
-				principal.FindFirstValue(ClaimTypes.Email),
-				principal.FindFirstValue(ClaimTypes.Role),
+				principal.FindFirstValue(JwtRegisteredClaimNames.Sub),
+				principal.FindFirstValue("role"),
 				rawToken,
 				GetTokenPayload(rawToken));
 		}

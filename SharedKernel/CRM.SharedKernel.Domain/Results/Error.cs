@@ -7,6 +7,8 @@ public readonly record struct Error
         Code = code;
         Description = description;
         Type = type;
+
+        NumericType = (int)type;
     }
 
     private Error(string code, string description, int numericType)
