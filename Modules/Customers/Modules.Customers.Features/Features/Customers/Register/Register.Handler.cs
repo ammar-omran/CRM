@@ -28,10 +28,11 @@ internal interface IRegisterHandler : IHandler
 }
 
 internal sealed class RegisterHandler(
-	CustomersDbContext context,
-	IEmailSender emailSender,
-	ILogger<RegisterHandler> logger)
-	: IRegisterHandler
+		CustomersDbContext context,
+		IEmailSender emailSender,
+		IPasswordHasher passwordHasher,
+		ILogger<RegisterHandler> logger)
+		: IRegisterHandler
 {
 	public async Task<Result<RegisterResponse>> HandleAsync(
 		RegisterRequest request,
@@ -39,12 +40,13 @@ internal sealed class RegisterHandler(
 	{
 
 
-		var customer = new Customer
+				var customer = new Customer
 		{
 			Name = request.Name,
 			Email = request.Email,
 			PhoneNumber = new PhoneNumber(request.PhoneNumber, request.CountryCode),
-			Password = request.Password,
+						// Hash the password before saving to the database
+						Password = passwordHasher.Hash(request.Password),
 			CreatedDate = DateTime.UtcNow,
 			UpdateDate = DateTime.UtcNow
 		};

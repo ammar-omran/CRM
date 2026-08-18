@@ -31,6 +31,18 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         entity.HasIndex(x => x.Email)
             .IsUnique();
 
-        entity.Ignore(x => x.PhoneNumber);
+        // Map PhoneNumber 
+        entity.OwnsOne(x => x.PhoneNumber, pn =>
+        {
+            pn.Property(p => p.Number)
+                .HasColumnName("PhoneNumber_Number")
+                .HasMaxLength(20);
+
+            pn.Property(p => p.CountryCode)
+                .HasColumnName("PhoneNumber_CountryCode")
+                .HasMaxLength(5);
+
+            pn.HasIndex(p => p.Number).HasDatabaseName("IX_Customers_PhoneNumber_Number");
+        });
     }
 }
