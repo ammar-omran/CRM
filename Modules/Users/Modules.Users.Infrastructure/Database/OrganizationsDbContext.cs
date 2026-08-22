@@ -1,6 +1,7 @@
 using CRM.SharedKernel.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Modules.Users.Domain.OrganizationAggregate;
+using Modules.Users.Domain.UserAggregate;
 
 namespace Modules.Users.Infrastructure.Database;
 
@@ -23,7 +24,6 @@ public class OrganizationsDbContext : DbContext, IApplicationDbContext
 	}
 
 	public DbSet<Agent> Agents { get; set; }
-	public DbSet<AgentRole> AgentRoles { get; set; }
 	public DbSet<Organization> Organizations { get; set; }
 	public DbSet<OrganizationAgent> OrganizationAgents { get; set; }
 	public DbSet<Customer> Customers { get; set; }

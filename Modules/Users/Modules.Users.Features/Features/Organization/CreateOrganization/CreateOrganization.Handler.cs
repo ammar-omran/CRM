@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using CRM.SharedKernel.Domain.Events;
 using CRM.SharedKernel.Domain.Handlers;
@@ -10,6 +11,7 @@ using Modules.Users.Features.Organization.Shared.Errors;
 using Modules.Users.Features.Organization.Shared.Requests;
 using Modules.Users.Features.Organization.Shared.Responses;
 using CRM.SharedKernel.Domain.Interfaces;
+using Modules.Users.Infrastructure.Database;
 
 namespace Modules.Users.Features.Organization.CreateOrganization;
 
@@ -21,7 +23,7 @@ internal interface ICreateOrganizationHandler : IHandler
 internal sealed class CreateOrganizationHandler(
 		IRepository<Domain.OrganizationAggregate.Organization> orgRepo,
 		IReadRepository<Domain.OrganizationAggregate.Agent> agentRepo,
-		IReadRepository<AgentRole> agentRoleRepo,
+		UsersDbContext usersContext,
 		ICustomerRepository customerRepo,
 		IReadRepository<OrganizationAgent> orgAgentsRepo,
 		IEventPublisher eventPublisher,
@@ -46,11 +48,10 @@ internal sealed class CreateOrganizationHandler(
 			errors.Add(OrganizationErrors.AgentNotFound(missingAgentIds.ToArray()));
 
 		var requestedRoleIds = request.Agents.Select(ra => ra.Role).Distinct().ToList();
-		var existingRoleIds = await agentRoleRepo
-			 .GetListAsync(
-					 query: agentRoleRepo.Query.Where(ar => requestedRoleIds.Contains(ar.Id)),
-					 selector: ar => ar.Id,
-					 cancellation: ct);
+		var existingRoleIds = await usersContext.Roles
+			.Where(r => requestedRoleIds.Contains(r.Id))
+			.Select(r => r.Id)
+			.ToListAsync(ct);
 
 		var missingRoleIds = requestedRoleIds.Except(existingRoleIds).ToList();
 		if (missingRoleIds.Count > 0)
@@ -70,7 +71,7 @@ internal sealed class CreateOrganizationHandler(
 		var organization = new Domain.OrganizationAggregate.Organization
 		{
 			Name = request.Name,
-			CreatedAt = DateTime.UtcNow,
+			CreatedAt = DateTime.Now,
 			OrganizationAgents = request.Agents.Select(
 						a => new OrganizationAgent
 						{

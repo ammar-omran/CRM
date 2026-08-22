@@ -9,11 +9,11 @@ using Modules.Users.Infrastructure.Database;
 
 #nullable disable
 
-namespace Modules.Users.Infrastructure.Database.Migrations
+namespace Modules.Users.Infrastructure.Database.Migrations.Organizations
 {
     [DbContext(typeof(OrganizationsDbContext))]
-    [Migration("20260807174150_InintOrg")]
-    partial class InintOrg
+    [Migration("20260822074641_InitOrg")]
+    partial class InitOrg
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,44 +48,6 @@ namespace Modules.Users.Infrastructure.Database.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Agents", "org");
-                });
-
-            modelBuilder.Entity("Modules.Users.Domain.OrganizationAggregate.AgentRole", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("AgentRoles", "org");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "FirstLine"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "SecondLine"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "TeamLead"
-                        });
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.OrganizationAggregate.Customer", b =>
@@ -163,8 +125,9 @@ namespace Modules.Users.Infrastructure.Database.Migrations
                     b.Property<int>("AgentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AgentRoleId")
-                        .HasColumnType("int");
+                    b.Property<string>("AgentRoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("OrganizationId")
                         .HasColumnType("int");
@@ -178,6 +141,40 @@ namespace Modules.Users.Infrastructure.Database.Migrations
                     b.HasIndex("OrganizationId");
 
                     b.ToTable("OrganizationAgents", "org");
+                });
+
+            modelBuilder.Entity("Modules.Users.Domain.UserAggregate.Role", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("id");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("concurrency_stamp");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)")
+                        .HasColumnName("normalized_name");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("Roles", "users", t =>
+                        {
+                            t.ExcludeFromMigrations();
+                        });
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.OrganizationAggregate.Customer", b =>
@@ -199,7 +196,7 @@ namespace Modules.Users.Infrastructure.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Modules.Users.Domain.OrganizationAggregate.AgentRole", "AgentRole")
+                    b.HasOne("Modules.Users.Domain.UserAggregate.Role", "AgentRole")
                         .WithMany()
                         .HasForeignKey("AgentRoleId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -218,6 +215,13 @@ namespace Modules.Users.Infrastructure.Database.Migrations
                     b.Navigation("Organization");
                 });
 
+            modelBuilder.Entity("Modules.Users.Domain.UserAggregate.Role", b =>
+                {
+                    b.HasOne("Modules.Users.Domain.UserAggregate.Role", null)
+                        .WithMany("ChildRoles")
+                        .HasForeignKey("RoleId");
+                });
+
             modelBuilder.Entity("Modules.Users.Domain.OrganizationAggregate.Agent", b =>
                 {
                     b.Navigation("AgentOrganizations");
@@ -228,6 +232,11 @@ namespace Modules.Users.Infrastructure.Database.Migrations
                     b.Navigation("OrganizationAgents");
 
                     b.Navigation("OrganizationCustomers");
+                });
+
+            modelBuilder.Entity("Modules.Users.Domain.UserAggregate.Role", b =>
+                {
+                    b.Navigation("ChildRoles");
                 });
 #pragma warning restore 612, 618
         }

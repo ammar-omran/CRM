@@ -8,7 +8,14 @@ public class UsersDatabaseMigrator : IModuleDatabaseMigrator
 {
     public async Task MigrateAsync(IServiceScope scope, CancellationToken cancellationToken = default)
     {
-        var dbContext = scope.ServiceProvider.GetRequiredService<UsersDbContext>();
-        await dbContext.Database.MigrateAsync(cancellationToken);
+        // Users schema owns the shared roles table and must migrate first,
+        // since OrganizationAgents holds an FK referencing users.roles.
+        await scope.ServiceProvider
+                .GetRequiredService<UsersDbContext>()
+                .Database.MigrateAsync(cancellationToken);
+
+        await scope.ServiceProvider
+                .GetRequiredService<OrganizationsDbContext>()
+                .Database.MigrateAsync(cancellationToken);
     }
 }

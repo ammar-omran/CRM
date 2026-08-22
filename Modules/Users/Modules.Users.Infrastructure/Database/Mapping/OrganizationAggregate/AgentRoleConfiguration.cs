@@ -1,38 +1,25 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Modules.Users.Domain.OrganizationAggregate;
+using Modules.Users.Domain.UserAggregate;
 
 namespace Modules.Users.Infrastructure.Database.Mapping.OrganizationAggregate;
 
-public class AgentRoleConfiguration : IEntityTypeConfiguration<AgentRole>
+public class AgentRoleConfiguration : IEntityTypeConfiguration<Role>
 {
-    public void Configure(EntityTypeBuilder<AgentRole> entity)
-    {
-        entity.HasKey(x => x.Id);
-        entity.Property(x => x.Name)
-            .IsRequired()
-            .HasMaxLength(64);
-        
-        
-        entity.HasIndex(x => x.Name)
-            .IsUnique();
-
-        entity.HasData(
-            new AgentRole
-            {
-                Id = 1,
-                Name = "FirstLine",
-            },
-            new AgentRole
-            {
-                Id = 2,
-                Name = "SecondLine",
-            },
-            new AgentRole
-            {
-                Id = 3,
-                Name = "TeamLead",
-            }
-        );
-    }
+	// Role lives in the users schema and is owned/migrated by UsersDbContext.
+	// Map it read-only into this model so OrganizationAgent.AgentRole can be
+	// navigated/included, while migrations never touch the shared table.
+	// Column names are explicit because this context does not use snake-case naming.
+	public void Configure(EntityTypeBuilder<Role> builder)
+	{
+		builder.ToTable("Roles", DbConsts.UsersSchema, t => t.ExcludeFromMigrations());
+		builder.HasKey(r => r.Id);
+		builder.Property(r => r.Id).HasColumnName("id").HasMaxLength(450);
+		builder.Property(r => r.Name).HasColumnName("name").HasMaxLength(256);
+		builder.Property(r => r.NormalizedName).HasColumnName("normalized_name").HasMaxLength(256);
+		builder.Property(r => r.ConcurrencyStamp).HasColumnName("concurrency_stamp");
+		builder.Ignore(r => r.PairentRoleId);
+		builder.Ignore(r => r.PairentRole);
+		builder.Ignore(r => r.RoleClaims);
+	}
 }

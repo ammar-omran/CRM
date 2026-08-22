@@ -43,7 +43,7 @@ internal sealed class OrganizationCreatedEventHandler(
 				agentEmail: orgAgent.Agent.Email,
 				tempPassword: "",
 				OrgName: @event.OrganizationName,
-				agentRole: orgAgent.AgentRole.Name,
+				agentRole: orgAgent.AgentRole.Name ?? string.Empty,
 				systemURL: cfg.SystemUrl);
 
 			await emailSender.SendAsync(

@@ -6,8 +6,7 @@ namespace Modules.Users.Infrastructure.Database.Mapping.UsersAggregate;
 
 public class UserLoginConfiguration : IEntityTypeConfiguration<UserLogin>
 {
-    public void Configure(EntityTypeBuilder<UserLogin> builder)
-    {
-        builder.ToTable("user_logins");
-    }
+	public void Configure(EntityTypeBuilder<UserLogin> builder)
+	{
+	}
 }

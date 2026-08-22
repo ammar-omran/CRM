@@ -49,8 +49,7 @@ public static class DependencyInjection
 				{
 					mssqlOptions.MigrationsHistoryTable(DbConsts.MigrationTableName, DbConsts.UsersSchema);
 				})
-				.AddInterceptors(interceptor)
-				.UseSnakeCaseNamingConvention();
+				.AddInterceptors(interceptor);
 		});
 
 		services.AddDbContext<OrganizationsDbContext>((provider, options) =>

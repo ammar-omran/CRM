@@ -33,7 +33,7 @@ public class OrganizationAgentValidator : AbstractValidator<AddOrganizationReque
 			.GreaterThan(0).WithMessage("AgentId must be valid");
 
 		RuleFor(x => x.Role)
-			.GreaterThan(0).WithMessage("Agent role must be valid");
+			.NotEmpty().WithMessage("Agent role must be valid");
 	}
 }
 

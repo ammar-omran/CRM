@@ -19,7 +19,7 @@ internal static class OrganizationErrors
     internal static Error FailedToFetchCustomer(string description)
         => Error.Failure($"{Prefix}.{nameof(FailedToFetchCustomer)}", description);
 
-    internal static Error AgentRoleNotFound(int[] agentRoleIds)
+    internal static Error AgentRoleNotFound(string[] agentRoleIds)
         => Error.Validation($"{Prefix}.{nameof(AgentRoleNotFound)}", $"The following Agent Roles were not found: {string.Join(", ", agentRoleIds)}");
 
     internal static Error NameAlreadyExists(string name)

@@ -9,11 +9,11 @@ using Modules.Users.Infrastructure.Database;
 
 #nullable disable
 
-namespace Modules.Users.Infrastructure.Database.Migrations
+namespace Modules.Users.Infrastructure.Database.Migrations.Users
 {
     [DbContext(typeof(UsersDbContext))]
-    [Migration("20260815203138_AlterCreatedAtColumn")]
-    partial class AlterCreatedAtColumn
+    [Migration("20260822074351_InitUser")]
+    partial class InitUser
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,184 +29,198 @@ namespace Modules.Users.Infrastructure.Database.Migrations
             modelBuilder.Entity("Modules.Users.Domain.Tokens.RefreshToken", b =>
                 {
                     b.Property<string>("Token")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("token");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("created_at");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("ExpiryDate")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("expiry_date");
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("Invalidated")
-                        .HasColumnType("bit")
-                        .HasColumnName("invalidated");
+                        .HasColumnType("bit");
 
                     b.Property<string>("JwtId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("jwt_id");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("updated_at");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("user_id");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Token")
-                        .HasName("pk_refresh_tokens");
+                    b.HasKey("Token");
 
-                    b.HasIndex("UserId")
-                        .HasDatabaseName("ix_refresh_tokens_user_id");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("refresh_tokens", "users");
+                    b.ToTable("RefreshTokens", "users");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.UserAggregate.Role", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("id");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("concurrency_stamp");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)")
-                        .HasColumnName("name");
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedName")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)")
-                        .HasColumnName("normalized_name");
+                        .HasColumnType("nvarchar(256)");
 
-                    b.HasKey("Id")
-                        .HasName("pk_roles");
+                    b.Property<string>("PairentRoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[normalized_name] IS NOT NULL");
+                        .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("roles", "users");
+                    b.HasIndex("PairentRoleId");
+
+                    b.ToTable("Roles", "users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            ConcurrencyStamp = "f0bd1f07-f514-4317-9657-5bb7db4d57c3",
+                            Name = "Agent",
+                            NormalizedName = "Agent"
+                        },
+                        new
+                        {
+                            Id = "2",
+                            ConcurrencyStamp = "8e0f28f1-76ee-4f53-82df-133091ecdb94",
+                            Name = "Supervisor",
+                            NormalizedName = "Supervisor"
+                        },
+                        new
+                        {
+                            Id = "3",
+                            ConcurrencyStamp = "0f83831b-220a-48a9-9fce-f9c148ec0b78",
+                            Name = "Admin",
+                            NormalizedName = "Admin"
+                        },
+                        new
+                        {
+                            Id = "4",
+                            ConcurrencyStamp = "bf4d84e9-fb60-458f-b176-d6d9e94e1218",
+                            Name = "Team Lead",
+                            NormalizedName = "TeamLead",
+                            PairentRoleId = "1"
+                        },
+                        new
+                        {
+                            Id = "5",
+                            ConcurrencyStamp = "afdb8cfc-85ee-471e-9dbc-4508ba2ef533",
+                            Name = "First Line",
+                            NormalizedName = "FirstLine",
+                            PairentRoleId = "1"
+                        },
+                        new
+                        {
+                            Id = "6",
+                            ConcurrencyStamp = "e647f1a9-a664-4269-8c3d-20401c1dccd5",
+                            Name = "Second Line",
+                            NormalizedName = "SecondLine",
+                            PairentRoleId = "1"
+                        });
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.UserAggregate.RoleClaim", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("claim_type");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("claim_value");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RoleId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("role_id");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Id")
-                        .HasName("pk_role_claims");
+                    b.HasKey("Id");
 
-                    b.HasIndex("RoleId")
-                        .HasDatabaseName("ix_role_claims_role_id");
+                    b.HasIndex("RoleId");
 
-                    b.ToTable("role_claims", "users");
+                    b.ToTable("AspNetRoleClaims", "users");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.UserAggregate.User", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("id");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int")
-                        .HasColumnName("access_failed_count");
+                        .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("concurrency_stamp");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("created_at");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)")
-                        .HasColumnName("email");
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit")
-                        .HasColumnName("email_confirmed");
+                        .HasColumnType("bit");
 
                     b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit")
-                        .HasColumnName("lockout_enabled");
+                        .HasColumnType("bit");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset")
-                        .HasColumnName("lockout_end");
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)")
-                        .HasColumnName("normalized_email");
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)")
-                        .HasColumnName("normalized_user_name");
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("password_hash");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("phone_number");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit")
-                        .HasColumnName("phone_number_confirmed");
+                        .HasColumnType("bit");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("security_stamp");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit")
-                        .HasColumnName("two_factor_enabled");
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("updated_at");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)")
-                        .HasColumnName("user_name");
+                        .HasColumnType("nvarchar(256)");
 
-                    b.HasKey("Id")
-                        .HasName("pk_users");
+                    b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -214,111 +228,90 @@ namespace Modules.Users.Infrastructure.Database.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[normalized_user_name] IS NOT NULL");
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("users", "users");
+                    b.ToTable("AspNetUsers", "users");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.UserAggregate.UserClaim", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("claim_type");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("claim_value");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("user_id");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Id")
-                        .HasName("pk_user_claims");
+                    b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .HasDatabaseName("ix_user_claims_user_id");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("user_claims", "users");
+                    b.ToTable("AspNetUserClaims", "users");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.UserAggregate.UserLogin", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("login_provider");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("provider_key");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("provider_display_name");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("user_id");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("LoginProvider", "ProviderKey")
-                        .HasName("pk_user_logins");
+                    b.HasKey("LoginProvider", "ProviderKey");
 
-                    b.HasIndex("UserId")
-                        .HasDatabaseName("ix_user_logins_user_id");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("user_logins", "users");
+                    b.ToTable("AspNetUserLogins", "users");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.UserAggregate.UserRole", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("user_id");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("role_id");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("UserId", "RoleId")
-                        .HasName("pk_user_roles");
+                    b.HasKey("UserId", "RoleId");
 
-                    b.HasIndex("RoleId")
-                        .HasDatabaseName("ix_user_roles_role_id");
+                    b.HasIndex("RoleId");
 
-                    b.ToTable("user_roles", "users");
+                    b.ToTable("AspNetUserRoles", "users");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.UserAggregate.UserToken", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("user_id");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("login_provider");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("name");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("value");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("UserId", "LoginProvider", "Name")
-                        .HasName("pk_user_tokens");
+                    b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("user_tokens", "users");
+                    b.ToTable("AspNetUserTokens", "users");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.Tokens.RefreshToken", b =>
@@ -327,10 +320,19 @@ namespace Modules.Users.Infrastructure.Database.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_refresh_tokens_users_user_id");
+                        .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Modules.Users.Domain.UserAggregate.Role", b =>
+                {
+                    b.HasOne("Modules.Users.Domain.UserAggregate.Role", "PairentRole")
+                        .WithMany("ChildRoles")
+                        .HasForeignKey("PairentRoleId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("PairentRole");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.UserAggregate.RoleClaim", b =>
@@ -339,8 +341,7 @@ namespace Modules.Users.Infrastructure.Database.Migrations
                         .WithMany("RoleClaims")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_role_claims_asp_net_roles_role_id");
+                        .IsRequired();
 
                     b.Navigation("Role");
                 });
@@ -351,8 +352,7 @@ namespace Modules.Users.Infrastructure.Database.Migrations
                         .WithMany("Claims")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_user_claims_asp_net_users_user_id");
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -363,8 +363,7 @@ namespace Modules.Users.Infrastructure.Database.Migrations
                         .WithMany("UserLogins")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_user_logins_users_user_id");
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -372,18 +371,16 @@ namespace Modules.Users.Infrastructure.Database.Migrations
             modelBuilder.Entity("Modules.Users.Domain.UserAggregate.UserRole", b =>
                 {
                     b.HasOne("Modules.Users.Domain.UserAggregate.Role", "Role")
-                        .WithMany("UserRoles")
+                        .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_user_roles_roles_role_id");
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Modules.Users.Domain.UserAggregate.User", "User")
                         .WithMany("UserRoles")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_user_roles_users_user_id");
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Role");
 
@@ -396,17 +393,16 @@ namespace Modules.Users.Infrastructure.Database.Migrations
                         .WithMany("UserTokens")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_user_tokens_users_user_id");
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.UserAggregate.Role", b =>
                 {
-                    b.Navigation("RoleClaims");
+                    b.Navigation("ChildRoles");
 
-                    b.Navigation("UserRoles");
+                    b.Navigation("RoleClaims");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.UserAggregate.User", b =>

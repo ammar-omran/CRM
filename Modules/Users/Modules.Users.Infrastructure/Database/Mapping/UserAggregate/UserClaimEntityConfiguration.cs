@@ -6,8 +6,7 @@ namespace Modules.Users.Infrastructure.Database.Mapping.UsersAggregate;
 
 public class UserClaimConfiguration : IEntityTypeConfiguration<UserClaim>
 {
-    public void Configure(EntityTypeBuilder<UserClaim> builder)
-    {
-        builder.ToTable("user_claims");
-    }
+	public void Configure(EntityTypeBuilder<UserClaim> builder)
+	{
+	}
 }

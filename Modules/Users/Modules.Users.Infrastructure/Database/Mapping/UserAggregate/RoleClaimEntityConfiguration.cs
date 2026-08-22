@@ -6,8 +6,7 @@ namespace Modules.Users.Infrastructure.Database.Mapping.UsersAggregate;
 
 public class RoleClaimConfiguration : IEntityTypeConfiguration<RoleClaim>
 {
-    public void Configure(EntityTypeBuilder<RoleClaim> builder)
-    {
-        builder.ToTable("role_claims");
-    }
+	public void Configure(EntityTypeBuilder<RoleClaim> builder)
+	{
+	}
 }
