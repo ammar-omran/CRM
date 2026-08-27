@@ -1,0 +1,35 @@
+@model CRM.Base.Modules.Admin.ModuleSummary
+
+@{
+    string label;
+    string cssClass;
+
+    if (!Model.Enabled)
+    {
+        label = "Disabled";
+        cssClass = "badge--disabled";
+    }
+    else if (Model.State == CRM.Base.Modules.State.ModuleState.Failed)
+    {
+        label = "Failed";
+        cssClass = "badge--failed";
+    }
+    else if (!Model.IsAvailable)
+    {
+        label = "Unavailable";
+        cssClass = "badge--unavailable";
+    }
+    else if (Model.State == CRM.Base.Modules.State.ModuleState.Running
+             || Model.State == CRM.Base.Modules.State.ModuleState.Registered)
+    {
+        label = "Enabled";
+        cssClass = "badge--enabled";
+    }
+    else
+    {
+        label = Model.State.ToString();
+        cssClass = "badge--neutral";
+    }
+}
+
+<span class="status-badge @cssClass">@label</span>

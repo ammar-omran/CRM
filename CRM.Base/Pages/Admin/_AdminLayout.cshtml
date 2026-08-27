@@ -1,0 +1,37 @@
+@{
+    string CurrentPath = Context.Request.Path.ToString();
+    string PageTitle = (string?)ViewData["Title"] ?? "Super Admin";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@PageTitle &middot; CRM.Base</title>
+    <link rel="stylesheet" href="~/css/admin.css" />
+</head>
+<body>
+    <header class="admin-topbar">
+        <div class="admin-topbar__brand">
+            <span class="admin-topbar__logo">◆</span>
+            <span class="admin-topbar__name">CRM.Base</span>
+            <span class="admin-topbar__badge">Super Admin</span>
+        </div>
+        <div class="admin-topbar__right">
+            <span class="admin-topbar__env">@(Context.Request.Host)</span>
+        </div>
+    </header>
+
+    <div class="admin-shell">
+        <aside class="admin-sidebar">
+            <partial name="Shared/_ModuleSidebar" model="CurrentPath" />
+        </aside>
+
+        <main class="admin-content">
+            <div class="admin-content__inner">
+                @RenderBody()
+            </div>
+        </main>
+    </div>
+</body>
+</html>

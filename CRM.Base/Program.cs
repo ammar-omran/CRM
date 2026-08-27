@@ -26,6 +26,12 @@ builder.Services
 				});
 			});
 
+builder.Services.AddRazorPages(options =>
+{
+    // Serve the Super Admin panel at the site root as the entry point.
+    options.Conventions.AddPageRoute("/Admin/Index", "/");
+});
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 		.AddJwtBearer(options =>
 		{
@@ -74,11 +80,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowAngularApp");
+app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapModuleEndpoints();
 app.MapInternalEndpoints();
 app.MapReverseProxy();
+app.MapRazorPages();
 
 await app.RunAsync();

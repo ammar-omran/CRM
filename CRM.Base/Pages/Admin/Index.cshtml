@@ -1,0 +1,60 @@
+@page
+@model CRM.Base.Pages.Admin.IndexModel
+@{
+    ViewData["Title"] = "Settings";
+}
+
+<div class="page-head">
+    <h1 class="page-head__title">Settings</h1>
+    <p class="page-head__subtitle">Platform-level module management for CRM.Base.</p>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.StatusMessage))
+{
+    <div class="alert @(Model.StatusIsError ? "alert--error" : "alert--success")" role="status">
+        <span class="alert__icon">@(Model.StatusIsError ? "⚠" : "✓")</span>
+        <span>@Model.StatusMessage</span>
+    </div>
+}
+
+<section class="panel">
+    <header class="panel__header">
+        <h2 class="panel__title">Registered Modules</h2>
+        <span class="panel__count">@Model.Modules.Count</span>
+    </header>
+
+    @if (Model.Modules.Count == 0)
+    {
+        <div class="empty-state">
+            <p>No modules are registered yet. Use the form below to register your first module.</p>
+        </div>
+    }
+    else
+    {
+        <div class="module-grid">
+            @foreach (var module in Model.Modules)
+            {
+                <partial name="Shared/_ModuleCard" model="@module" />
+            }
+        </div>
+    }
+</section>
+
+<section class="panel">
+    <header class="panel__header">
+        <h2 class="panel__title">Add Module</h2>
+    </header>
+
+    <form asp-page-handler="Register" method="post" class="add-module-form">
+        <label class="field">
+            <span class="field__label">Module URL</span>
+            <input asp-for="ModuleUrl" class="field__input"
+                   placeholder="https://localhost:5005" autocomplete="off" />
+        </label>
+        <button type="submit" class="btn btn--primary">Register Module</button>
+    </form>
+    <p class="panel__hint">
+        The module must expose a manifest at <code>/module/manifest</code>. Registration runs the
+        existing validation pipeline and updates the gateway automatically.
+    </p>
+</section>

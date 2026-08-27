@@ -172,6 +172,58 @@ public sealed class ModuleCatalog
     }
 
     /// <summary>
+    /// Enables a previously disabled module.
+    /// Persists the enabled flag, updates the runtime state, and signals YARP to reload routes.
+    /// </summary>
+    /// <param name="moduleId">The unique module identifier.</param>
+    /// <returns>True if the module was found and enabled; false otherwise.</returns>
+    public async Task<bool> EnableAsync(string moduleId)
+    {
+        if (!_entries.TryGetValue(moduleId, out var entry))
+        {
+            return false;
+        }
+
+        entry.Entity.Enabled = true;
+        entry.Entity.UpdatedAt = DateTime.UtcNow;
+        entry.State = entry.IsAvailable ? ModuleState.Running : ModuleState.Registered;
+
+        await _persistence.UpdateAsync(entry.Entity);
+
+        _logger.LogInformation("Module '{ModuleId}' enabled", moduleId);
+
+        OnChanged?.Invoke();
+
+        return true;
+    }
+
+    /// <summary>
+    /// Disables a module without removing it from the platform.
+    /// Persists the disabled flag, updates the runtime state, and signals YARP to drop its routes.
+    /// </summary>
+    /// <param name="moduleId">The unique module identifier.</param>
+    /// <returns>True if the module was found and disabled; false otherwise.</returns>
+    public async Task<bool> DisableAsync(string moduleId)
+    {
+        if (!_entries.TryGetValue(moduleId, out var entry))
+        {
+            return false;
+        }
+
+        entry.Entity.Enabled = false;
+        entry.Entity.UpdatedAt = DateTime.UtcNow;
+        entry.State = ModuleState.Disabled;
+
+        await _persistence.UpdateAsync(entry.Entity);
+
+        _logger.LogInformation("Module '{ModuleId}' disabled", moduleId);
+
+        OnChanged?.Invoke();
+
+        return true;
+    }
+
+    /// <summary>
     /// Updates the state of a module in the catalog.
     /// </summary>
     public void UpdateState(string moduleId, ModuleState state)
@@ -227,7 +279,12 @@ public sealed class ModuleCatalog
         return entry;
     }
 
-    private async Task<IModuleManifest?> FetchManifestAsync(string baseUrl, CancellationToken cancellationToken)
+    /// <summary>
+    /// Fetches and deserializes the manifest exposed by a module at <c>{baseUrl}/module/manifest</c>.
+    /// Public so that callers (e.g. admin surface) can diagnose registration failures without
+    /// duplicating the fetch logic owned by this catalog.
+    /// </summary>
+    public async Task<IModuleManifest?> FetchManifestAsync(string baseUrl, CancellationToken cancellationToken)
     {
         try
         {

@@ -1,0 +1,48 @@
+@model string
+@inject CRM.Base.Modules.Admin.IModuleAdminService Admin
+
+@{
+    string currentPath = Model;
+    bool isSettings = currentPath.Equals("/", StringComparison.OrdinalIgnoreCase)
+                      || currentPath.Equals("/Admin", StringComparison.OrdinalIgnoreCase)
+                      || currentPath.StartsWith("/Admin/", StringComparison.OrdinalIgnoreCase)
+                         && !currentPath.StartsWith("/Admin/Modules/", StringComparison.OrdinalIgnoreCase);
+    var modules = Admin.ListModules();
+}
+
+<nav class="sidebar-nav">
+    <a class="sidebar-nav__item @(isSettings ? "is-active" : "")"
+       asp-page="/Admin/Index"
+       asp-page-handler="">
+        <span class="sidebar-nav__icon">⚙</span>
+        <span class="sidebar-nav__label">Settings</span>
+    </a>
+
+    @if (modules.Count > 0)
+    {
+        <div class="sidebar-nav__section">Modules</div>
+        @foreach (var module in modules)
+        {
+            bool isModuleActive = currentPath.Equals($"/Admin/Modules/{module.ModuleId}", StringComparison.OrdinalIgnoreCase)
+                                  || currentPath.StartsWith($"/Admin/Modules/{module.ModuleId}/", StringComparison.OrdinalIgnoreCase);
+            <a class="sidebar-nav__item @(isModuleActive ? "is-active" : "")"
+               asp-page="/Admin/Modules/Details"
+               asp-route-moduleId="@module.ModuleId">
+                <span class="sidebar-nav__icon">▦</span>
+                <span class="sidebar-nav__label">@module.DisplayName</span>
+                @if (!module.Enabled)
+                {
+                    <span class="sidebar-nav__dot sidebar-nav__dot--off" title="Disabled"></span>
+                }
+                else if (!module.IsAvailable)
+                {
+                    <span class="sidebar-nav__dot sidebar-nav__dot--warn" title="Unavailable"></span>
+                }
+                else
+                {
+                    <span class="sidebar-nav__dot sidebar-nav__dot--on" title="Enabled"></span>
+                }
+            </a>
+        }
+    }
+</nav>

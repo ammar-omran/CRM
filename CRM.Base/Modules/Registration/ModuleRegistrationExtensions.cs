@@ -1,3 +1,4 @@
+using CRM.Base.Modules.Admin;
 using CRM.Base.Modules.DependencyResolution;
 using CRM.Base.Modules.Events;
 using CRM.Base.Modules.Persistence;
@@ -90,6 +91,10 @@ public static class ModuleRegistrationExtensions
 
         // Registrar
         services.AddScoped<IModuleRegistrar, ModuleRegistrar>();
+
+        // Thin application facade consumed by the Super Admin Razor Pages.
+        // Delegates to the existing catalog / validator pipeline; adds no platform behaviour.
+        services.AddSingleton<IModuleAdminService, ModuleAdminService>();
 
         return services;
     }

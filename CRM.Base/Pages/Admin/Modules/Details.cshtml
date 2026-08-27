@@ -1,0 +1,235 @@
+@page "{moduleId}"
+@model CRM.Base.Pages.Admin.Modules.DetailsModel
+@using CRM.Base.Modules.State
+
+@{
+    ViewData["Title"] = Model.Module?.DisplayName ?? "Module";
+    var module = Model.Module!;
+    bool isEnabled = module.Enabled;
+}
+
+<nav class="breadcrumb">
+    <a asp-page="/Admin/Index">Settings</a>
+    <span class="breadcrumb__sep">/</span>
+    <span class="breadcrumb__current">@module.DisplayName</span>
+</nav>
+
+<div class="page-head">
+    <div class="page-head__row">
+        <h1 class="page-head__title">@module.DisplayName</h1>
+        <span class="status-badge @(isEnabled ? "badge--enabled" : "badge--disabled")">
+            @(isEnabled ? "Enabled" : "Disabled")
+        </span>
+    </div>
+    <p class="page-head__subtitle">@module.ModuleId</p>
+</div>
+
+<div class="detail-tabs">
+    <a class="detail-tabs__item is-active" href="#overview">Overview</a>
+    <a class="detail-tabs__item is-disabled" href="#configuration" title="Coming soon">
+        Configuration <span class="detail-tabs__soon">soon</span>
+    </a>
+    <a class="detail-tabs__item is-disabled" href="#permissions" title="Coming soon">
+        Permissions <span class="detail-tabs__soon">soon</span>
+    </a>
+    <a class="detail-tabs__item" href="#integration">Integration</a>
+</div>
+
+<section id="overview" class="panel">
+    <header class="panel__header">
+        <h2 class="panel__title">Overview</h2>
+    </header>
+
+    <dl class="info-grid">
+        <div class="info-grid__item">
+            <dt>Display Name</dt>
+            <dd>@module.DisplayName</dd>
+        </div>
+        <div class="info-grid__item">
+            <dt>Module ID</dt>
+            <dd><code>@module.ModuleId</code></dd>
+        </div>
+        <div class="info-grid__item">
+            <dt>Description</dt>
+            <dd>@(module.Description ?? "—")</dd>
+        </div>
+        <div class="info-grid__item">
+            <dt>Author</dt>
+            <dd>@(module.Author ?? "—")</dd>
+        </div>
+        <div class="info-grid__item">
+            <dt>Version</dt>
+            <dd>@module.Version</dd>
+        </div>
+        <div class="info-grid__item">
+            <dt>Kind</dt>
+            <dd>@module.Kind</dd>
+        </div>
+        <div class="info-grid__item">
+            <dt>Audience</dt>
+            <dd>@module.Audience</dd>
+        </div>
+        <div class="info-grid__item">
+            <dt>Current State</dt>
+            <dd>@module.State</dd>
+        </div>
+        <div class="info-grid__item">
+            <dt>Availability</dt>
+            <dd>@(module.IsAvailable ? "Reachable" : "Unreachable")</dd>
+        </div>
+        <div class="info-grid__item">
+            <dt>Base URL</dt>
+            <dd><code>@module.BaseUrl</code></dd>
+        </div>
+    </dl>
+
+    @if (module.Tags is { Count: > 0 })
+    {
+        <div class="tag-row">
+            @foreach (var tag in module.Tags)
+            {
+                <span class="tag">@tag</span>
+            }
+        </div>
+    }
+</section>
+
+<section id="configuration" class="panel panel--placeholder">
+    <header class="panel__header">
+        <h2 class="panel__title">Configuration</h2>
+        <span class="panel__soon">Planned</span>
+    </header>
+    <p class="panel__hint">
+        Module-specific configuration will be available here in a future release. This page
+        currently only displays the manifest and registration information.
+    </p>
+</section>
+
+<section id="permissions" class="panel panel--placeholder">
+    <header class="panel__header">
+        <h2 class="panel__title">Permissions</h2>
+        <span class="panel__soon">Planned</span>
+    </header>
+    <p class="panel__hint">
+        Permission management will be added here in a future release. The module currently
+        declares @(module.Policies?.Count ?? 0) authorization @(module.Policies?.Count == 1 ? "policy" : "policies").
+    </p>
+</section>
+
+@if (module.ProvidedCapabilities.Count > 0 || module.ModuleDependencies is { Count: > 0 })
+{
+    <section class="panel">
+        <header class="panel__header">
+            <h2 class="panel__title">Capabilities</h2>
+        </header>
+        @if (module.ProvidedCapabilities.Count > 0)
+        {
+            <ul class="bullet-list">
+                @foreach (var cap in module.ProvidedCapabilities)
+                {
+                    <li>
+                        <strong>@cap.DisplayName</strong>
+                        @if (!string.IsNullOrWhiteSpace(cap.Description))
+                        {
+                            <span class="bullet-list__desc">— @cap.Description</span>
+                        }
+                        <code class="bullet-list__id">@cap.CapabilityId</code>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="panel__hint">No capabilities declared.</p>
+        }
+    </section>
+
+    <section class="panel">
+        <header class="panel__header">
+            <h2 class="panel__title">Dependencies</h2>
+        </header>
+        @if (module.ModuleDependencies is { Count: > 0 })
+        {
+            <ul class="bullet-list">
+                @foreach (var dep in module.ModuleDependencies)
+                {
+                    <li>
+                        <code>@dep.ModuleId</code>
+                        @if (!string.IsNullOrWhiteSpace(dep.Purpose))
+                        {
+                            <span class="bullet-list__desc">— @dep.Purpose</span>
+                        }
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="panel__hint">No module dependencies declared.</p>
+        }
+    </section>
+}
+
+<section id="integration" class="panel">
+    <header class="panel__header">
+        <h2 class="panel__title">Integration</h2>
+    </header>
+
+    <dl class="info-grid">
+        <div class="info-grid__item">
+            <dt>Route Prefix</dt>
+            <dd>
+                @if (module.Api?.RoutePrefixs is { Length: > 0 })
+                {
+                    @foreach (var prefix in module.Api.RoutePrefixs)
+                    {
+                        <code>@prefix</code>
+                    }
+                }
+                else
+                {
+                    <text>—</text>
+                }
+            </dd>
+        </div>
+        <div class="info-grid__item">
+            <dt>OpenAPI Endpoint</dt>
+            <dd>
+                @if (module.Api is not null)
+                {
+                    <code>@module.Api.OpenApiEndpoint</code>
+                }
+                else
+                {
+                    <text>—</text>
+                }
+            </dd>
+        </div>
+        <div class="info-grid__item">
+            <dt>Health Endpoint</dt>
+            <dd>
+                @if (module.Health is not null)
+                {
+                    <code>@module.Health.Endpoint</code>
+                }
+                else
+                {
+                    <text>—</text>
+                }
+            </dd>
+        </div>
+        <div class="info-grid__item">
+            <dt>Database Schema</dt>
+            <dd>
+                @if (module.Database is not null)
+                {
+                    <code>@module.Database.SchemaName</code>
+                }
+                else
+                {
+                    <text>—</text>
+                }
+            </dd>
+        </div>
+    </dl>
+</section>

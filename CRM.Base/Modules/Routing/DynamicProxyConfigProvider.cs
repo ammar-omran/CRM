@@ -54,6 +54,12 @@ public sealed class DynamicProxyConfigProvider : IProxyConfigProvider
 
 		foreach (var entry in _catalog.GetAll())
 		{
+			// Disabled modules are not routed through the gateway.
+			if (!entry.Entity.Enabled)
+			{
+				continue;
+			}
+
 			if (entry.Manifest?.Api is not { } api)
 			{
 				continue;
@@ -106,7 +112,7 @@ public sealed class DynamicProxyConfigProvider : IProxyConfigProvider
 
 		foreach (var entry in _catalog.GetAll())
 		{
-			if (entry.Manifest is null || !entry.IsAvailable)
+			if (entry.Manifest is null || !entry.IsAvailable || !entry.Entity.Enabled)
 			{
 				continue;
 			}
