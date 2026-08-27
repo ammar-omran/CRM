@@ -11,6 +11,8 @@ using Modules.Users.Infrastructure.Policies;
 using Modules.Users.Domain.Modules;
 using Modules.Users.Domain.Repositories;
 using Modules.Users.Infrastructure.Repositories;
+using Modules.Users.Infrastructure.Authorization;
+using CRM.SharedKernel.Domain.Authorization;
 using CRM.SharedKernel.Domain.Interfaces;
 
 // ReSharper disable once CheckNamespace
@@ -31,6 +33,9 @@ public static class DependencyInjection
 		services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 		services.AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));
 		services.AddScoped<ICustomerRepository, CustomerRepository>();
+
+		// Portal-module role & permission store (owns the module's RBAC data).
+		services.AddScoped<IRolePermissionStore, UsersRolePermissionStore>();
 		services.AddHttpClient("Modules.CustomersApi");
 
 		return services;
