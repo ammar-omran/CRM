@@ -106,13 +106,41 @@ public class ClientAuthorizationService(
 
 	private async Task<(string token, string refreshToken)> GenerateJwtAndRefreshTokenAsync(User user, string? existingRefreshToken)
 	{
-		var roles = await userManager.GetRolesAsync(user);
-		var userRole = roles.FirstOrDefault() ?? "user";
+		var roleNames = await userManager.GetRolesAsync(user);
+		if (roleNames.Count == 0)
+		{
+			roleNames = new List<string> { "user" };
+		}
 
-		var role = await roleManager.FindByNameAsync(userRole);
-		var roleClaims = role is not null ? await roleManager.GetClaimsAsync(role) : [];
+		// Collect the claims of EVERY assigned role, walking up each role's ParentRole chain so that
+		// claims inherited from parent roles are included as well. Claims are de-duplicated by
+		// (Type, Value) so a user with several roles does not end up with duplicate entries.
+		var allClaims = new List<Claim>();
+		var seenClaims = new HashSet<string>(StringComparer.Ordinal);
+		var visitedRoleIds = new HashSet<string>(StringComparer.Ordinal);
 
-		var token = GenerateJwtToken(user, authOptions.Value, userRole, roleClaims);
+		foreach (var roleName in roleNames)
+		{
+			var current = await roleManager.FindByNameAsync(roleName);
+			while (current is not null && visitedRoleIds.Add(current.Id))
+			{
+				var claims = await roleManager.GetClaimsAsync(current);
+				foreach (var claim in claims)
+				{
+					var key = $"{claim.Type}{(char)0x1F}{claim.Value}";
+					if (seenClaims.Add(key))
+					{
+						allClaims.Add(claim);
+					}
+				}
+
+				current = current.PairentRoleId is not null
+					? await roleManager.FindByIdAsync(current.PairentRoleId)
+					: null;
+			}
+		}
+
+		var token = GenerateJwtToken(user, authOptions.Value, roleNames, allClaims);
 		var refreshToken = await GenerateRefreshTokenAsync(token, user, existingRefreshToken);
 
 		return (token, refreshToken);
@@ -150,7 +178,7 @@ public class ClientAuthorizationService(
 
 	private static string GenerateJwtToken(User user,
 			AuthConfiguration authConfiguration,
-			string userRole,
+			IEnumerable<string> roles,
 			IList<Claim> roleClaims)
 	{
 		var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authConfiguration.Key));
@@ -160,9 +188,13 @@ public class ClientAuthorizationService(
 		List<Claim> claims = [
 				new(JwtRegisteredClaimNames.Sub, user.Email!),
 						new("userid", user.Id), // TODO: Stander name
-						new("role", userRole),
 						new(JwtRegisteredClaimNames.Jti, tokenId)
 		];
+
+		foreach (var role in roles)
+		{
+			claims.Add(new Claim("role", role));
+		}
 
 		foreach (var roleClaim in roleClaims)
 		{
