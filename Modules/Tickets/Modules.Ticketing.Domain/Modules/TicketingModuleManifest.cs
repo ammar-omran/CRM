@@ -70,14 +70,10 @@ public sealed class TicketingModuleManifest : IModuleManifest
 
 	/// <inheritdoc />
 	public IReadOnlyList<ModulePolicy> Policies { get; } =
-		 typeof(TicketPolicyConstants)
-			.GetFields(BindingFlags.Public | BindingFlags.Static)
-			.Where(f => f.IsLiteral && f.FieldType == typeof(string))
-			.Select(f => new ModulePolicy
-			{
-				Name = (string)f.GetRawConstantValue()!
-			})
-		.ToArray();
+		PolicyConstants.FromConstants(
+			typeof(TicketPolicyConstants)
+			// Add more entity constants classes here as the module grows, e.g. typeof(TicketCommentPolicyConstants)
+		);
 
 	/// <inheritdoc />
 	public ModuleEvents? Events { get; } = new()

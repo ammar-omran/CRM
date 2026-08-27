@@ -1,4 +1,6 @@
+using System.Reflection;
 using CRM.SharedKernel.Domain.Modules;
+using Modules.Users.Domain.Policies;
 
 namespace Modules.Users.Domain.Modules;
 
@@ -95,13 +97,10 @@ public sealed class UsersModuleManifest : IModuleManifest
 
 	/// <inheritdoc />
 	public IReadOnlyList<ModulePolicy> Policies { get; } =
-	[
-		new ModulePolicy { Name = "users:read", Description = "Allows reading user information." },
-		new ModulePolicy { Name = "users:create", Description = "Allows creating new users." },
-		new ModulePolicy { Name = "users:update", Description = "Allows updating user information." },
-		new ModulePolicy { Name = "users:delete", Description = "Allows deleting users." }
-	];
-
+		PolicyConstants.FromConstants(
+			typeof(UserPolicyConstants)
+			// Add more entity constants classes here as the module grows, e.g. typeof(OrganizationPolicyConstants)
+		);
 	/// <inheritdoc />
 	public ModuleEvents? Events { get; } = new()
 	{

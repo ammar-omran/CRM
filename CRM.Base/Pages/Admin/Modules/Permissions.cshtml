@@ -1,0 +1,199 @@
+@page
+@model CRM.Base.Pages.Admin.Modules.PermissionsModel
+@using CRM.Base.Modules.Admin.Permissions
+@using CRM.SharedKernel.Domain.Modules
+
+@{
+    ViewData["Title"] = "Permissions · " + (Model.Module?.DisplayName ?? "Module");
+    var module = Model.Module!;
+}
+
+<nav class="breadcrumb">
+    <a asp-page="/Admin/Index">Settings</a>
+    <span class="breadcrumb__sep">/</span>
+    <a asp-page="/Admin/Modules/Details" asp-route-moduleId="@module.ModuleId">@module.DisplayName</a>
+    <span class="breadcrumb__sep">/</span>
+    <span class="breadcrumb__current">Permissions</span>
+</nav>
+
+<div class="page-head">
+    <div class="page-head__row">
+        <h1 class="page-head__title">Permissions</h1>
+        <span class="status-badge @(module.Enabled ? "badge--enabled" : "badge--disabled")">@(module.Enabled ? "Enabled" : "Disabled")</span>
+    </div>
+    <p class="page-head__subtitle">@module.ModuleId · @module.BaseUrl</p>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert--error">@Model.ErrorMessage</div>
+}
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert--success">@Model.SuccessMessage</div>
+}
+
+<div class="perm-layout">
+    <section class="panel">
+        <header class="panel__header">
+            <h2 class="panel__title">Roles</h2>
+        </header>
+
+        @if (Model.Roles.Count == 0)
+        {
+            <p class="panel__hint">No roles returned. The module may be unreachable.</p>
+        }
+        else
+        {
+            <ul class="perm-roles">
+                @foreach (var role in Model.Roles)
+                {
+                    <li>
+                        <a class="perm-role @(Model.SelectedRole != null && Model.SelectedRole.Id == role.Id ? "is-active" : "")"
+                           asp-page="/Admin/Modules/Permissions" asp-route-moduleId="@module.ModuleId" asp-route-roleId="@role.Id">
+                            <span class="perm-role__name">@role.Name</span>
+                            <span class="perm-role__meta">
+                                @role.ClaimCount claim(s)@(role.ParentRoleId is not null ? " · inherits" : "")
+                            </span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        }
+
+        <form class="perm-form" method="post"
+              asp-page="/Admin/Modules/Permissions" asp-route-moduleId="@module.ModuleId" asp-page-handler="CreateRole">
+            <h3 class="perm-form__title">New role</h3>
+            <input type="hidden" asp-for="CreateRole.ModuleId" />
+            <div class="field">
+                <label asp-for="CreateRole.Name">Name</label>
+                <input asp-for="CreateRole.Name" placeholder="e.g. Ticketing Manager" />
+                <span asp-validation-for="CreateRole.Name" class="field__error"></span>
+            </div>
+            <div class="field">
+                <label asp-for="CreateRole.ParentRoleId">Parent role</label>
+                <select asp-for="CreateRole.ParentRoleId">
+                    <option value="">— none —</option>
+                    @foreach (var role in Model.Roles)
+                    {
+                        <option value="@role.Id">@role.Name</option>
+                    }
+                </select>
+            </div>
+            <button class="btn btn--primary" type="submit">Create role</button>
+        </form>
+    </section>
+
+    <section class="panel">
+        <header class="panel__header">
+            <h2 class="panel__title">
+                @if (Model.SelectedRole is not null)
+                {
+                    <text>Claims · @Model.SelectedRole.Name</text>
+                }
+                else
+                {
+                    <text>Role claims</text>
+                }
+            </h2>
+        </header>
+
+        @if (Model.SelectedRole is null)
+        {
+            <p class="panel__hint">Select a role on the left to view and manage its claims.</p>
+        }
+        else
+        {
+            <div class="perm-claims">
+                @if (Model.Claims.Count == 0)
+                {
+                    <p class="panel__hint">This role has no claims yet.</p>
+                }
+                else
+                {
+                    @foreach (var grp in Model.Claims.GroupBy(c => c.ClaimType))
+                    {
+                        <div class="claim-group">
+                            <div class="claim-group__title">@grp.Key</div>
+                            <ul class="claim-group__list">
+                                @foreach (var claim in grp)
+                                {
+                                    <li><code>@claim.ClaimValue</code></li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                }
+            </div>
+
+            <form class="perm-form" method="post"
+                  asp-page="/Admin/Modules/Permissions" asp-route-moduleId="@module.ModuleId" asp-page-handler="AddClaim">
+                <h3 class="perm-form__title">Add claim</h3>
+                <input type="hidden" asp-for="AddClaim.ModuleId" />
+                <input type="hidden" asp-for="AddClaim.RoleId" />
+
+                <div class="field">
+                    <label asp-for="AddClaim.ClaimType">Claim type</label>
+                    <input asp-for="AddClaim.ClaimType" id="claimType" />
+                    <span asp-validation-for="AddClaim.ClaimType" class="field__error"></span>
+                </div>
+
+                <div class="field">
+                    <label>Permission (from another module)</label>
+                    <select id="permSelect" onchange="onPermissionChange(this)">
+                        <option value="">— select a permission —</option>
+                        @foreach (var grp in Model.AvailablePermissions.GroupBy(p => p.SourceModuleId))
+                        {
+                            <optgroup label="@grp.First().SourceModuleName (@grp.Key)">
+                                @foreach (var perm in grp)
+                                {
+                                    <option value="@perm.FullPermission">
+                                        @perm.Policy@(perm.Description is not null ? $" — {perm.Description}" : "")
+                                    </option>
+                                }
+                            </optgroup>
+                        }
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label asp-for="AddClaim.ClaimValue">Claim value</label>
+                    <input asp-for="AddClaim.ClaimValue" id="claimValue" placeholder="policy name, e.g. ticket:create" />
+                    <span asp-validation-for="AddClaim.ClaimValue" class="field__error"></span>
+                </div>
+
+                <div class="field field--checkbox">
+                    <label class="checkbox">
+                        <input type="checkbox" id="customClaim" onchange="toggleCustom(this)" />
+                        Custom claim (edit type &amp; value)
+                    </label>
+                </div>
+
+                <button class="btn btn--primary" type="submit">Add claim</button>
+            </form>
+        }
+    </section>
+</div>
+
+<script>
+    function onPermissionChange(sel) {
+        var opt = sel.options[sel.selectedIndex];
+        if (!opt || !opt.value) return;
+        document.getElementById('claimValue').value = opt.value;
+        document.getElementById('claimType').value = 'permission';
+    }
+    function toggleCustom(cb) {
+        var custom = cb.checked;
+        var sel = document.getElementById('permSelect');
+        sel.disabled = custom;
+        sel.style.display = custom ? 'none' : '';
+        document.getElementById('claimType').readOnly = !custom;
+        document.getElementById('claimValue').readOnly = !custom;
+        if (custom) sel.selectedIndex = 0;
+    }
+    window.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('claimType').value = 'permission';
+        document.getElementById('claimType').readOnly = true;
+        document.getElementById('claimValue').readOnly = true;
+    });
+</script>

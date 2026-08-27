@@ -65,3 +65,15 @@ public interface IRolePermissionStore
 	/// <summary>Adds a claim to a role (idempotent). Returns the role id, or a Validation/NotFound error.</summary>
 	Task<Result<string>> AddRoleClaimAsync(string roleId, AddRoleClaimRequest request, CancellationToken cancellationToken = default);
 }
+
+/// <summary>Well-known claim types used by the permission system.</summary>
+public static class PermissionClaims
+{
+	/// <summary>
+	/// Claim type that grants a module permission. The claim <em>value</em> is the policy name
+	/// (e.g. <c>ticket:create</c>); the granting module's id is applied as a prefix by the caller.
+	/// Mirrors <see cref="CRM.SharedKernel.Infrastructure.Policies.PolicyFactoryExtensions.CreateClaimPoliciesFromConstants"/>,
+	/// which requires exactly this claim type.
+	/// </summary>
+	public const string Type = "permission";
+}

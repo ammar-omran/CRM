@@ -30,6 +30,8 @@ builder.Services.AddRazorPages(options =>
 {
     // Serve the Super Admin panel at the site root as the entry point.
     options.Conventions.AddPageRoute("/Admin/Index", "/");
+    // Module permission management lives under the module, e.g. /Admin/Modules/crm.users/Permissions.
+    options.Conventions.AddPageRoute("/Admin/Modules/Permissions", "/Admin/Modules/{moduleId}/Permissions");
 });
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

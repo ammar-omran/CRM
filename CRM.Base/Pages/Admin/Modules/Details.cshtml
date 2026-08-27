@@ -29,9 +29,18 @@
     <a class="detail-tabs__item is-disabled" href="#configuration" title="Coming soon">
         Configuration <span class="detail-tabs__soon">soon</span>
     </a>
-    <a class="detail-tabs__item is-disabled" href="#permissions" title="Coming soon">
-        Permissions <span class="detail-tabs__soon">soon</span>
-    </a>
+    @if (module.Kind == ModuleKind.Portal)
+    {
+        <a class="detail-tabs__item" asp-page="/Admin/Modules/Permissions" asp-route-moduleId="@module.ModuleId">
+            Permissions
+        </a>
+    }
+    else
+    {
+        <a class="detail-tabs__item is-disabled" href="#permissions" title="Only Portal modules manage roles">
+            Permissions <span class="detail-tabs__soon">n/a</span>
+        </a>
+    }
     <a class="detail-tabs__item" href="#integration">Integration</a>
 </div>
 
@@ -105,15 +114,24 @@
     </p>
 </section>
 
-<section id="permissions" class="panel panel--placeholder">
+<section id="permissions" class="panel">
     <header class="panel__header">
         <h2 class="panel__title">Permissions</h2>
-        <span class="panel__soon">Planned</span>
     </header>
-    <p class="panel__hint">
-        Permission management will be added here in a future release. The module currently
-        declares @(module.Policies?.Count ?? 0) authorization @(module.Policies?.Count == 1 ? "policy" : "policies").
-    </p>
+    @if (module.Kind == ModuleKind.Portal)
+    {
+        <p class="panel__hint">
+            This Portal module owns its roles and claims. Manage them from the
+            <a asp-page="/Admin/Modules/Permissions" asp-route-moduleId="@module.ModuleId">Permissions</a> page.
+        </p>
+    }
+    else
+    {
+        <p class="panel__hint">
+            Permission management is only available for Portal modules. This module declares
+            @(module.Policies?.Count ?? 0) @(module.Policies?.Count == 1 ? "policy" : "policies") but does not own roles.
+        </p>
+    }
 </section>
 
 @if (module.ProvidedCapabilities.Count > 0 || module.ModuleDependencies is { Count: > 0 })

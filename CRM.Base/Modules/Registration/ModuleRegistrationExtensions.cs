@@ -1,4 +1,5 @@
 using CRM.Base.Modules.Admin;
+using CRM.Base.Modules.Admin.Permissions;
 using CRM.Base.Modules.DependencyResolution;
 using CRM.Base.Modules.Events;
 using CRM.Base.Modules.Persistence;
@@ -95,6 +96,10 @@ public static class ModuleRegistrationExtensions
         // Thin application facade consumed by the Super Admin Razor Pages.
         // Delegates to the existing catalog / validator pipeline; adds no platform behaviour.
         services.AddSingleton<IModuleAdminService, ModuleAdminService>();
+
+        // Thin client that manages a Portal module's roles/claims through the module's
+        // internal permission endpoints. Resolves BaseUrl from the existing catalog.
+        services.AddSingleton<IModulePermissionClient, ModulePermissionClient>();
 
         return services;
     }
