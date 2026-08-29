@@ -156,7 +156,7 @@ namespace Modules.Users.Infrastructure.Database.Migrations.Users
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims", "users");
+                    b.ToTable("RoleClaims", "users");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.UserAggregate.User", b =>
@@ -227,7 +227,7 @@ namespace Modules.Users.Infrastructure.Database.Migrations.Users
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("AspNetUsers", "users");
+                    b.ToTable("Users", "users");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.UserAggregate.UserClaim", b =>
@@ -252,7 +252,7 @@ namespace Modules.Users.Infrastructure.Database.Migrations.Users
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims", "users");
+                    b.ToTable("UserClaims", "users");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.UserAggregate.UserLogin", b =>
@@ -274,7 +274,7 @@ namespace Modules.Users.Infrastructure.Database.Migrations.Users
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins", "users");
+                    b.ToTable("UserLogins", "users");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.UserAggregate.UserRole", b =>
@@ -289,7 +289,7 @@ namespace Modules.Users.Infrastructure.Database.Migrations.Users
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles", "users");
+                    b.ToTable("UserRoles", "users");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.UserAggregate.UserToken", b =>
@@ -308,7 +308,7 @@ namespace Modules.Users.Infrastructure.Database.Migrations.Users
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens", "users");
+                    b.ToTable("UserTokens", "users");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.Tokens.RefreshToken", b =>

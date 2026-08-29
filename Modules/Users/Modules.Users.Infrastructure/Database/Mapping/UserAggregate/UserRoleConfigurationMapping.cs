@@ -8,6 +8,8 @@ public class UserRoleConfiguration : IEntityTypeConfiguration<UserRole>
 {
 	public void Configure(EntityTypeBuilder<UserRole> builder)
 	{
+		builder.ToTable("UserRoles");
+
 		builder.HasKey(x => new { x.UserId, x.RoleId });
 
 		builder.HasOne(ur => ur.Role)

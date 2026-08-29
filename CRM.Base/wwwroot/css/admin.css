@@ -1,19 +1,19 @@
 :root {
-    --brand: #714b67;
-    --brand-dark: #5b3a54;
-    --brand-light: #8a6380;
+    --brand: #024F82;
+    --brand-dark: #024F82;
+    --brand-light: #024F82;
     --topbar-fg: #ffffff;
     --sidebar-bg: #ffffff;
     --sidebar-fg: #4a4a4a;
     --sidebar-active-bg: #f3ebf1;
-    --sidebar-active-fg: #714b67;
+    --sidebar-active-fg: #01395e;
     --content-bg: #f7f7fa;
     --panel-bg: #ffffff;
     --border: #e3e3e8;
     --text: #2b2b2b;
     --muted: #8a8a8a;
-    --primary: #714b67;
-    --primary-hover: #5b3a54;
+    --primary: #024F82;
+    --primary-hover: #01395e;
     --warn: #b8860b;
     --warn-bg: #fff6e0;
     --danger: #c0392b;
