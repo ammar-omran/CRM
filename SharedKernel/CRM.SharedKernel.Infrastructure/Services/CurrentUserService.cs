@@ -29,13 +29,17 @@ public sealed class CurrentUserService : ICurrentUserService
 
 			var rawToken = GetRawToken(_httpContextAccessor.HttpContext!);
 
-			var userId = principal.FindFirstValue("userid");
+			var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier)
+				?? principal.FindFirstValue(JwtRegisteredClaimNames.Sub)
+				?? principal.FindFirstValue("userid");
 
+			// Align with ClientAuthorizationService standard claims:
+			// Id -> ClaimTypes.NameIdentifier (sub), Name -> ClaimTypes.Name, Email -> ClaimTypes.Email, Role -> ClaimTypes.Role
 			return new CurrentUser(
 				userId,
 				principal.FindFirstValue(ClaimTypes.Name),
-				principal.FindFirstValue(JwtRegisteredClaimNames.Sub),
-				principal.FindFirstValue("role"),
+				principal.FindFirstValue(ClaimTypes.Email) ?? principal.FindFirstValue(JwtRegisteredClaimNames.Email) ?? principal.FindFirstValue(JwtRegisteredClaimNames.Sub),
+				principal.FindFirstValue(ClaimTypes.Role) ?? principal.FindFirstValue("role"),
 				rawToken,
 				GetTokenPayload(rawToken));
 		}

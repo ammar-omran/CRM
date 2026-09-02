@@ -39,10 +39,14 @@ namespace Modules.Users.Infrastructure.Database.Migrations.Organizations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Agents", "org");
                 });
@@ -174,6 +178,41 @@ namespace Modules.Users.Infrastructure.Database.Migrations.Organizations
                         });
                 });
 
+            modelBuilder.Entity("Modules.Users.Domain.UserAggregate.User", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("Id");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)")
+                        .HasColumnName("Email");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)")
+                        .HasColumnName("NormalizedEmail");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)")
+                        .HasColumnName("NormalizedUserName");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)")
+                        .HasColumnName("UserName");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users", "users", t =>
+                        {
+                            t.ExcludeFromMigrations();
+                        });
+                });
+
             modelBuilder.Entity("Modules.Users.Domain.OrganizationAggregate.Customer", b =>
                 {
                     b.HasOne("Modules.Users.Domain.OrganizationAggregate.Organization", "Organization")
@@ -210,6 +249,17 @@ namespace Modules.Users.Infrastructure.Database.Migrations.Organizations
                     b.Navigation("AgentRole");
 
                     b.Navigation("Organization");
+                });
+
+            modelBuilder.Entity("Modules.Users.Domain.OrganizationAggregate.Agent", b =>
+                {
+                    b.HasOne("Modules.Users.Domain.UserAggregate.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.UserAggregate.Role", b =>

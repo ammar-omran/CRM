@@ -21,13 +21,20 @@ namespace Modules.Users.Infrastructure.Database.Migrations.Organizations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Agents", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Agents_Users_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "users",
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -107,6 +114,12 @@ namespace Modules.Users.Infrastructure.Database.Migrations.Organizations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Agents_UserId",
+                schema: "org",
+                table: "Agents",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Customers_OrganizationId",

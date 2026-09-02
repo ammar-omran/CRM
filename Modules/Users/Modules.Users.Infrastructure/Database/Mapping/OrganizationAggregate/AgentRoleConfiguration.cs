@@ -14,10 +14,10 @@ public class AgentRoleConfiguration : IEntityTypeConfiguration<Role>
 	{
 		builder.ToTable("Roles", DbConsts.UsersSchema, t => t.ExcludeFromMigrations());
 		builder.HasKey(r => r.Id);
-		builder.Property(r => r.Id).HasColumnName("id").HasMaxLength(450);
-		builder.Property(r => r.Name).HasColumnName("name").HasMaxLength(256);
-		builder.Property(r => r.NormalizedName).HasColumnName("normalized_name").HasMaxLength(256);
-		builder.Property(r => r.ConcurrencyStamp).HasColumnName("concurrency_stamp");
+		builder.Property(r => r.Id).HasColumnName("Id").HasMaxLength(450);
+		builder.Property(r => r.Name).HasColumnName("Name").HasMaxLength(256);
+		builder.Property(r => r.NormalizedName).HasColumnName("NormalizedName").HasMaxLength(256);
+		builder.Property(r => r.ConcurrencyStamp).HasColumnName("ConcurrencyStamp");
 		builder.Ignore(r => r.PairentRoleId);
 		builder.Ignore(r => r.PairentRole);
 		builder.Ignore(r => r.RoleClaims);

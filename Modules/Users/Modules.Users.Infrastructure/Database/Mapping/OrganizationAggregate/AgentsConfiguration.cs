@@ -10,7 +10,17 @@ public class AgentConfiguration : IEntityTypeConfiguration<Agent>
     {
         builder.HasKey(a => a.Id);
 
-        builder.Property(a => a.UserId).IsRequired();
+        builder.Property(a => a.UserId)
+            .HasMaxLength(450)
+            .IsRequired();
+
+        builder.HasOne(a => a.User)
+            .WithMany()
+            .HasForeignKey(a => a.UserId)
+            .HasPrincipalKey(u => u.Id)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasIndex(a => a.UserId);
 
         builder.HasMany(a => a.AgentOrganizations)
             .WithOne(oa => oa.Agent)
