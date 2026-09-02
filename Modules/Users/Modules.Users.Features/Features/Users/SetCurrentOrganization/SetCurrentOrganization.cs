@@ -72,7 +72,7 @@ internal class SetCurrentOrganizationEndpoint : IApiEndpoint
 	}
 }
 
-internal class SetCurrentOrganizationRequestValidator : AbstractValidator<SetCurrentOrganizationRequest>
+public sealed class SetCurrentOrganizationRequestValidator : AbstractValidator<SetCurrentOrganizationRequest>
 {
 	public SetCurrentOrganizationRequestValidator()
 	{
