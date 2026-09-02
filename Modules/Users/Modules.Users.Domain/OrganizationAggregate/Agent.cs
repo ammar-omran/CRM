@@ -7,7 +7,5 @@ public class Agent
     public int Id { get; set; }
     public string UserId { get; set; } = string.Empty;
     public User User { get; set; } = default!;
-    public string Name { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
     public ICollection<OrganizationAgent> AgentOrganizations { get; set; } = [];
 }

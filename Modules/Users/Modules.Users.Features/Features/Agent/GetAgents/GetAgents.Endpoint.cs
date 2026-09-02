@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using CRM.SharedKernel.Application.API.Abstractions;
 using CRM.SharedKernel.Application.API.Extensions;
+using Modules.Users.Domain.Policies;
 using Modules.Users.Features.Agent.Shared.Requests;
 using Modules.Users.Features.Agent.Shared.Routes;
 
@@ -13,7 +14,8 @@ public class GetAgentsEndpoint : IApiEndpoint
 {
     public void MapEndpoint(WebApplication app)
     {
-        app.MapGet(RouteConsts.BaseRoute, Handle);
+        app.MapGet(RouteConsts.BaseRoute, Handle)
+            .RequireAuthorization(UserPolicyConstants.AgentReadPolicy);
     }
 
     private static async Task<IResult> Handle(

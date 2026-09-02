@@ -25,7 +25,7 @@ internal sealed class OrganizationCreatedEventHandler(
 
 		var orgAgents = await orgAgentRepo.GetListAsync(
 			query: orgAgentRepo.Query.Where(oa => oa.OrganizationId == @event.OrganizationId),
-			includes: [nameof(OrganizationAgent.Agent), nameof(OrganizationAgent.AgentRole)],
+			includes: ["Agent.User", nameof(OrganizationAgent.AgentRole)],
 			cancellation: ct);
 
 		if (orgAgents.Count == 0)
@@ -38,16 +38,19 @@ internal sealed class OrganizationCreatedEventHandler(
 
 		foreach (var orgAgent in orgAgents)
 		{
+			var user = orgAgent.Agent.User;
+			var agentName = user.UserName ?? user.Email ?? string.Empty;
+			var agentEmail = user.Email ?? string.Empty;
 			var body = OrganizationTemplates.AgentAddedToOrganizationEmailContent(
-				agentName: orgAgent.Agent.Name,
-				agentEmail: orgAgent.Agent.Email,
+				agentName: agentName,
+				agentEmail: agentEmail,
 				tempPassword: "",
 				OrgName: @event.OrganizationName,
 				agentRole: orgAgent.AgentRole.Name ?? string.Empty,
 				systemURL: cfg.SystemUrl);
 
 			await emailSender.SendAsync(
-				to: orgAgent.Agent.Email,
+				to: agentEmail,
 				subject: $"You have been added to {@event.OrganizationName}",
 				htmlBody: body,
 				ct: ct);

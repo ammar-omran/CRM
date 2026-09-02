@@ -26,8 +26,8 @@ internal sealed class GetAgentsHandler(
 
 		var query = agentRepo.Query;
 
-		if (!string.IsNullOrWhiteSpace(request.Email))
-			query = query.Where(a => a.Email == request.Email);
+		if (!string.IsNullOrWhiteSpace(request.UserId))
+			query = query.Where(a => a.UserId == request.UserId);
 
 		var total = request.SkipTotal ? -1 : await agentRepo.CountAsync(query, ct);
 
@@ -37,7 +37,7 @@ internal sealed class GetAgentsHandler(
 
 		var agents = await agentRepo.GetListAsync(
 				query: query,
-				selector: a => new AgentResponse(a.Id, a.Name, a.Email, ""),
+				selector: a => new AgentResponse(a.Id, a.UserId, a.User.UserName ?? string.Empty, a.User.Email ?? string.Empty),
 				cancellation: ct);
 
 		var result = new PaginationResponse<AgentResponse>(

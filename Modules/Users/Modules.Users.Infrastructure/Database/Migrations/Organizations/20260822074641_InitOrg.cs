@@ -21,9 +21,7 @@ namespace Modules.Users.Infrastructure.Database.Migrations.Organizations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -111,7 +109,7 @@ namespace Modules.Users.Infrastructure.Database.Migrations.Organizations
                         column: x => x.AgentRoleId,
                         principalSchema: "users",
                         principalTable: "Roles",
-                        principalColumn: "id",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
