@@ -14,8 +14,8 @@ public class EfRepository<T>(IApplicationDbContext dbContext)
 	{
 		try
 		{
-			await _dbContext.Set<T>().AddRangeAsync(entities);
-			await _dbContext.SaveChangesAsync();
+			await _dbContext.Set<T>().AddRangeAsync(entities, cancellation);
+			await _dbContext.SaveChangesAsync(cancellation);
 		}
 		catch (Exception ex)
 		{

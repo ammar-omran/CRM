@@ -57,7 +57,7 @@ public sealed class CurrentUserService : ICurrentUserService
 			: null;
 	}
 
-	private static IReadOnlyDictionary<string, object>? GetTokenPayload(string? rawToken)
+	private static System.IdentityModel.Tokens.Jwt.JwtPayload? GetTokenPayload(string? rawToken)
 	{
 		if (string.IsNullOrEmpty(rawToken))
 			return null;

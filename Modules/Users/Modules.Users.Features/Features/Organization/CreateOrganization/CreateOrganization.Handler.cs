@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using CRM.SharedKernel.Domain.Events;
 using CRM.SharedKernel.Domain.Handlers;
 using CRM.SharedKernel.Domain.Results;
-using CRM.SharedKernel.Infrastructure.Database;
 using Modules.Users.Domain.OrganizationAggregate;
 using Modules.Users.Domain.Repositories;
 using Modules.Users.Features.Organization.CreateOrganization.Events;
@@ -25,7 +24,6 @@ internal sealed class CreateOrganizationHandler(
 		IReadRepository<Domain.OrganizationAggregate.Agent> agentRepo,
 		UsersDbContext usersContext,
 		ICustomerRepository customerRepo,
-		IReadRepository<OrganizationAgent> orgAgentsRepo,
 		IEventPublisher eventPublisher,
 		ILogger<CreateOrganizationHandler> logger) : ICreateOrganizationHandler
 {
@@ -118,11 +116,6 @@ internal sealed class CreateOrganizationHandler(
 			await orgRepo.Add(organization, ct);
 
 			logger.LogInformation("Organization Created with ID {OrganizationId}", organization.Id);
-
-			organization.OrganizationAgents = await orgAgentsRepo.GetListAsync(
-					orgAgentsRepo.Query.Where(orgAgent => orgAgent.OrganizationId == organization.Id),
-					includes: [nameof(OrganizationAgent.Agent), nameof(OrganizationAgent.AgentRole)],
-					cancellation: ct);
 
 			await eventPublisher.PublishAsync(new OrganizationCreatedEvent(organization.Id, organization.Name), ct);
 		}

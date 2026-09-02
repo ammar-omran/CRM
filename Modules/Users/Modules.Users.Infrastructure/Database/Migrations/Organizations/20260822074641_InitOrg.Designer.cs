@@ -144,28 +144,23 @@ namespace Modules.Users.Infrastructure.Database.Migrations.Organizations
                     b.Property<string>("Id")
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)")
-                        .HasColumnName("id");
+                        .HasColumnName("Id");
 
                     b.Property<string>("ConcurrencyStamp")
                         .HasColumnType("nvarchar(max)")
-                        .HasColumnName("concurrency_stamp");
+                        .HasColumnName("ConcurrencyStamp");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)")
-                        .HasColumnName("name");
+                        .HasColumnName("Name");
 
                     b.Property<string>("NormalizedName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)")
-                        .HasColumnName("normalized_name");
-
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnName("NormalizedName");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
 
                     b.ToTable("Roles", "users", t =>
                         {
@@ -257,13 +252,6 @@ namespace Modules.Users.Infrastructure.Database.Migrations.Organizations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Modules.Users.Domain.UserAggregate.Role", b =>
-                {
-                    b.HasOne("Modules.Users.Domain.UserAggregate.Role", null)
-                        .WithMany("ChildRoles")
-                        .HasForeignKey("RoleId");
-                });
-
             modelBuilder.Entity("Modules.Users.Domain.OrganizationAggregate.Agent", b =>
                 {
                     b.Navigation("AgentOrganizations");
@@ -274,11 +262,6 @@ namespace Modules.Users.Infrastructure.Database.Migrations.Organizations
                     b.Navigation("OrganizationAgents");
 
                     b.Navigation("OrganizationCustomers");
-                });
-
-            modelBuilder.Entity("Modules.Users.Domain.UserAggregate.Role", b =>
-                {
-                    b.Navigation("ChildRoles");
                 });
 #pragma warning restore 612, 618
         }

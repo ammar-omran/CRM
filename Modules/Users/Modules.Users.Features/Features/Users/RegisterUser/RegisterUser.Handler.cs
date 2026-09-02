@@ -26,7 +26,7 @@ internal sealed class RegisterUserHandler(
         {
             Id = Guid.NewGuid().ToString(),
             Email = request.Email,
-            UserName = request.Email
+            UserName = request.Name,
         };
 
         var result = await userManager.CreateAsync(user, request.Password);

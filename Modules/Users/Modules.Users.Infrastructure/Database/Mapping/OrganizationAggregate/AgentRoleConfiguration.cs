@@ -20,6 +20,7 @@ public class AgentRoleConfiguration : IEntityTypeConfiguration<Role>
 		builder.Property(r => r.ConcurrencyStamp).HasColumnName("ConcurrencyStamp");
 		builder.Ignore(r => r.PairentRoleId);
 		builder.Ignore(r => r.PairentRole);
+		builder.Ignore(r => r.ChildRoles);
 		builder.Ignore(r => r.RoleClaims);
 	}
 }

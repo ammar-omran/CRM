@@ -9,9 +9,7 @@ using CRM.SharedKernel.Infrastructure.Policies;
 using OpenTelemetry.Resources;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using OpenTelemetry.Trace;
-using Microsoft.AspNetCore.Identity;
 using CRM.SharedKernel.Infrastructure.Services;
-using CRM.SharedKernel.Infrastructure.Database;
 using CRM.SharedKernel.Domain.Modules;
 
 // ReSharper disable once CheckNamespace
@@ -27,7 +25,7 @@ public static class DependencyInjection
 
 
 		var provider = services.BuildServiceProvider();
-		var activityModuleNames = provider.GetService<IModuleManifest>().Identity.ModuleId;
+		var activityModuleNames = provider.GetService<IModuleManifest>()?.Identity.ModuleId ?? string.Empty;
 		services.AddHostOpenTelemetry(activityModuleNames);
 
 		services.AddJwtAuthentication(configuration);

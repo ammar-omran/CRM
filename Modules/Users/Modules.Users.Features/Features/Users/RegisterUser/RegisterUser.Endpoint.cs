@@ -8,7 +8,7 @@ using Modules.Users.Features.Users.Shared.Routes;
 
 namespace Modules.Users.Features.Users.RegisterUser;
 
-public sealed record RegisterUserRequest(string Email, string Password, string? Role);
+public sealed record RegisterUserRequest(string Email, string Name, string Password, string? Role);
 
 public class RegisterUserEndpoint : IApiEndpoint
 {
