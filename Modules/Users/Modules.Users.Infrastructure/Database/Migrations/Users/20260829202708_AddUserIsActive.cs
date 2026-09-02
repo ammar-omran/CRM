@@ -1,0 +1,31 @@
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace Modules.Users.Infrastructure.Database.Migrations.Users
+{
+    /// <inheritdoc />
+    public partial class AddUserIsActive : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AddColumn<bool>(
+                name: "IsActive",
+                schema: "users",
+                table: "Users",
+                type: "bit",
+                nullable: false,
+                defaultValue: false);
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropColumn(
+                name: "IsActive",
+                schema: "users",
+                table: "Users");
+        }
+    }
+}

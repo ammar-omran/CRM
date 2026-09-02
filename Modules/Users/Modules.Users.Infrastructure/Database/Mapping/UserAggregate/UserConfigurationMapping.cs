@@ -10,6 +10,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 	{
 		builder.ToTable("Users");
 
+		builder.Property(u => u.IsActive)
+			.HasDefaultValue(false);
+
 		// Each User can have many UserClaims
 		builder.HasMany(e => e.Claims)
 				.WithOne(e => e.User)

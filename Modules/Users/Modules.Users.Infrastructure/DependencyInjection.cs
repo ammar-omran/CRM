@@ -8,6 +8,7 @@ using Modules.Users.Domain.UserAggregate;
 using Modules.Users.Infrastructure.Authorization;
 using Modules.Users.Infrastructure.Database;
 using Modules.Users.Infrastructure.Policies;
+using Modules.Users.Domain.Authentication;
 using Modules.Users.Domain.Modules;
 using Modules.Users.Domain.Repositories;
 using Modules.Users.Infrastructure.Repositories;
@@ -27,6 +28,8 @@ public static class DependencyInjection
 		services.AddCoreInfrastructure(configuration);
 
 		services.AddScoped<IClientAuthorizationService, ClientAuthorizationService>();
+
+		services.AddScoped<IPasswordResetTokenGenerator, PasswordResetTokenGenerator>();
 
 		services.AddSingleton<IPolicyFactory, UsersPolicyFactory>();
 

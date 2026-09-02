@@ -36,4 +36,19 @@ public static class UserErrors
     
     public static Error InvalidToken() =>
         Error.Validation($"{ErrorPrefix}.{nameof(InvalidToken)}", "Invalid token");
+
+    public static Error UserNotActive() =>
+        Error.Unauthorized($"{ErrorPrefix}.{nameof(UserNotActive)}", "User account is inactive.");
+
+    public static Error UserAlreadyActive(string email) =>
+        Error.Conflict($"{ErrorPrefix}.{nameof(UserAlreadyActive)}", $"User '{email}' already has an active account.");
+
+    public static Error WeakPassword(string details) =>
+        Error.Validation($"{ErrorPrefix}.{nameof(WeakPassword)}", $"Password does not meet requirements: {details}");
+
+    public static Error InvalidOrExpiredLink() =>
+        Error.Validation($"{ErrorPrefix}.{nameof(InvalidOrExpiredLink)}", "Invalid or expired link.");
+
+    public static Error TokenExpired() =>
+        Error.Validation($"{ErrorPrefix}.{nameof(TokenExpired)}", "This link has expired. Please contact your administrator.");
 }

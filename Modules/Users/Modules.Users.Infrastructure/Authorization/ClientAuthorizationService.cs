@@ -42,6 +42,13 @@ public class ClientAuthorizationService(
 			return UserErrors.InvalidCredentials();
 		}
 
+		// Is-active guard: an inactive account (e.g. pending first-time password setup)
+		// is not permitted to authenticate.
+		if (!user.IsActive)
+		{
+			return UserErrors.UserNotActive();
+		}
+
 		var (token, refreshToken) = await GenerateJwtAndRefreshTokenAsync(user, null);
 
 		return new LoginUserResponse(token, refreshToken);

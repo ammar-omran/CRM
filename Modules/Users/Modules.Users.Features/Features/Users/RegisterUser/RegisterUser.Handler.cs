@@ -15,7 +15,7 @@ internal interface IRegisterUserHandler : IHandler
 
 internal sealed class RegisterUserHandler(
     UserManager<User> userManager,
-    ILogger<RegisterUserHandler> logger) 
+    ILogger<RegisterUserHandler> logger)
     : IRegisterUserHandler
 {
     public async Task<Result<UserResponse>> HandleAsync(
