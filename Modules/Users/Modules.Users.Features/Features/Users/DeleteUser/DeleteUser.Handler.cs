@@ -7,7 +7,7 @@ using Modules.Users.Domain.UserAggregate;
 
 namespace Modules.Users.Features.Users.DeleteUser;
 
-internal interface IDeleteUserHandler : IHandler
+public interface IDeleteUserHandler : IHandler
 {
     Task<Result<Success>> HandleAsync(string userId, CancellationToken cancellationToken);
 }

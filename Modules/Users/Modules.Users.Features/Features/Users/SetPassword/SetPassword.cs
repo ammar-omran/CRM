@@ -1,17 +1,11 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using CRM.SharedKernel.Application.API.Abstractions;
-using CRM.SharedKernel.Application.API.Extensions;
 using CRM.SharedKernel.Domain.Handlers;
 using CRM.SharedKernel.Domain.Results;
 using Modules.Users.Domain.Authentication;
 using Modules.Users.Domain.Errors;
 using Modules.Users.Domain.UserAggregate;
-using Modules.Users.Features.Users.Shared.Routes;
 using Modules.Users.Features.Validators;
 
 namespace Modules.Users.Features.Users.SetPassword;
@@ -25,7 +19,7 @@ public sealed record SetPasswordRequest(string Token, string Password);
 
 
 
-internal interface ISetPasswordHandler : IHandler
+public interface ISetPasswordHandler : IHandler
 {
 	Task<Result<Success>> HandleAsync(SetPasswordRequest request, CancellationToken cancellationToken);
 }
@@ -111,32 +105,3 @@ public class SetPasswordRequestValidator : AbstractValidator<SetPasswordRequest>
 	}
 }
 
-
-public class SetPasswordEndpoint : IApiEndpoint
-{
-	public void MapEndpoint(WebApplication app)
-	{
-		app.MapPost(RouteConsts.SetPassword, Handle);
-	}
-
-	private static async Task<Microsoft.AspNetCore.Http.IResult> Handle(
-			[FromBody] SetPasswordRequest request,
-			IValidator<SetPasswordRequest> validator,
-			ISetPasswordHandler handler,
-			CancellationToken cancellationToken)
-	{
-		var validationResult = await validator.ValidateAsync(request, cancellationToken);
-		if (!validationResult.IsValid)
-		{
-			return Results.ValidationProblem(validationResult.ToDictionary());
-		}
-
-		var response = await handler.HandleAsync(request, cancellationToken);
-		if (response.IsError)
-		{
-			return response.Errors.ToProblem();
-		}
-
-		return Results.NoContent();
-	}
-}

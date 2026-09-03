@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Module registration
 builder.Services.AddUsersModule(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddControllers();
 builder.Services.AddSwagger();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>().AddProblemDetails();
 
@@ -24,6 +25,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapDefaultEndpoints();
+app.MapControllers();
 app.MapApiEndpoints();
 
 // Default Portal-module permission management endpoints, mounted on the internal

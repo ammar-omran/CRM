@@ -12,7 +12,7 @@ using Modules.Users.Infrastructure.Database;
 
 namespace Modules.Users.Features.Agents.CreateAgent;
 
-internal interface ICreateAgentHandler : IHandler
+public interface ICreateAgentHandler : IHandler
 {
 	Task<Result<AgentResponse>> HandleAsync(AddAgentRequest request, CancellationToken cancellationToken);
 }

@@ -9,7 +9,7 @@ using Modules.Users.Infrastructure.Database;
 
 namespace Modules.Users.Features.Agents.GetAgents;
 
-internal interface IGetAgentsHandler : IHandler
+public interface IGetAgentsHandler : IHandler
 {
 	Task<Result<PaginationResponse<AgentResponse>>> HandleAsync(AgentByRequest request, CancellationToken cancellationToken);
 }

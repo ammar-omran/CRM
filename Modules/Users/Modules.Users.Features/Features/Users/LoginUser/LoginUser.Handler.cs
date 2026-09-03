@@ -4,7 +4,7 @@ using Modules.Users.Domain.Authentication;
 
 namespace Modules.Users.Features.Users.LoginUser;
 
-internal interface ILoginUserHandler : IHandler
+public interface ILoginUserHandler : IHandler
 {
     Task<Result<LoginUserResponse>> HandleAsync(LoginUserRequest request, CancellationToken cancellationToken);
 }

@@ -4,7 +4,7 @@ using Modules.Users.Domain.Authentication;
 
 namespace Modules.Users.Features.Users.RefreshToken;
 
-internal interface IRefreshTokenHandler : IHandler
+public interface IRefreshTokenHandler : IHandler
 {
     Task<Result<RefreshTokenResponse>> HandleAsync(RefreshTokenRequest request, CancellationToken cancellationToken);
 }

@@ -9,7 +9,7 @@ using Modules.Users.Infrastructure.Database;
 
 namespace Modules.Users.Features.Organizations.GetOrganizations;
 
-internal interface IGetOrganizationsHandler : IHandler
+public interface IGetOrganizationsHandler : IHandler
 {
 	Task<Result<PaginationResponse<OrganizationResponse>>> HandleAsync(GetOrganizationRequest request, CancellationToken cancellationToken);
 }

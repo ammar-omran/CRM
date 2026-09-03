@@ -8,7 +8,7 @@ using Modules.Users.Infrastructure.Database;
 
 namespace Modules.Users.Features.Users.GetUserById;
 
-internal interface IGetUserByIdHandler : IHandler
+public interface IGetUserByIdHandler : IHandler
 {
     Task<Result<UserResponse>> HandleAsync(string userId, CancellationToken cancellationToken);
 }

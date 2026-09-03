@@ -8,7 +8,7 @@ using Modules.Users.Features.Users.Shared;
 
 namespace Modules.Users.Features.Users.RegisterUser;
 
-internal interface IRegisterUserHandler : IHandler
+public interface IRegisterUserHandler : IHandler
 {
     Task<Result<UserResponse>> HandleAsync(RegisterUserRequest request, CancellationToken cancellationToken);
 }

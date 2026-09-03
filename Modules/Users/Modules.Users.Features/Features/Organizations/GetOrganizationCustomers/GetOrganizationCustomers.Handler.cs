@@ -9,7 +9,7 @@ using Modules.Users.Infrastructure.Database;
 
 namespace Modules.Users.Features.Organizations.GetOrganizationCustomers;
 
-internal interface IGetOrganizationCustomersHandler : IHandler
+public interface IGetOrganizationCustomersHandler : IHandler
 {
 	Task<Result<PaginationResponse<OrganizationCustomerResponse>>> HandleAsync(
 			GetOrganizationCustomersRequest request,

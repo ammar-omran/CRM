@@ -13,7 +13,7 @@ using Modules.Users.Infrastructure.Database;
 
 namespace Modules.Users.Features.Organizations.CreateOrganization;
 
-internal interface ICreateOrganizationHandler : IHandler
+public interface ICreateOrganizationHandler : IHandler
 {
 	Task<Result<OrganizationResponse>> HandleAsync(AddOrganizationRequest request, CancellationToken cancellationToken);
 }
