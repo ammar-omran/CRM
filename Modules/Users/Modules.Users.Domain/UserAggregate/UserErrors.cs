@@ -51,4 +51,9 @@ public static class UserErrors
 
     public static Error TokenExpired() =>
         Error.Validation($"{ErrorPrefix}.{nameof(TokenExpired)}", "This link has expired. Please contact your administrator.");
+
+    public static Error LockedOut(DateTimeOffset? lockoutEnd) =>
+        Error.Unauthorized($"{ErrorPrefix}.{nameof(LockedOut)}", lockoutEnd.HasValue
+            ? $"Account is locked out until {lockoutEnd.Value:O}."
+            : "Account is locked out.");
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -218,9 +218,9 @@ namespace Modules.Users.Infrastructure.Database.Migrations.Users
                     { "1", "f0bd1f07-f514-4317-9657-5bb7db4d57c3", "Agent", "Agent", null },
                     { "2", "8e0f28f1-76ee-4f53-82df-133091ecdb94", "Supervisor", "Supervisor", null },
                     { "3", "0f83831b-220a-48a9-9fce-f9c148ec0b78", "Admin", "Admin", null },
-                    { "4", "bf4d84e9-fb60-458f-b176-d6d9e94e1218", "Team Lead", "TeamLead", "1" },
-                    { "5", "afdb8cfc-85ee-471e-9dbc-4508ba2ef533", "First Line", "FirstLine", "1" },
-                    { "6", "e647f1a9-a664-4269-8c3d-20401c1dccd5", "Second Line", "SecondLine", "1" }
+                    { "4", "bf4d84e9-fb60-458f-b176-d6d9e94e1218", "TeamLead", "TEAMLEAD", "1" },
+                    { "5", "afdb8cfc-85ee-471e-9dbc-4508ba2ef533", "FirstLine", "FIRSTLINE", "1" },
+                    { "6", "e647f1a9-a664-4269-8c3d-20401c1dccd5", "SecondLine", "SECONDLINE", "1" }
                 });
 
             migrationBuilder.CreateIndex(

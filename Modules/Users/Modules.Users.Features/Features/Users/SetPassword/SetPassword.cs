@@ -79,6 +79,7 @@ internal sealed class SetPasswordHandler(
 		// 6. Persist the new password hash and activate the account.
 		user.PasswordHash = userManager.PasswordHasher.HashPassword(user, request.Password);
 		user.IsActive = true;
+		user.EmailConfirmed = true;
 
 		var result = await userManager.UpdateAsync(user);
 		if (!result.Succeeded)

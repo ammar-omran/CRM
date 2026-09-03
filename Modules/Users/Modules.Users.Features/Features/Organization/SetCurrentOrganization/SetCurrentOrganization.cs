@@ -11,7 +11,7 @@ using Modules.Users.Features.Users.Shared.Routes;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace Modules.Users.Features.Users.SetCurrentOrganization;
+namespace Modules.Users.Features.Organization.SetCurrentOrganization;
 
 public sealed record SetCurrentOrganizationRequest(int OrganizationId);
 

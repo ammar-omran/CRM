@@ -37,17 +37,26 @@ public class ClientAuthorizationService(
 			return UserErrors.NotFoundByEmail(email);
 		}
 
-		var result = await signInManager.CheckPasswordSignInAsync(user, password, false);
-		if (!result.Succeeded)
-		{
-			return UserErrors.InvalidCredentials();
-		}
-
 		// Is-active guard: an inactive account (e.g. pending first-time password setup)
-		// is not permitted to authenticate.
+		// is not permitted to authenticate. Check before password to avoid counting
+		// failed attempts against inactive accounts.
 		if (!user.IsActive)
 		{
 			return UserErrors.UserNotActive();
+		}
+
+		// lockoutOnFailure:true increments AccessFailedCount / LockoutEnd when
+		// LockoutEnabled is true. Required for LockoutEnabled benefit.
+		var result = await signInManager.CheckPasswordSignInAsync(user, password, lockoutOnFailure: true);
+		if (result.IsLockedOut)
+		{
+			logger.LogWarning("User {Email} is locked out until {LockoutEnd}", email, user.LockoutEnd);
+			return UserErrors.LockedOut(user.LockoutEnd);
+		}
+
+		if (!result.Succeeded)
+		{
+			return UserErrors.InvalidCredentials();
 		}
 
 		var (token, refreshToken) = await GenerateJwtAndRefreshTokenAsync(user, null);
