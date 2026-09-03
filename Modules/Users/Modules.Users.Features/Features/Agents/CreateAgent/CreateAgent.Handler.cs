@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using CRM.SharedKernel.Domain.Handlers;
 using CRM.SharedKernel.Domain.Results;
@@ -7,7 +8,7 @@ using Modules.Users.Domain.UserAggregate;
 using Modules.Users.Features.Agents.Shared.Errors;
 using Modules.Users.Features.Agents.Shared.Requests;
 using Modules.Users.Features.Agents.Shared.Responses;
-using CRM.SharedKernel.Domain.Interfaces;
+using Modules.Users.Infrastructure.Database;
 
 namespace Modules.Users.Features.Agents.CreateAgent;
 
@@ -17,8 +18,7 @@ internal interface ICreateAgentHandler : IHandler
 }
 
 internal sealed class CreateAgentHandler(
-		IRepository<Agent> agentRepo,
-		IReadRepository<Agent> agentReadRepo,
+		OrganizationsDbContext dbContext,
 		UserManager<User> userManager,
 		ILogger<CreateAgentHandler> logger) : ICreateAgentHandler
 {
@@ -33,7 +33,7 @@ internal sealed class CreateAgentHandler(
 			return AgentErrors.UserNotFound(request.UserId);
 		}
 
-		var alreadyAgent = await agentReadRepo.AnyAsync(a => a.UserId == request.UserId, ct);
+		var alreadyAgent = await dbContext.Agents.AnyAsync(a => a.UserId == request.UserId, ct);
 		if (alreadyAgent)
 		{
 			logger.LogInformation("Agent for user {UserId} already exists", request.UserId);
@@ -47,7 +47,8 @@ internal sealed class CreateAgentHandler(
 
 		try
 		{
-			await agentRepo.Add(agent, ct);
+			await dbContext.Agents.AddAsync(agent, ct);
+			await dbContext.SaveChangesAsync(ct);
 
 			logger.LogInformation("Agent Added with ID {AgentId} for User {UserId}", agent.Id, request.UserId);
 

@@ -1,12 +1,11 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using CRM.SharedKernel.Domain.Handlers;
 using CRM.SharedKernel.Domain.Results;
 using CRM.SharedKernel.Application.API.Responses;
-using CRM.SharedKernel.Infrastructure.Database;
-using Modules.Users.Domain.OrganizationAggregate;
 using Modules.Users.Features.Organizations.Shared.Requests;
 using Modules.Users.Features.Organizations.Shared.Responses;
-using CRM.SharedKernel.Domain.Interfaces;
+using Modules.Users.Infrastructure.Database;
 
 namespace Modules.Users.Features.Organizations.GetOrganizationCustomers;
 
@@ -18,7 +17,7 @@ internal interface IGetOrganizationCustomersHandler : IHandler
 }
 
 internal sealed class GetOrganizationCustomersHandler(
-		IReadRepository<Customer> orgCustomerRepo,
+		OrganizationsDbContext dbContext,
 		ILogger<GetOrganizationCustomersHandler> logger) : IGetOrganizationCustomersHandler
 {
 	public async Task<Result<PaginationResponse<OrganizationCustomerResponse>>> HandleAsync(
@@ -27,7 +26,7 @@ internal sealed class GetOrganizationCustomersHandler(
 	{
 		logger.LogInformation("Getting Organization Customers");
 
-		var query = orgCustomerRepo.Query;
+		var query = dbContext.Customers.AsQueryable();
 
 		if (!string.IsNullOrWhiteSpace(request.Name))
 			query = query.Where(c => c.Name.Contains(request.Name));
@@ -38,24 +37,21 @@ internal sealed class GetOrganizationCustomersHandler(
 		if (!string.IsNullOrWhiteSpace(request.OrganizationName))
 			query = query.Where(c => c.Organization.Name.Contains(request.OrganizationName));
 
-		var total = request.SkipTotal ? -1 : await orgCustomerRepo.CountAsync(query, ct);
+		var total = request.SkipTotal ? -1 : await query.CountAsync(ct);
 
-		query = query
+		var customers = await query
 				.OrderBy(c => c.Organization.Name)
 				.ThenBy(c => c.Name)
 				.Skip(request.Skip)
-				.Take(request.Limit);
-
-		var customers = await orgCustomerRepo.GetListAsync(
-				query: query,
-				selector: c => new OrganizationCustomerResponse
+				.Take(request.Limit)
+				.Select(c => new OrganizationCustomerResponse
 				{
 					Name = c.Name,
 					Email = c.Email,
 					Phone = c.Phone,
 					OrganizationName = c.Organization.Name
-				},
-				cancellation: ct);
+				})
+				.ToListAsync(ct);
 
 		var result = new PaginationResponse<OrganizationCustomerResponse>(
 				customers,

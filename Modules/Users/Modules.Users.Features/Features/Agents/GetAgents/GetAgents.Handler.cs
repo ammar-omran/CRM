@@ -1,12 +1,11 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using CRM.SharedKernel.Domain.Handlers;
 using CRM.SharedKernel.Domain.Results;
 using CRM.SharedKernel.Application.API.Responses;
-using CRM.SharedKernel.Infrastructure.Database;
-using Modules.Users.Domain.OrganizationAggregate;
 using Modules.Users.Features.Agents.Shared.Requests;
 using Modules.Users.Features.Agents.Shared.Responses;
-using CRM.SharedKernel.Domain.Interfaces;
+using Modules.Users.Infrastructure.Database;
 
 namespace Modules.Users.Features.Agents.GetAgents;
 
@@ -16,7 +15,7 @@ internal interface IGetAgentsHandler : IHandler
 }
 
 internal sealed class GetAgentsHandler(
-		IReadRepository<Agent> agentRepo,
+		OrganizationsDbContext dbContext,
 		ILogger<GetAgentsHandler> logger) : IGetAgentsHandler
 {
 	public async Task<Result<PaginationResponse<AgentResponse>>> HandleAsync(
@@ -25,21 +24,19 @@ internal sealed class GetAgentsHandler(
 	{
 		logger.LogInformation("Getting Agents");
 
-		var query = agentRepo.Query;
+		var query = dbContext.Agents.AsQueryable();
 
 		if (!string.IsNullOrWhiteSpace(request.UserId))
 			query = query.Where(a => a.UserId == request.UserId);
 
-		var total = request.SkipTotal ? -1 : await agentRepo.CountAsync(query, ct);
+		var total = request.SkipTotal ? -1 : await query.CountAsync(ct);
 
-		query = query
+		var agents = await query
+				.OrderBy(a => a.Id)
 				.Skip(request.Skip)
-				.Take(request.Limit);
-
-		var agents = await agentRepo.GetListAsync(
-				query: query,
-				selector: a => new AgentResponse(a.Id, a.UserId, a.User.UserName ?? string.Empty, a.User.Email ?? string.Empty),
-				cancellation: ct);
+				.Take(request.Limit)
+				.Select(a => new AgentResponse(a.Id, a.UserId, a.User.UserName ?? string.Empty, a.User.Email ?? string.Empty))
+				.ToListAsync(ct);
 
 		var result = new PaginationResponse<AgentResponse>(
 				agents,

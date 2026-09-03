@@ -1,16 +1,15 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using CRM.SharedKernel.Domain.Events;
-using CRM.SharedKernel.Infrastructure.Database;
-using Modules.Users.Domain.OrganizationAggregate;
+using Modules.Users.Infrastructure.Database;
 using CRM.SharedKernel.Infrastructure.Services;
 using CRM.SharedKernel.Infrastructure.Configuration;
-using CRM.SharedKernel.Domain.Interfaces;
 
 namespace Modules.Users.Features.Organizations.CreateOrganization.Events;
 
 internal sealed class OrganizationCreatedEventHandler(
-	IReadRepository<OrganizationAgent> orgAgentRepo,
+	OrganizationsDbContext dbContext,
 	IEmailSender emailSender,
 	IOptions<EmailOptions> emailOptions,
 	ILogger<OrganizationCreatedEventHandler> logger)
@@ -23,10 +22,12 @@ internal sealed class OrganizationCreatedEventHandler(
 			@event.OrganizationId,
 			@event.OrganizationName);
 
-		var orgAgents = await orgAgentRepo.GetListAsync(
-			query: orgAgentRepo.Query.Where(oa => oa.OrganizationId == @event.OrganizationId),
-			includes: ["Agent.User", nameof(OrganizationAgent.AgentRole)],
-			cancellation: ct);
+		var orgAgents = await dbContext.OrganizationAgents
+			.Include(oa => oa.Agent)
+				.ThenInclude(a => a.User)
+			.Include(oa => oa.AgentRole)
+			.Where(oa => oa.OrganizationId == @event.OrganizationId)
+			.ToListAsync(ct);
 
 		if (orgAgents.Count == 0)
 		{

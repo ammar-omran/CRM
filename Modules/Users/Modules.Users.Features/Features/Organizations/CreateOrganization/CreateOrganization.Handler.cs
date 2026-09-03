@@ -9,7 +9,6 @@ using Modules.Users.Features.Organizations.CreateOrganization.Events;
 using Modules.Users.Features.Organizations.Shared.Errors;
 using Modules.Users.Features.Organizations.Shared.Requests;
 using Modules.Users.Features.Organizations.Shared.Responses;
-using CRM.SharedKernel.Domain.Interfaces;
 using Modules.Users.Infrastructure.Database;
 
 namespace Modules.Users.Features.Organizations.CreateOrganization;
@@ -20,8 +19,7 @@ internal interface ICreateOrganizationHandler : IHandler
 }
 
 internal sealed class CreateOrganizationHandler(
-		IRepository<Organization> orgRepo,
-		IReadRepository<Agent> agentRepo,
+		OrganizationsDbContext dbContext,
 		UsersDbContext usersContext,
 		ICustomerRepository customerRepo,
 		IEventPublisher eventPublisher,
@@ -34,12 +32,10 @@ internal sealed class CreateOrganizationHandler(
 		var errors = new List<Error>();
 
 		var requestedAgentIds = request.Agents.Select(ra => ra.Id).ToList();
-		var existingAgentIds = (await agentRepo
-				.GetListAsync(
-						agentRepo.Query.Where(a => requestedAgentIds.Contains(a.Id)),
-						cancellation: ct))
+		var existingAgentIds = await dbContext.Agents
+				.Where(a => requestedAgentIds.Contains(a.Id))
 				.Select(a => a.Id)
-				.ToList();
+				.ToListAsync(ct);
 
 		var missingAgentIds = requestedAgentIds.Except(existingAgentIds).ToList();
 		if (missingAgentIds.Count > 0)
@@ -55,7 +51,7 @@ internal sealed class CreateOrganizationHandler(
 		if (missingRoleIds.Count > 0)
 			errors.Add(OrganizationErrors.AgentRoleNotFound(missingRoleIds.ToArray()));
 
-		var nameExists = await orgRepo.AnyAsync(o => o.Name == request.Name, ct);
+		var nameExists = await dbContext.Organizations.AnyAsync(o => o.Name == request.Name, ct);
 		if (nameExists)
 			errors.Add(OrganizationErrors.NameAlreadyExists(request.Name));
 
@@ -113,7 +109,8 @@ internal sealed class CreateOrganizationHandler(
 
 		try
 		{
-			await orgRepo.Add(organization, ct);
+			await dbContext.Organizations.AddAsync(organization, ct);
+			await dbContext.SaveChangesAsync(ct);
 
 			logger.LogInformation("Organization Created with ID {OrganizationId}", organization.Id);
 
