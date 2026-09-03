@@ -71,6 +71,7 @@ public sealed class CustomersModuleManifest : IModuleManifest
 			"/api/customers/register",
 			"/api/customers/confirm-email",
 			"/api/customers/resend-otp",
+			"/api/customers/refresh",
 			"/api/customers/update-password",
 			"/api/customers/reset-password"
 		]

@@ -9,7 +9,7 @@ namespace Modules.Customers.Features.Customers.GetAllCustomers;
 
 public sealed record GetAllCustomersRequest(int Skip, int Limit);
 
-internal interface IGetAllCustomersHandler : IHandler
+public interface IGetAllCustomersHandler : IHandler
 {
     Task<Result<IReadOnlyList<CustomerResponse>>> HandleAsync(GetAllCustomersRequest request, CancellationToken cancellationToken);
 }
@@ -25,17 +25,17 @@ internal sealed class GetAllCustomersHandler(
     {
         var customers = await context.Customers
             .AsNoTracking()
-            .OrderByDescending(c => c.CreatedDate)
+            .OrderByDescending(c => c.CreatedAt)
             .Skip(request.Skip)
             .Take(request.Limit)
             .Select(c => new CustomerResponse(
                 c.Id,
                 c.Name,
-                c.Email,
+                c.Email ?? string.Empty,
                 c.PhoneNumber.Number,
                 c.PhoneNumber.CountryCode,
                 c.IsEmailVerified,
-                c.CreatedDate))
+                c.CreatedAt))
             .ToListAsync(cancellationToken);
 
         logger.LogInformation("Retrieved {Count} customers", customers.Count);

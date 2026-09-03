@@ -8,9 +8,9 @@ using Modules.Customers.Infrastructure.Database;
 
 namespace Modules.Customers.Features.Customers.GetCustomerById;
 
-internal interface IGetCustomerByIdHandler : IHandler
+public interface IGetCustomerByIdHandler : IHandler
 {
-    Task<Result<CustomerResponse>> HandleAsync(int customerId, CancellationToken cancellationToken);
+    Task<Result<CustomerResponse>> HandleAsync(string customerId, CancellationToken cancellationToken);
 }
 
 internal sealed class GetCustomerByIdHandler(
@@ -19,7 +19,7 @@ internal sealed class GetCustomerByIdHandler(
     : IGetCustomerByIdHandler
 {
     public async Task<Result<CustomerResponse>> HandleAsync(
-        int customerId,
+        string customerId,
         CancellationToken cancellationToken)
     {
         var customer = await context.Customers
@@ -35,10 +35,10 @@ internal sealed class GetCustomerByIdHandler(
         return new CustomerResponse(
             customer.Id,
             customer.Name,
-            customer.Email,
+            customer.Email ?? string.Empty,
             customer.PhoneNumber.Number,
             customer.PhoneNumber.CountryCode,
             customer.IsEmailVerified,
-            customer.CreatedDate);
+            customer.CreatedAt);
     }
 }

@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCustomersModule(builder.Configuration);
 builder.Services.AddSwagger();
+builder.Services.AddControllers();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>().AddProblemDetails();
 builder.Services.AddHttpContextAccessor();
 
@@ -23,6 +24,7 @@ app.UseAuthorization();
 
 app.UseModuleMiddlewares();
 
+app.MapControllers();
 app.MapApiEndpoints();
 app.MapDefaultEndpoints();
 

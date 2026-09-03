@@ -216,7 +216,7 @@ public class ClientAuthorizationService(
 		var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
 		var tokenId = Guid.NewGuid().ToString();
-		// Standard claim types aligned with JwtTokenGenerator and CurrentUserService best practices:
+		// Standard claim types aligned with CurrentUserService best practices:
 		// Id -> ClaimTypes.NameIdentifier (+ sub), Name -> ClaimTypes.Name, Email -> ClaimTypes.Email, Role -> ClaimTypes.Role
 		List<Claim> claims = [
 				new(ClaimTypes.NameIdentifier, user.Id),
