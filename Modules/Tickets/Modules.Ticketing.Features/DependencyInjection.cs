@@ -13,10 +13,10 @@ public static class TicketingModuleRegistration
 	{
 		return services
 			.AddTicketingInfrastructure(configuration)
-			.AddTicketingModuleApi();
+			.AddTicketingModuleApi(configuration);
 	}
 
-	private static IServiceCollection AddTicketingModuleApi(this IServiceCollection services)
+	private static IServiceCollection AddTicketingModuleApi(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddSharedKernelModuleMiddlewares();
 		services.RegisterModuleMiddlewaresFromAssemblyContaining(typeof(TicketingModuleRegistration));
@@ -26,6 +26,9 @@ public static class TicketingModuleRegistration
 		// Module events: forward published events to the platform for delivery to subscribers.
 		services.AddHttpClient();
 		services.AddScoped<IModuleEventPublisher, ModuleEventPublisher>();
+
+		// Email confirmations on ticket creation (best-effort, see CreateTicketHandler).
+		services.AddEmailSender(configuration);
 
 		return services;
 	}

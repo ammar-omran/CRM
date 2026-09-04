@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Modules.Ticketing.Domain.Policies;
 using Modules.Ticketing.Features.Tickets;
+using Modules.Ticketing.Features.Tickets.Shared;
 
 namespace Modules.Ticketing.API.Controllers;
 
@@ -18,24 +19,73 @@ public sealed class TicketsController : ControllerBase
 		_currentUserService = currentUserService;
 	}
 
-	[HttpGet]
-	[Authorize(Policy = TicketPolicyConstants.ViewPolicy)]
-	public async Task<IActionResult> GetTickets(
-			[FromServices] IGetTicketsHandler getTicketsHandler,
+	/// <summary>
+	/// Unscoped paginated list with filtering. Policy-gated (supervisor/admin).
+	/// Isolation-free by design — use /mine or /group for scoped views.
+	/// </summary>
+	[HttpGet("list")]
+	[Authorize(Policy = TicketPolicyConstants.ViewAllPolicy)]
+	public async Task<IActionResult> GetList(
+			[FromQuery] TicketFilterRequest request,
+			[FromServices] IGetTicketsListHandler handler,
 			CancellationToken cancellationToken)
 	{
-		var result = await getTicketsHandler.HandleAsync(cancellationToken);
+		var result = await handler.HandleAsync(request, cancellationToken);
 		return result.IsError ? result.Errors.ToMVCProblem() : Ok(result.Value);
 	}
 
-	[HttpGet("{ticketId}")]
-	[Authorize(Policy = TicketPolicyConstants.ViewPolicy)]
+	/// <summary>
+	/// Tickets assigned to the caller (TicketOperators → Operator.RefId == UserId).
+	/// </summary>
+	[HttpGet("mine")]
+	[Authorize(Policy = TicketPolicyConstants.ViewMinePolicy)]
+	public async Task<IActionResult> GetMine(
+			[FromQuery] TicketFilterRequest request,
+			[FromServices] IGetMyTicketsHandler handler,
+			CancellationToken cancellationToken)
+	{
+		var result = await handler.HandleAsync(request, _currentUserService.CurrentUser, cancellationToken);
+		return result.IsError ? result.Errors.ToMVCProblem() : Ok(result.Value);
+	}
+
+	/// <summary>
+	/// Tickets sharing the caller's group (ticket.GroupId == tokenPayload[GroupKey]).
+	/// </summary>
+	[HttpGet("group")]
+	[Authorize(Policy = TicketPolicyConstants.ViewGroupPolicy)]
+	public async Task<IActionResult> GetGroup(
+			[FromQuery] TicketFilterRequest request,
+			[FromServices] IGetGroupTicketsHandler handler,
+			CancellationToken cancellationToken)
+	{
+		var result = await handler.HandleAsync(request, _currentUserService.CurrentUser, cancellationToken);
+		return result.IsError ? result.Errors.ToMVCProblem() : Ok(result.Value);
+	}
+
+	// :int constraints keep single-segment routes from colliding with
+	// multi-segment routes such as lookups/* under the same prefix.
+	[HttpGet("{ticketId:int}")]
+	[Authorize(Policy = TicketPolicyConstants.ViewAnyPolicy)]
 	public async Task<IActionResult> GetTicketById(
 			int ticketId,
 			[FromServices] IGetTicketByIdHandler getTicketByIdHandler,
 			CancellationToken cancellationToken)
 	{
-		var result = await getTicketByIdHandler.HandleAsync(ticketId, cancellationToken);
+		var result = await getTicketByIdHandler.HandleAsync(ticketId, _currentUserService.CurrentUser, cancellationToken);
+		return result.IsError ? result.Errors.ToMVCProblem() : Ok(result.Value);
+	}
+
+	/// <summary>
+	/// Raw audit trail — strong DTOs for frontend formatting/i18n (no server-side text).
+	/// </summary>
+	[HttpGet("{ticketId:int}/history")]
+	[Authorize(Policy = TicketPolicyConstants.ViewAnyPolicy)]
+	public async Task<IActionResult> GetTicketHistory(
+			int ticketId,
+			[FromServices] IGetTicketHistoryHandler handler,
+			CancellationToken cancellationToken)
+	{
+		var result = await handler.HandleAsync(ticketId, _currentUserService.CurrentUser, cancellationToken);
 		return result.IsError ? result.Errors.ToMVCProblem() : Ok(result.Value);
 	}
 
@@ -51,31 +101,6 @@ public sealed class TicketsController : ControllerBase
 			? result.Errors.ToMVCProblem()
 			: Created($"api/tickets/{result.Value?.Id}", result.Value);
 	}
-
-	[HttpPut("{ticketId}")]
-	[Authorize(Policy = TicketPolicyConstants.UpdatePolicy)]
-	public async Task<IActionResult> Update(
-			int ticketId,
-			[FromServices] IUpdateTicketHandler updateTicketHandler,
-			[FromBody] UpdateTicketRequest request, CancellationToken cancellationToken)
-	{
-		if (ticketId != request.Id)
-		{
-			return BadRequest(new { Error = "Ticket ID mismatch" });
-		}
-
-		var result = await updateTicketHandler.HandleAsync(request, _currentUserService.CurrentUser, cancellationToken);
-		return result.IsError ? result.Errors.ToMVCProblem() : Ok(result.Value);
-	}
-
-	[HttpDelete("{ticketId}")]
-	[Authorize(Policy = TicketPolicyConstants.DeletePolicy)]
-	public async Task<IActionResult> Delete(
-			int ticketId,
-			[FromServices] IDeleteTicketHandler deleteTicketHandler,
-			CancellationToken cancellationToken)
-	{
-		var result = await deleteTicketHandler.HandleAsync(ticketId, cancellationToken);
-		return result.IsError ? result.Errors.ToMVCProblem() : NoContent();
-	}
 }
+
+

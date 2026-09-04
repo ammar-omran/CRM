@@ -35,7 +35,8 @@ internal sealed class CreateTicketHandler(
 	TicketingDbContext context,
 	ILogger<CreateTicketHandler> logger,
 	IConfiguration configurations,
-	IModuleEventPublisher moduleEventPublisher)
+	IModuleEventPublisher moduleEventPublisher,
+	IEmailSender emailSender)
 	: ICreateTicketHandler
 {
 	public async Task<Result<CreateTicketResponse>> HandleAsync(
@@ -71,15 +72,18 @@ internal sealed class CreateTicketHandler(
 			}
 		}
 
+		// Severity resolution (old-convention port): explicit SeverityId wins;
+		// otherwise fall back to the referenced title's default severity; custom titles leave it null.
 		Severity? severity = null;
-		if (request.SeverityId is not null)
+		var effectiveSeverityId = request.SeverityId ?? ticketTitle?.DefaultSeverityId;
+		if (effectiveSeverityId is not null)
 		{
 			severity = await context.Severities
-				.FirstOrDefaultAsync(s => s.Id == request.SeverityId, cancellationToken);
+				.FirstOrDefaultAsync(s => s.Id == effectiveSeverityId, cancellationToken);
 
 			if (severity is null)
 			{
-				return Error.NotFound("Severity.NotFound", $"Severity with ID {request.SeverityId} was not found.");
+				return Error.NotFound("Severity.NotFound", $"Severity with ID {effectiveSeverityId} was not found.");
 			}
 		}
 
@@ -89,8 +93,14 @@ internal sealed class CreateTicketHandler(
 			return operatorResult.Errors;
 		}
 
-		var groupKey = configurations["GroupKey"] as string;
-		currentUser.TokenPayload.TryGetValue(groupKey, out var groupId);
+		// Group isolation: resolve via configured GroupKey claim, same convention as the group listing.
+		string? groupIdValue = null;
+		var groupKey = configurations["GroupKey"];
+		if (!string.IsNullOrWhiteSpace(groupKey) && currentUser.TokenPayload is not null
+			&& currentUser.TokenPayload.TryGetValue(groupKey, out var groupId))
+		{
+			groupIdValue = groupId?.ToString();
+		}
 
 		var createResult = TicketEntity.Create(
 			request.OtherTitle,
@@ -101,7 +111,7 @@ internal sealed class CreateTicketHandler(
 			currentUser.Role,
 			severity,
 			ticketTitle,
-			groupId?.ToString() ?? "");
+			groupIdValue ?? "");
 
 		if (createResult.IsError)
 		{
@@ -115,6 +125,18 @@ internal sealed class CreateTicketHandler(
 		logger.LogInformation("Ticket created with ID: {TicketId}", ticket.Id);
 
 		await moduleEventPublisher.PublishAsync(new TicketCreatedEvent(ticket.Id), cancellationToken);
+
+		// Best-effort confirmation email. Never fails ticket creation.
+		try
+		{
+			var to = operatorResult.Value!.Email;
+			if (!string.IsNullOrWhiteSpace(to))
+				await emailSender.SendAsync(to, "Ticket created", $"Your ticket #{ticket.Id} has been created.", cancellationToken);
+		}
+		catch (Exception ex)
+		{
+			logger.LogWarning(ex, "Failed to send ticket-created email for ticket {TicketId}", ticket.Id);
+		}
 
 		return new CreateTicketResponse(ticket.Id, ticket.Title, ticket.Status.ToString());
 	}
