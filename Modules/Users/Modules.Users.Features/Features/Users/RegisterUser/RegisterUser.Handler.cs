@@ -27,9 +27,14 @@ internal sealed class RegisterUserHandler(
             Id = Guid.NewGuid().ToString(),
             Email = request.Email,
             UserName = request.Name,
+            PhoneNumber = request.Phone,
         };
 
-        var result = await userManager.CreateAsync(user, request.Password);
+        IdentityResult result;
+        if (!string.IsNullOrWhiteSpace(request.Password))
+            result = await userManager.CreateAsync(user, request.Password);
+        else
+            result = await userManager.CreateAsync(user);
         if (!result.Succeeded)
         {
             logger.LogInformation("Failed to register user: {@Errors}", result.Errors);
