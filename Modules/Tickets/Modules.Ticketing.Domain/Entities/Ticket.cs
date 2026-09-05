@@ -48,10 +48,11 @@ public class Ticket : IAuditableEntity
 		Category category,
 		TicketType type,
 		Operator createdBy,
-		string? creatorRole = null,
+		IReadOnlyList<string>? creatorUserRoles = null,
 		Severity? severity = null,
 		TicketTitle? ticketTitle = null,
-		string? groupId = null)
+		string? groupId = null,
+		TicketOperationRole creatorOperationRole = TicketOperationRole.Creator)
 	{
 		if (category is null)
 			return TicketErrors.CategoryRequired;
@@ -87,14 +88,14 @@ public class Ticket : IAuditableEntity
 		ticket.CreatedAt = DateTime.UtcNow;
 		ticket.TicketHistories.Add(TicketHistory.ForCreated(ticket.Id, createdBy));
 
-		if (!string.IsNullOrWhiteSpace(creatorRole))
-			ticket.TicketOperators.Add(new TicketOperator
-			{
-				TicketId = ticket.Id,
-				OperatorId = createdBy.Id,
-				Role = creatorRole,
-				Operator = createdBy
-			});
+		var ticketOperator = new TicketOperator
+		{
+			TicketId = ticket.Id,
+			OperatorId = createdBy.Id,
+			Operator = createdBy
+		};
+		ticketOperator.SetRole(creatorOperationRole, creatorUserRoles);
+		ticket.TicketOperators.Add(ticketOperator);
 
 		return ticket;
 	}
@@ -232,7 +233,7 @@ public class Ticket : IAuditableEntity
 		return null;
 	}
 
-	public Error? AssignOperator(Operator assignee, string role, Operator actedBy)
+	public Error? AssignOperator(Operator assignee, TicketOperationRole operationRole, Operator actedBy, IEnumerable<string>? assigneeUserRoles = null)
 	{
 		if (actedBy is null)
 			return TicketErrors.OperatorRequired;
@@ -243,9 +244,29 @@ public class Ticket : IAuditableEntity
 		if (TicketOperators.Any(o => o.OperatorId == assignee.Id))
 			return TicketErrors.AlreadyAssigned;
 
-		var roleValue = string.IsNullOrWhiteSpace(role) ? "Operator" : role;
-		TicketOperators.Add(new TicketOperator { TicketId = Id, OperatorId = assignee.Id, Role = roleValue, Operator = assignee });
-		RecordChange(TicketAuditHelper.OperatorsField, null, $"{assignee.Id} ({roleValue})", actedBy);
+		var ticketOperator = new TicketOperator { TicketId = Id, OperatorId = assignee.Id, Operator = assignee };
+		ticketOperator.SetRole(operationRole, assigneeUserRoles);
+		TicketOperators.Add(ticketOperator);
+		RecordChange(TicketAuditHelper.OperatorsField, null, $"{assignee.Id} ({ticketOperator.Role})", actedBy);
+		return null;
+	}
+
+	/// <summary>Backward-compat overload — parses string role.</summary>
+	public Error? AssignOperator(Operator assignee, string role, Operator actedBy)
+	{
+		if (string.IsNullOrWhiteSpace(role))
+			return AssignOperator(assignee, TicketOperationRole.Assignee, actedBy);
+		// Try enum, fall back to raw string as operation role with empty user roles.
+		if (Enum.TryParse<TicketOperationRole>(role.Trim(), true, out var parsed))
+			return AssignOperator(assignee, parsed, actedBy, null);
+		// Legacy plain string without user roles part.
+		if (actedBy is null) return TicketErrors.OperatorRequired;
+		if (assignee is null) return Error.Validation("Ticket.InvalidOperator", "Operator is required.");
+		if (TicketOperators.Any(o => o.OperatorId == assignee.Id)) return TicketErrors.AlreadyAssigned;
+		var to = new TicketOperator { TicketId = Id, OperatorId = assignee.Id, Operator = assignee };
+		to.SetRawRole(role.Trim());
+		TicketOperators.Add(to);
+		RecordChange(TicketAuditHelper.OperatorsField, null, $"{assignee.Id} ({role.Trim()})", actedBy);
 		return null;
 	}
 

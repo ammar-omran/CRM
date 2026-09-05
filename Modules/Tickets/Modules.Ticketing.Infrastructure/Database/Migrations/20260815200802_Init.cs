@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Modules.Ticketing.Infrastructure.Database.Migrations
 {
     /// <inheritdoc />
-    public partial class Inint : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -57,9 +57,9 @@ namespace Modules.Ticketing.Infrastructure.Database.Migrations
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ref_id = table.Column<int>(type: "int", nullable: false),
-                    name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    email = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    ref_id = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    email = table.Column<string>(type: "nvarchar(320)", maxLength: 320, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -249,7 +249,7 @@ namespace Modules.Ticketing.Infrastructure.Database.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ticket_id = table.Column<int>(type: "int", nullable: false),
                     operator_id = table.Column<int>(type: "int", nullable: false),
-                    role = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    role = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -262,8 +262,8 @@ namespace Modules.Ticketing.Infrastructure.Database.Migrations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_ticket_operators_tickets_ticket_id",
-                        column: x => x.ticket_id,
+                        name: "fk_ticket_operators_tickets_operator_id",
+                        column: x => x.operator_id,
                         principalSchema: "ticketing",
                         principalTable: "tickets",
                         principalColumn: "id",
@@ -372,6 +372,13 @@ namespace Modules.Ticketing.Infrastructure.Database.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "ix_operators_ref_id",
+                schema: "ticketing",
+                table: "operators",
+                column: "ref_id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "ix_ticket_comments_ticket_id",
                 schema: "ticketing",
                 table: "ticket_comments",
@@ -390,10 +397,11 @@ namespace Modules.Ticketing.Infrastructure.Database.Migrations
                 column: "operator_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_ticket_operators_ticket_id",
+                name: "ix_ticket_operators_ticket_id_operator_id",
                 schema: "ticketing",
                 table: "ticket_operators",
-                column: "ticket_id");
+                columns: new[] { "ticket_id", "operator_id" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_ticket_titles_category_id",

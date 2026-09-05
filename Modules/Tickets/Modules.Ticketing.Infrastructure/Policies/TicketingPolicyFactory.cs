@@ -19,7 +19,7 @@ internal sealed class TicketingPolicyFactory : IPolicyFactory
 		// is still enforced inside the handlers.
 		policies[TicketPolicyConstants.ViewAnyPolicy] = p => p.RequireClaim(
 			PermissionClaims.Type,
-			TicketPolicyConstants.ViewPolicy,
+			TicketPolicyConstants.ViewAllPolicy,
 			TicketPolicyConstants.ViewMinePolicy,
 			TicketPolicyConstants.ViewGroupPolicy,
 			TicketPolicyConstants.ViewAnyPolicy);

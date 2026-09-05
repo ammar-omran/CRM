@@ -108,7 +108,7 @@ internal sealed class CreateTicketHandler(
 			category,
 			type,
 			operatorResult.Value!,
-			currentUser.Role,
+			currentUser.Roles,
 			severity,
 			ticketTitle,
 			groupIdValue ?? "");
@@ -124,7 +124,7 @@ internal sealed class CreateTicketHandler(
 
 		logger.LogInformation("Ticket created with ID: {TicketId}", ticket.Id);
 
-		await moduleEventPublisher.PublishAsync(new TicketCreatedEvent(ticket.Id), cancellationToken);
+		await moduleEventPublisher.PublishAsync(new TicketCreatedEvent(ticket.Id, groupIdValue, ticket.Title, ticket.Description), cancellationToken);
 
 		// Best-effort confirmation email. Never fails ticket creation.
 		try
@@ -155,6 +155,13 @@ internal sealed class CreateTicketHandler(
 
 		if (@operator is not null)
 		{
+			// Keep profile fresh
+			if (@operator.Name != (currentUser.Name ?? string.Empty) || @operator.Email != (currentUser.Email ?? string.Empty))
+			{
+				if (!string.IsNullOrWhiteSpace(currentUser.Name)) @operator.Name = currentUser.Name!;
+				if (!string.IsNullOrWhiteSpace(currentUser.Email)) @operator.Email = currentUser.Email!;
+				await context.SaveChangesAsync(cancellationToken);
+			}
 			return @operator;
 		}
 
@@ -162,7 +169,7 @@ internal sealed class CreateTicketHandler(
 		{
 			RefId = currentUser.UserId,
 			Name = currentUser.Name ?? string.Empty,
-			Email = currentUser.Email ?? string.Empty
+			Email = currentUser.Email ?? string.Empty,
 		};
 
 		context.Operators.Add(@operator);

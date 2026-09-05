@@ -25,7 +25,7 @@ public sealed class CurrentUserService : ICurrentUserService
 		{
 			var principal = _httpContextAccessor.HttpContext?.User;
 			if (principal is null)
-				return new CurrentUser(null, null, null, null, null, null);
+				return new CurrentUser(null, null, null, null, null, Array.Empty<string>());
 
 			var rawToken = GetRawToken(_httpContextAccessor.HttpContext!);
 
@@ -33,15 +33,22 @@ public sealed class CurrentUserService : ICurrentUserService
 				?? principal.FindFirstValue(JwtRegisteredClaimNames.Sub)
 				?? principal.FindFirstValue("userid");
 
-			// Align with ClientAuthorizationService standard claims:
-			// Id -> ClaimTypes.NameIdentifier (sub), Name -> ClaimTypes.Name, Email -> ClaimTypes.Email, Role -> ClaimTypes.Role
+			// Collect all role claims (ClaimTypes.Role + "role"), deduplicated, trimmed.
+			var roles = principal.FindAll(ClaimTypes.Role)
+				.Select(c => c.Value)
+				.Concat(principal.FindAll("role").Select(c => c.Value))
+				.Where(v => !string.IsNullOrWhiteSpace(v))
+				.Select(v => v.Trim())
+				.Distinct(StringComparer.OrdinalIgnoreCase)
+				.ToList();
+
 			return new CurrentUser(
 				userId,
 				principal.FindFirstValue(ClaimTypes.Name),
 				principal.FindFirstValue(ClaimTypes.Email) ?? principal.FindFirstValue(JwtRegisteredClaimNames.Email) ?? principal.FindFirstValue(JwtRegisteredClaimNames.Sub),
-				principal.FindFirstValue(ClaimTypes.Role) ?? principal.FindFirstValue("role"),
 				rawToken,
-				GetTokenPayload(rawToken));
+				GetTokenPayload(rawToken),
+				roles);
 		}
 	}
 

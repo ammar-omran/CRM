@@ -12,8 +12,8 @@ using Modules.Ticketing.Infrastructure.Database;
 namespace Modules.Ticketing.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(TicketingDbContext))]
-    [Migration("20260815200802_Inint")]
-    partial class Inint
+    [Migration("20260905113601_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -158,20 +158,28 @@ namespace Modules.Ticketing.Infrastructure.Database.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)")
                         .HasColumnName("email");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
                         .HasColumnName("name");
 
-                    b.Property<int>("RefId")
-                        .HasColumnType("int")
+                    b.Property<string>("RefId")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)")
                         .HasColumnName("ref_id");
 
                     b.HasKey("Id")
                         .HasName("pk_operators");
+
+                    b.HasIndex("RefId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_operators_ref_id");
 
                     b.ToTable("operators", "ticketing");
                 });
@@ -463,7 +471,8 @@ namespace Modules.Ticketing.Infrastructure.Database.Migrations
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)")
                         .HasColumnName("role");
 
                     b.Property<int>("TicketId")
@@ -476,8 +485,9 @@ namespace Modules.Ticketing.Infrastructure.Database.Migrations
                     b.HasIndex("OperatorId")
                         .HasDatabaseName("ix_ticket_operators_operator_id");
 
-                    b.HasIndex("TicketId")
-                        .HasDatabaseName("ix_ticket_operators_ticket_id");
+                    b.HasIndex("TicketId", "OperatorId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_ticket_operators_ticket_id_operator_id");
 
                     b.ToTable("ticket_operators", "ticketing");
                 });
@@ -836,10 +846,10 @@ namespace Modules.Ticketing.Infrastructure.Database.Migrations
 
                     b.HasOne("Modules.Ticketing.Domain.Entities.Ticket", "Ticket")
                         .WithMany("TicketOperators")
-                        .HasForeignKey("TicketId")
+                        .HasForeignKey("OperatorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_ticket_operators_tickets_ticket_id");
+                        .HasConstraintName("fk_ticket_operators_tickets_operator_id");
 
                     b.Navigation("Operator");
 

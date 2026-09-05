@@ -101,6 +101,18 @@ public sealed class TicketsController : ControllerBase
 			? result.Errors.ToMVCProblem()
 			: Created($"api/tickets/{result.Value?.Id}", result.Value);
 	}
+
+	[HttpPost("{ticketId:int}/assign")]
+	[Authorize(Policy = TicketPolicyConstants.AssignPolicy)]
+	public async Task<IActionResult> Assign(
+			int ticketId,
+			[FromBody] AssignTicketRequest request,
+			[FromServices] IAssignTicketHandler handler,
+			CancellationToken cancellationToken)
+	{
+		var result = await handler.HandleAsync(ticketId, request, _currentUserService.CurrentUser, cancellationToken);
+		return result.IsError ? result.Errors.ToMVCProblem() : Ok(result.Value);
+	}
 }
 
 
