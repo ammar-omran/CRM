@@ -35,8 +35,7 @@ internal sealed class CreateTicketHandler(
 	TicketingDbContext context,
 	ILogger<CreateTicketHandler> logger,
 	IConfiguration configurations,
-	IModuleEventPublisher moduleEventPublisher,
-	IEmailSender emailSender)
+	IModuleEventPublisher moduleEventPublisher)
 	: ICreateTicketHandler
 {
 	public async Task<Result<CreateTicketResponse>> HandleAsync(
@@ -125,18 +124,6 @@ internal sealed class CreateTicketHandler(
 		logger.LogInformation("Ticket created with ID: {TicketId}", ticket.Id);
 
 		await moduleEventPublisher.PublishAsync(new TicketCreatedEvent(ticket.Id, groupIdValue, ticket.Title, ticket.Description), cancellationToken);
-
-		// Best-effort confirmation email. Never fails ticket creation.
-		try
-		{
-			var to = operatorResult.Value!.Email;
-			if (!string.IsNullOrWhiteSpace(to))
-				await emailSender.SendAsync(to, "Ticket created", $"Your ticket #{ticket.Id} has been created.", cancellationToken);
-		}
-		catch (Exception ex)
-		{
-			logger.LogWarning(ex, "Failed to send ticket-created email for ticket {TicketId}", ticket.Id);
-		}
 
 		return new CreateTicketResponse(ticket.Id, ticket.Title, ticket.Status.ToString());
 	}
