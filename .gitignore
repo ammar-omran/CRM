@@ -362,3 +362,8 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Local platform DB (SQLite) - generated at runtime
+CRM.Base/platform.db
+CRM.Base/platform.db-shm
+CRM.Base/platform.db-wal
