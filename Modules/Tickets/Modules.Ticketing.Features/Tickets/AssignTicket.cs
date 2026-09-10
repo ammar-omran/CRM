@@ -91,7 +91,9 @@ internal sealed class AssignTicketHandler(
 				await context.SaveChangesAsync(ct);
 		}
 
-		var error = ticket.AssignOperator(assignee, request.Role, actor, currentUser.Roles);
+		// Role is dynamic and lives only on TicketOperator as "{operation}:{userCsv}".
+		// UserRoles part is empty here — assignee's current roles are not snapshotted on Operator.
+		var error = ticket.AssignOperator(assignee, request.Role, actor, null);
 		if (error is not null)
 			return error.Value;
 
