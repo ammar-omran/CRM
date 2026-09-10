@@ -9,6 +9,8 @@ using Modules.Customers.Infrastructure.Authorization;
 using Modules.Customers.Infrastructure.Database;
 using Modules.Customers.Infrastructure.Policies;
 using Modules.Customers.Domain.Modules;
+using CRM.SharedKernel.Domain.Authorization;
+using Modules.Customers.Infrastructure.Authorization;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -27,6 +29,8 @@ public static class DependencyInjection
 
 		services.AddSingleton<IPolicyFactory, CustomersPolicyFactory>();
 		services.AddScoped<IModuleDatabaseMigrator, CustomersDatabaseMigrator>();
+		// Portal-module role & permission store (owns the module's RBAC data).
+		services.AddScoped<IRolePermissionStore, CustomersRolePermissionStore>();
 
 		return services;
 	}

@@ -1,4 +1,5 @@
 using CRM.SharedKernel.Domain.Modules;
+using Modules.Customers.Domain.Policies;
 
 namespace Modules.Customers.Domain.Modules;
 
@@ -78,7 +79,11 @@ public sealed class CustomersModuleManifest : IModuleManifest
 	};
 
 	/// <inheritdoc />
-	public IReadOnlyList<ModulePolicy> Policies { get; } = [];
+	public IReadOnlyList<ModulePolicy> Policies { get; } =
+		PolicyConstants.FromConstants(
+			typeof(CustomerPolicyConstants)
+		// Add more entity constants classes here as the module grows, e.g. typeof(OrganizationPolicyConstants)
+		);
 
 	/// <inheritdoc />
 	public ModuleEvents? Events { get; } = null;

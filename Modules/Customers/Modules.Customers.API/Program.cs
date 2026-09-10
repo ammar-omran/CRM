@@ -1,3 +1,4 @@
+using CRM.SharedKernel.Application.API.Authorization;
 using CRM.SharedKernel.Application.API.ErrorHandling;
 using CRM.SharedKernel.Application.API.Extensions;
 
@@ -22,10 +23,16 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseModuleMiddlewares();
-
+app.MapDefaultEndpoints();
 app.MapControllers();
 app.MapApiEndpoints();
-app.MapDefaultEndpoints();
+
+
+// Default Portal-module permission management endpoints, mounted on the internal
+// network boundary (Users owns the role data). Reachable only from the local
+// network / Super Admin host, not exposed via the public gateway.
+app.MapPortalPermissionEndpoints();
+
+app.UseModuleMiddlewares();
 
 await app.RunAsync();
