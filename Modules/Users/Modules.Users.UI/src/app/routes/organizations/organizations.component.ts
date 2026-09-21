@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
 import { OrganizationListComponent } from './organization-list/organization-list.component';
 import { OrganizationCustomersComponent } from './organization-customers/organization-customers.component';
@@ -12,7 +12,7 @@ import { OrganizationCustomersComponent } from './organization-customers/organiz
   imports: [
     CommonModule,
     MatTabsModule,
-    TranslateModule,
+    TranslatePipe,
     PageHeaderComponent,
     OrganizationListComponent,
     OrganizationCustomersComponent,

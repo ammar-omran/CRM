@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 
 import { MatCardModule } from '@angular/material/card';
@@ -22,7 +22,7 @@ import { CustomValidators } from '@shared/utils/custom-validators';
     MatFormFieldModule,
     MatCardModule,
     ReactiveFormsModule,
-    TranslateModule,
+    TranslatePipe,
     MatInputModule,
     MatIconModule,
     MatButtonModule,
@@ -82,13 +82,12 @@ export class SetPasswordComponent implements OnInit {
     this.isSubmitting = true;
 
     const formData = {
-      token: this.token,
-      password: this.setPasswordForm.value.newPassword,
-      confirmPassword: this.setPasswordForm.value.confirmPassword,
+      Token: this.token,
+      Password: this.setPasswordForm.value.newPassword,
     };
 
     this.apiService
-      .triggerApiRequest<BaseResponse<null>>(EndPoint.SET_PASSWORD, HttpVerb.POST, null, formData)
+      .triggerApiRequest<BaseResponse<null>>(EndPoint.SET_PASSWORD, HttpVerb.POST, undefined, formData)
       .subscribe({
         next: () => {
           this.toastr.success('Password set successfully');

@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService, User } from '@core/authentication';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-user-panel',
@@ -37,7 +37,7 @@ import { TranslateModule } from '@ngx-translate/core';
   styleUrls: ['./user-panel.component.scss'],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [RouterLink, MatButtonModule, MatIconModule, MatTooltipModule, TranslateModule],
+  imports: [RouterLink, MatButtonModule, MatIconModule, MatTooltipModule, TranslatePipe],
 })
 export class UserPanelComponent implements OnInit {
   user!: User;

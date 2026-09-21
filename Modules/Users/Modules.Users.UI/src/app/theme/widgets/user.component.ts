@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { debounceTime, tap } from 'rxjs/operators';
 
 import { AuthService, SettingsService, TokenService, User } from '@core';
@@ -11,7 +11,7 @@ import { AuthService, SettingsService, TokenService, User } from '@core';
 @Component({
   selector: 'app-user',
   template: `
-    <button class="r-full" mat-button [matMenuTriggerFor]="menu">
+    <button class="r-full" matButton [matMenuTriggerFor]="menu">
       <span class="m-x-8">{{ user.userName }}</span>
       <img matButtonIcon class="avatar r-full" [src]="user.avatar" width="24" alt="avatar" />
     </button>
@@ -32,7 +32,7 @@ import { AuthService, SettingsService, TokenService, User } from '@core';
     `,
   ],
   standalone: true,
-  imports: [MatButtonModule, MatIconModule, MatMenuModule, TranslateModule],
+  imports: [MatButton, MatIcon, MatMenu, MatMenuTrigger, MatMenuItem, TranslatePipe],
 })
 export class UserComponent implements OnInit {
   user!: User;

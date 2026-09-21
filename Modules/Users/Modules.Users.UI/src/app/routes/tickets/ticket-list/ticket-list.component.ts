@@ -5,7 +5,7 @@ import { PageHeaderComponent } from '@shared';
 import { CommonModule, DatePipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FilterComponent } from '@shared/components/filter/filter.component';
 import { ListActionsComponent } from '@shared/components/list-actions/list-actions.component';
 import { FilterControl } from '@shared/interfaces/filter-control.model';
@@ -31,7 +31,7 @@ interface AdminTicket {
   templateUrl: './ticket-list.component.html',
   styleUrls: ['./ticket-list.component.scss'],
   imports: [
-    TranslateModule,
+    TranslatePipe,
     MatIconModule,
     MatButtonModule,
     PageHeaderComponent,

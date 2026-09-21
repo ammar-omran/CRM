@@ -22,20 +22,17 @@ export const permissionGuard = (route: ActivatedRouteSnapshot, _state: RouterSta
   const rbac = inject(RbacService);
   const router = inject(Router);
 
-  const required: string | undefined = route.data?.requiredPermission;
+  const required: string | string[] | undefined = route.data?.requiredPermission ?? route.data?.permissions;
 
   // If no permission is declared for the route, allow access
   if (!required) return true;
 
-  // Admin has no granular permissions — always send to dashboard
-  if (rbac.isAdmin()) {
-    return router.parseUrl('/dashboard');
-  }
+  // Admin bypasses permission checks
+  if (rbac.isAdmin()) return true;
 
-  // Check if the user has the required permission
-  if (rbac.hasPermission(required)) {
-    return true;
-  }
+  const requiredList = Array.isArray(required) ? required : [required];
+  const hasAny = requiredList.some(p => rbac.hasPermission(p));
+  if (hasAny) return true;
 
   // Unauthorized — redirect to 403
   return router.parseUrl('/403');

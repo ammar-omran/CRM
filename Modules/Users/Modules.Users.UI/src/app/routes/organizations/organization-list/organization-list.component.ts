@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { AdaptiveTableComponent } from '@shared/components/adaptive-table/adaptive-table.component';
 import { EndPoint, HttpVerb } from '@shared/enums';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { NgxPermissionsModule } from 'ngx-permissions';
 
@@ -17,7 +17,7 @@ import { NgxPermissionsModule } from 'ngx-permissions';
     MatButtonModule,
     AdaptiveTableComponent,
     PageHeaderComponent,
-    TranslateModule,
+    TranslatePipe,
     NgxPermissionsModule,
   ],
   templateUrl: './organization-list.component.html',

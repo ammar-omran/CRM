@@ -5,7 +5,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ApiService } from '@shared/services/api.service';
 import { EndPoint, HttpVerb } from '@shared/enums';
 import { BaseResponse } from '@shared/interfaces/base-response';
@@ -19,7 +19,7 @@ import { BaseResponse } from '@shared/interfaces/base-response';
     MatFormFieldModule,
     MatSelectModule,
     MatButtonModule,
-    TranslateModule,
+    TranslatePipe,
   ],
   templateUrl: './assign-customer-dialog.component.html',
   styleUrl: './assign-customer-dialog.component.scss',

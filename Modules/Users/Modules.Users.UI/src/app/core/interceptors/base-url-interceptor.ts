@@ -6,7 +6,7 @@ export const BASE_URL = new InjectionToken<string>('BASE_URL');
 
 @Injectable()
 export class BaseUrlInterceptor implements HttpInterceptor {
-  private hasScheme = (url: string) => this.baseUrl && new RegExp('^http(s)?://', 'i').test(url);
+  private hasScheme = (url: string): boolean => !!this.baseUrl && /^http(s)?:\/\//i.test(url);
 
   constructor(@Optional() @Inject(BASE_URL) private baseUrl?: string) {}
 
@@ -16,7 +16,8 @@ export class BaseUrlInterceptor implements HttpInterceptor {
       return next.handle(request);
     }
 
-    return this.hasScheme(request.url) === false
+    const hasScheme = /^http(s)?:\/\//i.test(request.url);
+    return !hasScheme && !!this.baseUrl
       ? next.handle(request.clone({ url: this.prependBaseUrl(request.url) }))
       : next.handle(request);
   }
@@ -25,9 +26,9 @@ export class BaseUrlInterceptor implements HttpInterceptor {
     return url.includes('/assets/i18n/') || url.includes('./assets/i18n/');
   }
 
-  private prependBaseUrl(url: string) {
+  private prependBaseUrl(url: string): string {
     return [this.baseUrl?.replace(/\/$/g, ''), url.replace(/^\.\//, '')]
-      .filter(val => val)
+      .filter((val): val is string => !!val)
       .join('/');
   }
 }

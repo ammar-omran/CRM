@@ -1,46 +1,32 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { map, catchError, tap } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
+import { catchError, map } from 'rxjs/operators';
+import { Observable, throwError, of } from 'rxjs';
 
 import { admin, Menu } from '@core';
 import { Token } from './interface';
-import { of } from 'rxjs';
 import { environment } from '@env/environment';
-import { EncodingService } from '@shared/services/encoding.service';
+
+export interface LoginResponse {
+  token: string;
+  refreshToken: string;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class LoginService {
-  constructor(
-    protected http: HttpClient,
-    private _encodingService: EncodingService
-  ) { }
+  private readonly http = inject(HttpClient);
 
-  login(email: string, password: string) {
-    const requestBody = {
-      email,
-      password,
-    };
-
+  login(email: string, password: string): Observable<LoginResponse> {
+    // Backend expects { Email, Password } (case-insensitive) at POST api/users/login
     return this.http
-      .post<string>(`${environment.ApiUrl}/user/login`, requestBody, {
-        responseType: 'text' as 'json',
-      })
+      .post<LoginResponse>(`${environment.ApiUrl}/users/login`, { email, password })
       .pipe(
-        tap((response: string) => { }),
-        map((response: string) => {
-          try {
-            const parsed = JSON.parse(response);
-            if (parsed && parsed.token) {
-              return parsed.token;
-            }
-          } catch (e) {
-            // response is likely a raw text token rather than JSON
-          }
-          return response;
-        }),
+        map(res => ({
+          token: (res as any).token ?? (res as any).Token,
+          refreshToken: (res as any).refreshToken ?? (res as any).RefreshToken,
+        })),
         catchError(error => {
           console.error('Login error:', error);
           return throwError(() => error);
@@ -48,8 +34,9 @@ export class LoginService {
       );
   }
 
-  refresh(params: Record<string, any>) {
-    return this.http.post<Token>('/auth/refresh', params);
+  refresh(params: { Token: string; RefreshToken: string }) {
+    // Backend POST api/users/refresh expects { Token, RefreshToken } — gateway-routed, absolute URL required
+    return this.http.post<LoginResponse>(`${environment.ApiUrl}/users/refresh`, params);
   }
 
   logout() {

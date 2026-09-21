@@ -2,8 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { TokenInterceptor } from './token-interceptor';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
-import { STATUS } from 'angular-in-memory-web-api';
+import { HTTP_INTERCEPTORS, HttpClient, HttpStatusCode } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { LocalStorageService, MemoryStorageService } from '@shared/services/storage.service';
@@ -89,7 +88,7 @@ describe('TokenInterceptor', () => {
     init('', 'token');
     spyOn(tokenService, 'clear');
 
-    mockRequest('/me', {}, { status: STATUS.UNAUTHORIZED, statusText: 'Unauthorized' });
+    mockRequest('/me', {}, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
 
     expect(tokenService.clear).toHaveBeenCalled();
   });

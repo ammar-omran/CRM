@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 $themes: (
   info: (
     bg: #eff6ff,
@@ -112,31 +114,31 @@ $themes: (
 
 @each $name, $t in $themes {
   .info-banner.#{$name} {
-    background-color: map-get($t, bg);
-    border-color: map-get($t, border);
+    background-color: map.get($t, bg);
+    border-color: map.get($t, border);
 
     .banner-icon mat-icon {
-      color: map-get($t, icon);
+      color: map.get($t, icon);
     }
 
     .banner-title {
-      color: map-get($t, title);
+      color: map.get($t, title);
     }
 
     .banner-message {
-      color: map-get($t, text);
+      color: map.get($t, text);
     }
 
     .banner-cancel {
-      border-color: map-get($t, btn-border) !important;
-      color: map-get($t, title) !important;
+      border-color: map.get($t, btn-border) !important;
+      color: map.get($t, title) !important;
     }
 
     .banner-confirm {
-      background-color: map-get($t, confirm-bg) !important;
+      background-color: map.get($t, confirm-bg) !important;
 
       &:hover {
-        background-color: map-get($t, confirm-hover) !important;
+        background-color: map.get($t, confirm-hover) !important;
       }
     }
   }

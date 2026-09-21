@@ -32,10 +32,10 @@ export class EmailNotificationService {
    * @returns Observable of the email sending result
    */
   sendCommentNotification(notificationData: EmailNotificationData): Observable<any> {
-    const url = `${environment.ApiUrl}/${EndPoint.SEND_COMMENT_NOTIFICATION}`;
+    const url = `${environment.ApiUrl}/${EndPoint.LEGACY_SEND_COMMENT_NOTIFICATION}`;
 
     // Get current language for email template
-    const currentLang = this.translateService.currentLang || 'en';
+    const currentLang = this.translateService.currentLang() || 'en';
 
     const payload = {
       ...notificationData,
@@ -51,9 +51,9 @@ export class EmailNotificationService {
    * @returns Observable of the email sending result
    */
   sendStatusChangeNotification(notificationData: EmailNotificationData): Observable<any> {
-    const url = `${environment.ApiUrl}/${EndPoint.SEND_STATUS_CHANGE_NOTIFICATION}`;
+    const url = `${environment.ApiUrl}/${EndPoint.LEGACY_SEND_STATUS_CHANGE_NOTIFICATION}`;
 
-    const currentLang = this.translateService.currentLang || 'en';
+    const currentLang = this.translateService.currentLang() || 'en';
 
     const payload = {
       ...notificationData,
@@ -69,9 +69,9 @@ export class EmailNotificationService {
    * @returns Observable of the email sending result
    */
   sendTicketUpdateNotification(notificationData: EmailNotificationData): Observable<any> {
-    const url = `${environment.ApiUrl}/${EndPoint.SEND_TICKET_UPDATE_NOTIFICATION}`;
+    const url = `${environment.ApiUrl}/${EndPoint.LEGACY_SEND_TICKET_UPDATE_NOTIFICATION}`;
 
-    const currentLang = this.translateService.currentLang || 'en';
+    const currentLang = this.translateService.currentLang() || 'en';
 
     const payload = {
       ...notificationData,

@@ -11,7 +11,7 @@ import { EndPoint, HttpVerb } from '@shared/enums';
 import { TicketDetails } from '@shared/interfaces/ticket-details';
 import { HelperService } from '@shared/services/helper.service';
 import { ApiService } from '@shared/services/api.service';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { CommentComponent } from '@shared/utils/comment/comment.component';
 import { AddCommentComponent } from '../add-comment/add-comment.component';
@@ -37,7 +37,7 @@ import { ToastrService } from 'ngx-toastr';
     MatCardContent,
     MatCardTitle,
     MatDivider,
-    TranslateModule,
+    TranslatePipe,
     MatButtonModule,
     CommentComponent,
     AddCommentComponent,
@@ -106,43 +106,54 @@ export class TicketDetailsComponent implements OnInit {
   adminId: string = localStorage.getItem('adminId') || 'no';
 
   getComments() {
-    this.apiService
-      .triggerApiRequest(
-        `${EndPoint.GET_TICKET_COMMENTS}/${this.ticketId}` as EndPoint,
-        HttpVerb.GET
-      )
-      .subscribe((response: any) => {
-        if (response.status) {
-          if (response.ticketComments != null) {
-            this.ticketComments = response.ticketComments.map((comment: any) => {
-              const createdById = comment.createdById ?? comment.CreatedById ?? comment.createdBy ?? 0;
-              const createdByName = comment.createdByName ?? comment.CreatedByName ?? comment.author ?? 'Unknown';
-              const haveAtt = comment.haveAttachments ?? comment.HaveAttachments ?? false;
-              const rawIsAdmin = comment.isAdmin ?? comment.IsAdmin ?? null;
-              let role: string;
-              if (rawIsAdmin !== null && rawIsAdmin !== undefined) {
-                role = rawIsAdmin ? 'Support' : 'Customer';
-              } else if (String(createdByName).toLowerCase() === 'superadmin') {
-                role = 'Support';
-              } else {
-                const ticketCustomerId = (this.ticket as any)?.customerId ?? (this.ticket as any)?.CustomerId ?? null;
-                const isCustomer = ticketCustomerId != null ? Number(createdById) === Number(ticketCustomerId) : String(createdById) !== '1';
-                role = ticketCustomerId != null ? (isCustomer ? 'Customer' : 'Support') : String(createdById) === '1' ? 'Support' : 'Customer';
-              }
-              return {
-                id: comment.id ?? comment.commentId ?? comment.CommentId ?? comment.referenceId,
-                author: createdByName,
-                description: comment.description ?? comment.Description ?? '',
-                createdDate: String(comment.createdDate ?? comment.CreatedDate),
-                HaveAttachments: haveAtt,
-                createdById,
-                role,
-              };
-            });
-            this.enrichCommentsWithAttachmentStatus();
-          }
+    const endpoint = HelperService.formatEndpoint(EndPoint.GET_TICKET_COMMENTS, {
+      ticketId: this.ticketId,
+    }) as EndPoint;
+
+    this.apiService.triggerApiRequest<any>(endpoint, HttpVerb.GET).subscribe({
+      next: (response: any) => {
+        // New backend returns PaginationResponse or direct array: handle both
+        // Legacy shape: { status, ticketComments } vs new: [{ CommentId, CreatedById, ... }] or { items: [...] }
+        const raw = response?.data ?? response?.Data ?? response?.items ?? response?.Items ?? response;
+        const list = Array.isArray(raw) ? raw : raw?.ticketComments ?? raw?.TicketComments ?? [];
+        const arr = Array.isArray(list) ? list : [];
+        if (arr.length === 0 && Array.isArray(response) && response.length === 0) {
+          this.ticketComments = [];
+          return;
         }
-      });
+        // If raw was already the array (new backend), use it; otherwise use list
+        const source = arr.length ? arr : Array.isArray(raw) ? raw : [];
+        this.ticketComments = source.map((comment: any) => {
+          const createdById = comment.createdById ?? comment.CreatedById ?? comment.commenter ?? comment.Commenter ?? 0;
+          const createdByName =
+            comment.createdByName ?? comment.CreatedByName ?? comment.author ?? 'Unknown';
+          const haveAtt = comment.haveAttachments ?? comment.HaveAttachments ?? comment.isAdmin ?? false;
+          // Backend now returns IsAdmin + CreatedByName directly
+          const rawIsAdmin = comment.isAdmin ?? comment.IsAdmin ?? null;
+          let role: string;
+          if (rawIsAdmin !== null && rawIsAdmin !== undefined) {
+            role = rawIsAdmin ? 'Support' : 'Customer';
+          } else if (String(createdByName).toLowerCase() === 'superadmin') {
+            role = 'Support';
+          } else {
+            role = 'Customer';
+          }
+          return {
+            id: comment.commentId ?? comment.CommentId ?? comment.id ?? comment.Id,
+            author: createdByName,
+            description: comment.description ?? comment.Description ?? comment.content ?? comment.Content ?? '',
+            createdDate: String(comment.createdDate ?? comment.CreatedDate ?? ''),
+            HaveAttachments: !!haveAtt,
+            createdById,
+            role,
+          };
+        });
+        this.enrichCommentsWithAttachmentStatus();
+      },
+      error: () => {
+        this.ticketComments = [];
+      },
+    });
   }
 
   handleCommentAdded() {

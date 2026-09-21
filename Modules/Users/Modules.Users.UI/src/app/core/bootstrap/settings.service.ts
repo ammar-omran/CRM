@@ -1,4 +1,3 @@
-import { Directionality } from '@angular/cdk/bidi';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
@@ -29,7 +28,7 @@ export class SettingsService {
     private store: LocalStorageService,
     private mediaMatcher: MediaMatcher,
     @Inject(DOCUMENT) private document: Document,
-    @Inject(Directionality) public dir: AppDirectionality
+    public dir: AppDirectionality
   ) {
     const storedOptions = this.store.get(this.key);
     this.options = Object.assign(defaults, storedOptions);

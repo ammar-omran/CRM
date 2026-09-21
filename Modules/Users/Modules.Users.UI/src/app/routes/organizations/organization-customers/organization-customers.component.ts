@@ -5,7 +5,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MtxGridColumn, MtxGridModule } from '@ng-matero/extensions/grid';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, catchError, debounceTime, of, switchMap } from 'rxjs';
 import { environment } from '@env/environment';
@@ -27,7 +27,7 @@ import {
     MatIconModule,
     MatButtonModule,
     MtxGridModule,
-    TranslateModule,
+    TranslatePipe,
     PageHeaderComponent,
     ListActionsComponent,
     FilterComponent,

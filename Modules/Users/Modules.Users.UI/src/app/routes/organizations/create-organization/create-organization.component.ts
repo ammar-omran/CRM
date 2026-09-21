@@ -10,7 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { EndPoint, HttpVerb } from '@shared/enums';
 import { ApiService } from '@shared/services/api.service';
 import { ToastrService } from 'ngx-toastr';
@@ -39,7 +39,7 @@ import { ResponseStatusEnum } from '@shared/Enums/response-status-enum';
     MatIconModule,
     MatSelectModule,
     MatDialogModule,
-    TranslateModule,
+    TranslatePipe,
     PageHeaderComponent,
   ],
   templateUrl: './create-organization.component.html',

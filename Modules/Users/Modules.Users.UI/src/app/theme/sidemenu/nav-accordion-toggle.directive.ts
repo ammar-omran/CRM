@@ -12,8 +12,8 @@ export class NavAccordionToggleDirective {
     this.navLink = navLink;
   }
 
-  @HostListener('click', ['$event'])
-  onClick() {
+  @HostListener('click')
+  onClick(): void {
     this.navLink.toggle();
   }
 }

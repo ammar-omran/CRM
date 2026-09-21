@@ -2,104 +2,31 @@
   <mat-card class="card-border">
     <div class="mb-4">
       <mat-card-title class="secondary-title mb-1">
-        <span> {{ isEditMode ? ('edit_agent' | translate) : ('add_agent' | translate) }} </span>
+        {{ 'add_agent' | translate }}
       </mat-card-title>
-      <div class="subtitle">
-        <span>For contractor :</span>
-        <span>{{ contractorName }}</span>
-      </div>
+      <p class="text-muted small">{{ 'add_agent_hint' | translate }}</p>
     </div>
     <mat-card-content>
-      <div class="row gx-5 justify-content-between">
-        <div class="col-md-8">
-          <div class="row row-cols row-cols-1 row-cols-md-2">
-            @if (isEditMode) {
-              <div class="col">
-                <mat-form-field color="accent" appearance="outline">
-                  <mat-label>{{ 'code' | translate }}</mat-label>
-                  <input matInput formControlName="code" [disabled]="true" />
-                  @if (agentForm.controls.code.errors?.required) {
-                    <mat-error>{{ 'code_required' | translate }}</mat-error>
-                  }
-                </mat-form-field>
-              </div>
-            }
-            <div class="col">
-              <mat-form-field color="accent" appearance="outline">
-                <mat-label>{{ 'name' | translate }}</mat-label>
-                <input matInput formControlName="name" />
-                @if (agentForm.controls.name.errors?.required) {
-                  <mat-error>{{ 'name_required' | translate }}</mat-error>
-                }
-              </mat-form-field>
-            </div>
+      <mat-form-field color="accent" appearance="outline" class="w-100">
+        <mat-label>{{ 'user_id' | translate }}</mat-label>
+        <input matInput formControlName="userId" placeholder="e.g. 3fa85f64-5717-4562-b3fc-2c963f66afa6" />
+        @if (agentForm.controls.userId.hasError('required')) {
+          <mat-error>{{ 'validations.required' | translate }}</mat-error>
+        }
+      </mat-form-field>
+      <p class="text-muted small">{{ 'agent_user_id_help' | translate }}</p>
 
-            <div class="col">
-              <mat-form-field color="accent" appearance="outline">
-                <mat-label>{{ 'ghana_card' | translate }}</mat-label>
-                <input matInput formControlName="ghanaCard" />
-                @if (agentForm.controls.ghanaCard.errors?.required) {
-                  <mat-error>{{ 'ghana_card_required' | translate }}</mat-error>
-                }
-              </mat-form-field>
-            </div>
-
-            <div class="col">
-              <mat-form-field color="accent" appearance="outline">
-                <mat-label>{{ 'mobile' | translate }}</mat-label>
-                <input matInput formControlName="mobile" />
-                @if (agentForm.controls.mobile.errors?.required) {
-                  <mat-error>{{ 'mobile_required' | translate }}</mat-error>
-                }
-              </mat-form-field>
-            </div>
-            <div class="col">
-              <mat-form-field color="accent" appearance="outline">
-                <mat-label>{{ 'email' | translate }}</mat-label>
-                <input matInput formControlName="email" type="email" />
-                @if (agentForm.controls.email.errors?.email) {
-                  <mat-error>{{ 'invalid_email' | translate }}</mat-error>
-                }
-              </mat-form-field>
-            </div>
-
-            <div class="col">
-              <mat-form-field color="accent" appearance="outline">
-                <mat-label>{{ 'status' | translate }}</mat-label>
-                <mat-select formControlName="status">
-                  <mat-option [value]="true">{{ 'active' | translate }}</mat-option>
-                  <mat-option [value]="false">{{ 'inactive' | translate }}</mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3 vstack align-items-center">
-          <div class="image-preview-container">
-            <img [src]="imagePreview" alt="Agent Image" class="image-preview" />
-          </div>
-          <div class="upload-button-container">
-            <input
-              type="file"
-              #fileInput
-              (change)="onImageUpload($event)"
-              hidden
-              accept="image/*"
-            />
-            <button mat-raised-button color="accent" type="button" (click)="fileInput.click()">
-              {{ 'upload_image' | translate }}
-            </button>
-          </div>
-        </div>
-      </div>
       <button
-        class="mt-0"
         mat-raised-button
         color="primary"
         type="submit"
-        [disabled]="agentForm.invalid"
+        [disabled]="agentForm.invalid || isSubmitting"
       >
-        {{ 'submit' | translate }}
+        @if (isSubmitting) {
+          {{ 'loading' | translate }}
+        } @else {
+          {{ 'submit' | translate }}
+        }
       </button>
     </mat-card-content>
   </mat-card>

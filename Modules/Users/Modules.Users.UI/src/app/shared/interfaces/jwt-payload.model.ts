@@ -1,15 +1,24 @@
 export interface JwtPayload {
+  // Standard / Microsoft claim URIs emitted by ASP.NET Identity + ClientAuthorizationService
+  sub?: string;
+  jti?: string;
+  exp?: number;
+  // Legacy UI shape (kept for backward compat)
   UserId?: string;
   UserEmail?: string;
-  /** name */
   UserName?: string;
-  /** Role id as string (e.g. '1'=Admin, '2'=Supervisor, '3'=Agent) */
   RoleId?: string;
-  /** Role name string (e.g. 'admin', 'supervisor', 'agent') */
   RoleName?: string;
-  /**
-   * JSON array of permission strings.
-   * Example: ["Tickets.View", "TicketDetails.View"]
-   */
   permissions?: string[];
+  permission?: string | string[];
+  // Real backend claim keys
+  'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'?: string;
+  'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'?: string;
+  'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'?: string;
+  'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role'?: string | string[];
+  role?: string | string[];
+  email?: string;
+  name?: string;
+  // Allow any other permission claim
+  [key: string]: unknown;
 }

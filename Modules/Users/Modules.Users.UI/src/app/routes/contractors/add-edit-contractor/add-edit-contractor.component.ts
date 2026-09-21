@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { EndPoint, HttpVerb } from '@shared/enums';
 import { BaseResponse } from '@shared/interfaces/base-response';
 import { Contractor } from '@shared/interfaces/contractor.model';
@@ -25,7 +25,7 @@ import { map, Observable, Subscription } from 'rxjs';
     MatFormFieldModule,
     MatCardModule,
     ReactiveFormsModule,
-    TranslateModule,
+    TranslatePipe,
     MatInputModule,
     MatIconModule,
     MatButtonModule,

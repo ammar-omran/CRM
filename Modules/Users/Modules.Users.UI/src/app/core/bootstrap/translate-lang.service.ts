@@ -21,7 +21,7 @@ export class TranslateLangService {
         : this.languageService.defaultLanguage;
 
       this.settings.setLanguage(defaultLang);
-      this.translate.setDefaultLang(defaultLang);
+      this.translate.setFallbackLang(defaultLang);
       this.translate.use(defaultLang).subscribe({
         next: () => console.log(`Successfully initialized '${defaultLang}' language.'`),
         error: () => console.error(`Problem with '${defaultLang}' language initialization.'`),

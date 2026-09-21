@@ -1,7 +1,7 @@
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Component, HostBinding, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { MenuService } from '@core';
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
@@ -16,7 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
   standalone: true,
   imports: [
     BreadcrumbComponent,
-    TranslateModule,
+    TranslatePipe,
     MatTooltipModule,
     RouterModule,
     MatIconModule,

@@ -1,4 +1,4 @@
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ApplicationConfig, importProvidersFrom, LOCALE_ID } from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter, withComponentInputBinding, withInMemoryScrolling } from '@angular/router';
@@ -10,9 +10,9 @@ import { MAT_CARD_CONFIG } from '@angular/material/card';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { provideMomentDatetimeAdapter } from '@ng-matero/extensions-moment-adapter';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateLoader, provideTranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
+import { HttpClient } from '@angular/common/http';
 import { NgxPermissionsModule } from 'ngx-permissions';
 import { NgProgressHttpModule } from 'ngx-progressbar/http';
 import { NgProgressRouterModule } from 'ngx-progressbar/router';
@@ -21,16 +21,13 @@ import { ToastrModule } from 'ngx-toastr';
 import { BASE_URL, appInitializerProviders, httpInterceptorProviders } from '@core';
 import { environment } from '@env/environment';
 import { PaginatorI18nService } from '@shared';
+import { AppDirectionality } from '@shared/services/directionality.service';
+import { Directionality } from '@angular/cdk/bidi';
 import { routes } from './app.routes';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 // Register Arabic locale
 registerLocaleData(localeAr);
-
-// Required for AOT compilation
-export function TranslateHttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -41,18 +38,21 @@ export const appConfig: ApplicationConfig = {
       withInMemoryScrolling({ scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled' }),
       withComponentInputBinding()
     ),
+    { provide: Directionality, useExisting: AppDirectionality },
+    provideTranslateService({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (http: HttpClient) =>
+          new TranslateHttpLoader(http, './assets/i18n/', '.json'),
+        deps: [HttpClient],
+      },
+      fallbackLang: 'en-US',
+    }),
     importProvidersFrom(
       NgProgressHttpModule,
       NgProgressRouterModule,
       NgxPermissionsModule.forRoot(),
-      ToastrModule.forRoot(),
-      TranslateModule.forRoot({
-        loader: {
-          provide: TranslateLoader,
-          useFactory: TranslateHttpLoaderFactory,
-          deps: [HttpClient],
-        },
-      })
+      ToastrModule.forRoot()
     ),
     {
       provide: LocationStrategy,

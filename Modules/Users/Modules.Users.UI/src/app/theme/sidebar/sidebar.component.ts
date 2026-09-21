@@ -3,10 +3,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { SidemenuComponent } from '../sidemenu/sidemenu.component';
 import { BrandingComponent } from '../widgets/branding.component';
-import { UserPanelComponent } from './user-panel.component';
-import { RouterLink } from '@angular/router';
 import { admin } from '@core';
-import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-sidebar',
@@ -15,12 +12,9 @@ import { MatButton } from '@angular/material/button';
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [
-    RouterLink,
     MatSlideToggleModule,
     BrandingComponent,
     SidemenuComponent,
-    UserPanelComponent,
-    MatButton,
   ],
 })
 export class SidebarComponent {

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -22,7 +22,7 @@ import { NgClass } from '@angular/common';
     MatFormFieldModule,
     MatCardModule,
     ReactiveFormsModule,
-    TranslateModule,
+    TranslatePipe,
     MatInputModule,
     MatCardModule,
     MatIconModule,

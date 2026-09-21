@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, iif, merge, of } from 'rxjs';
 import { catchError, map, share, switchMap, tap } from 'rxjs/operators';
-import { filterObject, isEmptyObject } from './helpers';
+import { isEmptyObject } from './helpers';
 import { Token, User } from './interface';
 import { LoginService } from './login.service';
 import { TokenService } from './token.service';
@@ -10,19 +10,16 @@ import { TokenService } from './token.service';
   providedIn: 'root',
 })
 export class AuthService {
+  private readonly loginService = inject(LoginService);
+  private readonly tokenService = inject(TokenService);
   private user$ = new BehaviorSubject<User>({});
   private change$ = merge(
-    this.tokenService.change()
-    // this.tokenService.refresh().pipe(switchMap(() => this.refresh()))
+    this.tokenService.change(),
+    this.tokenService.refresh().pipe(switchMap(() => this.refresh()))
   ).pipe(
     switchMap(() => this.assignUser()),
     share()
   );
-
-  constructor(
-    private loginService: LoginService,
-    private tokenService: TokenService
-  ) {}
 
   init() {
     return new Promise<void>(resolve => this.change$.subscribe(() => resolve()));
@@ -38,22 +35,34 @@ export class AuthService {
 
   login(email: string, password: string) {
     return this.loginService.login(email, password).pipe(
-      tap(accessToken => {
-        const baseToken: Token = {
-          accessToken,
+      tap(res => {
+        const token: Token = {
+          accessToken: res.token,
+          refresh_token: res.refreshToken,
         };
-        this.tokenService.set(baseToken);
+        this.tokenService.set(token);
       }),
       map(() => this.check())
     );
   }
 
   refresh() {
+    const refreshToken = this.tokenService.getRefreshToken() as string | undefined;
+    const accessToken = this.tokenService.getAccessToken();
+    if (!refreshToken || !accessToken) return of(false);
     return this.loginService
-      .refresh(filterObject({ refresh_token: this.tokenService.getRefreshToken() }))
+      .refresh({ Token: accessToken, RefreshToken: refreshToken })
       .pipe(
-        catchError(() => of(undefined)),
-        tap(token => this.tokenService.set(token)),
+        catchError(() => of(undefined as unknown as Token)),
+        tap(token => {
+          if (token) {
+            const t = token as unknown as { token: string; refreshToken: string; Token: string; RefreshToken: string };
+            this.tokenService.set({
+              accessToken: t.token ?? t.Token,
+              refresh_token: t.refreshToken ?? t.RefreshToken,
+            } as Token);
+          }
+        }),
         map(() => this.check())
       );
   }

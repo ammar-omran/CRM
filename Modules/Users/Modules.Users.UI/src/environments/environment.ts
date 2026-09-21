@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  ApiUrl: 'https://localhost:55492/api', // Azka Getaway
+  ApiUrl: 'https://localhost:5001/api', // Azka Getaway
   baseUrl: '',
   useHash: false,
   releaseDate: '2025',

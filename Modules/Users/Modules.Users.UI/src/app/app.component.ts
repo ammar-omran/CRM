@@ -38,7 +38,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   private initializeLanguage(): void {
     this.translateService.addLangs(['en-US', 'ar-EG']);
-    this.translateService.setDefaultLang('en-US');
+    this.translateService.setFallbackLang('en-US');
     this.languageService.getCurrentLanguage(); // This will trigger language setting
   }
 }

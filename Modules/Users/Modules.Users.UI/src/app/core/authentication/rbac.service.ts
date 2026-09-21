@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TokenService } from './token.service';
@@ -9,10 +9,12 @@ export type AppRole = string;
   providedIn: 'root',
 })
 export class RbacService {
+  private readonly tokenService = inject(TokenService);
   private role$ = new BehaviorSubject<AppRole>('');
   private permissions$ = new BehaviorSubject<string[]>([]);
+  private roles$ = new BehaviorSubject<string[]>([]);
 
-  constructor(private tokenService: TokenService) {
+  constructor() {
     this.loadFromToken();
   }
 
@@ -21,16 +23,27 @@ export class RbacService {
    * the JWT and populate the reactive role/permission subjects.
    */
   loadFromToken(): void {
-    const role = (this.tokenService.getUserRole() ?? '');
+    const role = this.tokenService.getUserRole() ?? '';
+    const roles = this.tokenService.getUserRoles();
     const permissions = this.tokenService.getPermissions();
     this.role$.next(role);
+    this.roles$.next(roles);
     this.permissions$.next(permissions);
   }
 
   /** Clear stored role and permissions (e.g. on logout) */
   clear(): void {
     this.role$.next('');
+    this.roles$.next([]);
     this.permissions$.next([]);
+  }
+
+  getRoles(): string[] {
+    return this.roles$.getValue();
+  }
+
+  roles() {
+    return this.roles$.asObservable();
   }
 
   /** Returns the current role as a snapshot string */
@@ -64,14 +77,17 @@ export class RbacService {
   }
 
   isAdmin(): boolean {
-    return this.role$.getValue().toLowerCase() === 'admin';
+    const all = [this.role$.getValue(), ...this.roles$.getValue()].map(r => r.toLowerCase());
+    return all.includes('admin');
   }
 
   isSupervisor(): boolean {
-    return this.role$.getValue().toLowerCase() === 'supervisor';
+    const all = [this.role$.getValue(), ...this.roles$.getValue()].map(r => r.toLowerCase());
+    return all.includes('supervisor');
   }
 
   isAgent(): boolean {
-    return this.role$.getValue().toLowerCase() === 'agent';
+    const all = [this.role$.getValue(), ...this.roles$.getValue()].map(r => r.toLowerCase());
+    return all.includes('agent');
   }
 }

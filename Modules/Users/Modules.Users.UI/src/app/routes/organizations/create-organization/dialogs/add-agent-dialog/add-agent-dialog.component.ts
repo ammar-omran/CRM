@@ -7,7 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ApiService } from '@shared/services/api.service';
 import { EndPoint, HttpVerb } from '@shared/enums';
 import { BaseResponse } from '@shared/interfaces/base-response';
@@ -49,7 +49,7 @@ export interface AddAgentDialogData {
     MatSelectModule,
     MatButtonModule,
     MatIconModule,
-    TranslateModule,
+    TranslatePipe,
     InfoBannerComponent,
   ],
   templateUrl: './add-agent-dialog.component.html',
