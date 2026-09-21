@@ -26,4 +26,6 @@ public class TicketingDbContext : DbContext, IApplicationDbContext
     public DbSet<TicketTitle> TicketTitles { get; set; } = null!;
     public DbSet<Severity> Severities { get; set; } = null!;
     public DbSet<TicketsAttachment> TicketsAttachments { get; set; } = null!;
+    public DbSet<Attachment> Attachments { get; set; } = null!;
+    public DbSet<Service> Services { get; set; } = null!;
 }

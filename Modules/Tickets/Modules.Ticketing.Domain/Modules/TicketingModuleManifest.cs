@@ -71,8 +71,8 @@ public sealed class TicketingModuleManifest : IModuleManifest
 	/// <inheritdoc />
 	public IReadOnlyList<ModulePolicy> Policies { get; } =
 		PolicyConstants.FromConstants(
-			typeof(TicketPolicyConstants)
-			// Add more entity constants classes here as the module grows, e.g. typeof(TicketCommentPolicyConstants)
+			typeof(TicketPolicyConstants),
+			typeof(AttachmentPolicyConstants)
 		);
 
 	/// <inheritdoc />
