@@ -13,6 +13,8 @@ public class TicketCommentConfiguration : IEntityTypeConfiguration<TicketComment
 		builder.Property(tc => tc.TicketId).IsRequired();
 		builder.Property(tc => tc.Content).IsRequired().HasMaxLength(1000);
 		builder.Property(tc => tc.Commenter).IsRequired();
+		builder.Property(tc => tc.CreatedByName).IsRequired().HasMaxLength(150).HasDefaultValue(string.Empty);
+		builder.Property(tc => tc.IsAdmin).IsRequired().HasDefaultValue(false);
 		builder.Property(tc => tc.CreatedDate).HasDefaultValueSql("GETDATE()");
 
 		builder.HasOne(tc => tc.Ticket)

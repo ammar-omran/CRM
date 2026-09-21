@@ -24,6 +24,12 @@ internal sealed class TicketingPolicyFactory : IPolicyFactory
 			TicketPolicyConstants.ViewGroupPolicy,
 			TicketPolicyConstants.ViewAnyPolicy);
 
-		return policies;
+		var commentPolicies = PolicyFactoryExtensions.CreateClaimPoliciesFromConstants<CommentPolicyConstants>();
+		var attachmentPolicies = PolicyFactoryExtensions.CreateClaimPoliciesFromConstants<AttachmentPolicyConstants>();
+
+		return policies
+				.Union(commentPolicies)
+				.Union(attachmentPolicies)
+				.ToDictionary(x => x.Key, x => x.Value);
 	}
 }

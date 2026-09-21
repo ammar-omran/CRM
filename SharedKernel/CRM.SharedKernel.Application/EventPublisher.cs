@@ -28,7 +28,8 @@ public class EventPublisher(IServiceProvider serviceProvider, ILogger<EventPubli
 		where TEvent : IEvent
 	{
 		var eventType = @event.GetType();
-		logger.LogDebug("Publishing event {EventType}", eventType.Name);
+		if (logger.IsEnabled(LogLevel.Debug))
+			logger.LogDebug("Publishing event {EventType}", eventType.Name);
 
 		try
 		{
@@ -37,11 +38,13 @@ public class EventPublisher(IServiceProvider serviceProvider, ILogger<EventPubli
 
 			if (handlers.Length == 0)
 			{
-				logger.LogDebug("No handlers registered for event {EventType}", eventType.Name);
+				if (logger.IsEnabled(LogLevel.Debug))
+					logger.LogDebug("No handlers registered for event {EventType}", eventType.Name);
 				return;
 			}
 
-			logger.LogDebug("Found {HandlerCount} handlers for event {EventType}", handlers.Length, eventType.Name);
+			if (logger.IsEnabled(LogLevel.Debug))
+				logger.LogDebug("Found {HandlerCount} handlers for event {EventType}", handlers.Length, eventType.Name);
 
 			// Execute all handlers and collect results
 			var handlerTasks = handlers
@@ -62,7 +65,8 @@ public class EventPublisher(IServiceProvider serviceProvider, ILogger<EventPubli
 				throw new AggregateException($"One or more handlers threw exceptions while processing event {eventType.Name}", exceptions!);
 			}
 
-			logger.LogDebug("Successfully published event {EventType}", eventType.Name);
+			if (logger.IsEnabled(LogLevel.Debug))
+				logger.LogDebug("Successfully published event {EventType}", eventType.Name);
 		}
 		catch (AggregateException)
 		{

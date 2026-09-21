@@ -22,9 +22,11 @@ public static class MiddlewareRegistrationExtensions
 		var middlewareTypes = assembly.GetTypes()
 			.Where(t => t.IsAssignableTo(typeof(IModuleMiddlewareConfigurator)) && t is { IsClass: true, IsAbstract: false, IsInterface: false });
 
+#pragma warning disable CA2263 // Prefer generic overload - dynamic type requires non-generic
 		var serviceDescriptors = middlewareTypes
 			.Select(type => ServiceDescriptor.Singleton(typeof(IModuleMiddlewareConfigurator), type))
 			.ToArray();
+#pragma warning restore CA2263
 
 		services.TryAddEnumerable(serviceDescriptors);
 		return services;
@@ -32,8 +34,10 @@ public static class MiddlewareRegistrationExtensions
 
 	public static IServiceCollection AddSharedKernelModuleMiddlewares(this IServiceCollection services)
 	{
+#pragma warning disable CA2263 // Prefer generic overload - false positive for TryAddEnumerable
 		services.TryAddEnumerable(ServiceDescriptor.Singleton(
 			typeof(IModuleMiddlewareConfigurator), typeof(TracingMiddlewareConfigurator)));
+#pragma warning restore CA2263
 		return services;
 	}
 

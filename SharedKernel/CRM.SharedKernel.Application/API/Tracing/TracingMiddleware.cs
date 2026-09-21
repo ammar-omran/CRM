@@ -174,7 +174,7 @@ public sealed class TracingMiddleware : IDisposable
             lastSegment = lastSegment[1..^1];
 
             // Handle constraints such as {id:int}
-            var constraintIndex = lastSegment.IndexOf(':');
+            var constraintIndex = lastSegment.IndexOf(':', StringComparison.Ordinal);
 
             if (constraintIndex >= 0)
             {
@@ -188,8 +188,8 @@ public sealed class TracingMiddleware : IDisposable
     private static string NormalizeSegment(string value)
     {
         return value
-            .Replace("-", "_")
-            .Replace(".", "_")
+            .Replace("-", "_", StringComparison.Ordinal)
+            .Replace(".", "_", StringComparison.Ordinal)
             .ToLowerInvariant();
     }
 

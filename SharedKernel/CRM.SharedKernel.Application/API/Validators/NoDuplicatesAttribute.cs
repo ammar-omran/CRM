@@ -3,11 +3,13 @@ using System.ComponentModel.DataAnnotations;
 namespace CRM.SharedKernel.Application.API.Validators;
 
 [System.AttributeUsage(System.AttributeTargets.All, Inherited = false, AllowMultiple = true)]
-public class NoDuplicatesAttribute(string propertyName) : ValidationAttribute
+public sealed class NoDuplicatesAttribute(string propertyName) : ValidationAttribute
 {
 	private readonly string _propertyName = propertyName;
 
-	protected override ValidationResult IsValid(object value, ValidationContext context)
+	public string PropertyName => _propertyName;
+
+	protected override ValidationResult? IsValid(object? value, ValidationContext? validationContext)
 	{
 		if (value is not IEnumerable<object> list)
 			return ValidationResult.Success;
@@ -20,7 +22,7 @@ public class NoDuplicatesAttribute(string propertyName) : ValidationAttribute
 			.Select(g => g.Key)
 			.ToList();
 
-		if (duplicates.Count == 0)
+		if (duplicates.Count != 0)
 		{
 			return new ValidationResult(
 				$"Duplicate values found for '{_propertyName}': {string.Join(", ", duplicates)}.");
@@ -29,6 +31,6 @@ public class NoDuplicatesAttribute(string propertyName) : ValidationAttribute
 		return ValidationResult.Success;
 	}
 
-	private static object GetPropertyValue(object obj, string propertyName) =>
+	private static object? GetPropertyValue(object obj, string propertyName) =>
 		obj.GetType().GetProperty(propertyName)?.GetValue(obj);
 }

@@ -62,7 +62,7 @@ public static class EndpointResultsExtensions
 		Func<TIn, TOut> onSuccess,
 		Func<Result<TIn>, TOut> onFailure)
 	{
-		return result.IsSuccess ? onSuccess(result.Value) : onFailure(result);
+		return result.IsSuccess ? onSuccess(result.Value!) : onFailure(result);
 	}
 
 	public static IActionResult ToMVCProblem(this List<Error> errors)

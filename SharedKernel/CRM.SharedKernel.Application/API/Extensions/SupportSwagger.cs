@@ -11,13 +11,14 @@ public static class SupportSwagger
 	{
 		var provider = services.BuildServiceProvider();
 		var manifest = provider.GetService<IModuleManifest>();
+		var moduleId = manifest?.Identity.ModuleId ?? "module";
 		services
 			.AddEndpointsApiExplorer()
 			.AddSwaggerGen(options =>
 			{
 				options.SwaggerDoc("v1", new OpenApiInfo
 				{
-					Title = $"{manifest.Identity.ModuleId}.api",
+					Title = $"{moduleId}.api",
 					Version = "v1"
 				});
 

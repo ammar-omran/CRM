@@ -12,17 +12,25 @@ public class TicketComment
 	public string Content { get; private set; } = string.Empty;
 	public int TicketId { get; private set; }
 	public int Commenter { get; set; }
+	public string CreatedByName { get; private set; } = string.Empty;
+	public bool IsAdmin { get; private set; }
 	public DateTime CreatedDate { get; private set; } = DateTime.Now;
 
 	public Ticket Ticket { get; private set; } = default!;
 
-	public static Result<TicketComment> Create(int ticketId, string content, int commenter)
+	public static Result<TicketComment> Create(int ticketId,
+		string content,
+		int commenter,
+		string? createdByName = null,
+		bool isAdmin = false)
 	{
 		var comment = new TicketComment
 		{
 			TicketId = ticketId,
 			Content = content,
 			Commenter = commenter,
+			CreatedByName = createdByName ?? string.Empty,
+			IsAdmin = isAdmin
 		};
 
 		var errors = comment.Validate();
@@ -41,6 +49,9 @@ public class TicketComment
 
 		if (Commenter <= 0)
 			errors.Add(Error.Validation("Comment.InvalidAutherId", "A comment must belong to a Commenter."));
+
+		if (!string.IsNullOrEmpty(CreatedByName) && CreatedByName.Length > 150)
+			errors.Add(Error.Validation("Comment.InvalidAuthorName", "Author name must be 150 characters or fewer."));
 
 		return errors.ToArray();
 	}

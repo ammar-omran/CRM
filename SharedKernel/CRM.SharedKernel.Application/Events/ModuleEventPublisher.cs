@@ -45,19 +45,21 @@ public sealed class ModuleEventPublisher(
 				["module.event.id"] = envelope.EventId.ToString()
 			}));
 
-		var client = httpClientFactory.CreateClient();
+		using var client = httpClientFactory.CreateClient();
 		client.BaseAddress = new Uri(baseUrl.TrimEnd('/') + "/");
 
 		using var request = await client.PostAsJsonAsync("internal/events/publish", envelope, cancellationToken);
 
 		if (!request.IsSuccessStatusCode)
 		{
-			logger.LogError(
-				"Failed to publish module event {EventName}: platform returned {StatusCode}.",
-				eventName, (int)request.StatusCode);
+			if (logger.IsEnabled(LogLevel.Error))
+				logger.LogError(
+					"Failed to publish module event {EventName}: platform returned {StatusCode}.",
+					eventName, (int)request.StatusCode);
 			return;
 		}
 
-		logger.LogDebug("Published module event {EventName} ({EventId}).", eventName, envelope.EventId);
+		if (logger.IsEnabled(LogLevel.Debug))
+			logger.LogDebug("Published module event {EventName} ({EventId}).", eventName, envelope.EventId);
 	}
 }

@@ -2,7 +2,7 @@ namespace CRM.SharedKernel.Application.API.Responses;
 
 public class BaseResponse<T> : BaseResponse
 {
-	public T Data { get; set; }
+	public T Data { get; set; } = default!;
 }
 
 public class BaseResponse

@@ -52,6 +52,13 @@ public sealed class TicketingModuleManifest : IModuleManifest
 			DisplayName = "Ticket Attachments",
 			Description = "File attachment management for tickets.",
 			Category = "Ticketing"
+		},
+		new ModuleCapability
+		{
+			CapabilityId = "ticket-comments",
+			DisplayName = "Ticket Comments",
+			Description = "Threaded comments and replies for tickets.",
+			Category = "Ticketing"
 		}
 	];
 
@@ -72,7 +79,8 @@ public sealed class TicketingModuleManifest : IModuleManifest
 	public IReadOnlyList<ModulePolicy> Policies { get; } =
 		PolicyConstants.FromConstants(
 			typeof(TicketPolicyConstants),
-			typeof(AttachmentPolicyConstants)
+			typeof(AttachmentPolicyConstants),
+			typeof(CommentPolicyConstants)
 		);
 
 	/// <inheritdoc />
