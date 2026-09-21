@@ -1,0 +1,71 @@
+<form [formGroup]="contractorForm" (ngSubmit)="onSubmit()" class="custom-form">
+  <div class="row">
+    <div class="col-md-9 col-lg-8">
+      <mat-card class="card-border">
+        <mat-card-title class="secondary-title">
+          {{ isEditMode ? ('edit_contractor' | translate) : ('add_contractor' | translate) }}
+        </mat-card-title>
+        <mat-card-content>
+          @if (isEditMode) {
+            <mat-form-field color="accent" appearance="outline">
+              <mat-label>{{ 'contractor_code' | translate }}</mat-label>
+              <input matInput formControlName="code" [disabled]="true" />
+            </mat-form-field>
+          }
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>{{ 'name' | translate }}</mat-label>
+            <input matInput formControlName="name" />
+            @if (contractorForm.controls.name.errors?.required) {
+              <mat-error>{{ 'name_required' | translate }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>{{ 'contact_person' | translate }}</mat-label>
+            <input matInput formControlName="contactPersonName" />
+            @if (contractorForm.controls.contactPersonName.errors?.required) {
+              <mat-error>{{ 'contact_person_required' | translate }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>{{ 'phone' | translate }}</mat-label>
+            <input matInput formControlName="phone" />
+            @if (contractorForm.controls.phone.errors?.required) {
+              <mat-error>{{ 'phone_required' | translate }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>{{ 'ghana_post_address' | translate }}</mat-label>
+            <input matInput formControlName="ghanaPostAddress" />
+          </mat-form-field>
+
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>{{ 'office_address' | translate }}</mat-label>
+            <input matInput formControlName="officeAddress" />
+          </mat-form-field>
+          <mat-form-field color="accent" appearance="outline">
+            <mat-label>{{ 'selected_districts' | translate }}</mat-label>
+            <mat-select formControlName="assignedDistricts" multiple>
+              @for (district of availableDistricts$ | async; track district.id) {
+                <mat-option [value]="district.id">
+                  {{ district.name }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="contractorForm.invalid"
+          >
+            {{ 'submit' | translate }}
+          </button>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</form>

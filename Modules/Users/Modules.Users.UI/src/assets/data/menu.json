@@ -13,7 +13,7 @@
       "customIcon": "assets/images/svgs/menu/installations.svg",
       "permissions": {
         "only": [],
-        "except": []
+        "except": ["ADMIN"]
       }
     },
     {
@@ -23,7 +23,7 @@
       "exact": true,
       "customIcon": "assets/images/svgs/menu/contractor.svg",
       "permissions": {
-        "only": [],
+        "only": ["ADMIN", "SUPERVISOR"],
         "except": []
       }
     },
@@ -33,8 +33,7 @@
       "type": "link",
       "icon": "group",
       "permissions": {
-        "only": [],
-        "except": []
+        "only": ["ROLE_AGENT"]
       }
     }
   ]

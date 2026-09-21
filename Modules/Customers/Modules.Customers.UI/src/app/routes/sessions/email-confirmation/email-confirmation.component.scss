@@ -1,0 +1,161 @@
+:host {
+    display: block;
+}
+
+.verification-wrapper {
+    width: 100%;
+    max-width: 430px;
+}
+
+.logo {
+    max-width: 170px;
+}
+
+.verification-card {
+
+    border-radius: 22px;
+    border: none;
+
+    padding: 18px;
+
+    box-shadow: 0 12px 40px rgba(0,0,0,.08);
+
+}
+
+.icon-circle {
+
+    width: 72px;
+    height: 72px;
+
+    border-radius: 50%;
+
+    background: #edf5ff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .mat-icon{
+        width:34px;
+        height:34px;
+        font-size:34px;
+    }
+
+}
+
+.description{
+
+    font-size:.92rem;
+    line-height:1.6;
+
+}
+
+.otp-container{
+
+    display:flex;
+    justify-content:center;
+    gap:12px;
+
+}
+
+.otp-input{
+
+    width:50px;
+    height:58px;
+
+    border:1px solid #d9dee8;
+    border-radius:10px;
+
+    text-align:center;
+
+    font-size:24px;
+    font-weight:700;
+
+    outline:none;
+
+    transition:.2s;
+
+    background:white;
+
+}
+
+.otp-input:focus{
+
+    border-color:#1976d2;
+
+    box-shadow:0 0 0 3px rgba(25,118,210,.12);
+
+}
+
+.timer-card{
+
+    border:1px solid #ededed;
+
+    border-radius:12px;
+
+    background:#fafafa;
+
+    text-align:center;
+
+    padding:14px;
+
+}
+
+.timer-value{
+
+    font-size:28px;
+
+    font-weight:700;
+
+    line-height:1;
+
+}
+
+.timer-label{
+
+    margin-top:8px;
+
+    color:#8b8b8b;
+
+    font-size:11px;
+
+    letter-spacing:.12em;
+
+    text-transform:uppercase;
+
+}
+
+.expire-icon{
+
+    vertical-align:middle;
+
+    font-size:18px;
+
+    width:18px;
+    height:18px;
+
+    margin-inline-end:4px;
+
+}
+
+.verify-btn{
+
+    height:52px;
+
+    border-radius:10px;
+
+    font-size:16px;
+
+    font-weight:600;
+
+}
+
+[dir="rtl"]{
+
+    .otp-container{
+
+        direction:ltr;
+
+    }
+
+}

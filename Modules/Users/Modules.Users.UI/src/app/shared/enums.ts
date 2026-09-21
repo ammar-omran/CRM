@@ -49,7 +49,8 @@ export enum EndPoint {
   AddTicket = 'Ticket/AddTicket',
   UPLOAD_ATTACHMENT = 'Attachments/{attachmentTypeId}/{referenceId}',
   SET_ATTACHMENT_REFERENCE = 'Attachments/{attachmentId}/set-reference/{referenceId}',
-  DOWNLOAD_TICKET_ATTACHMENT = 'Attachments/download/{ticketId}',
+  GET_ATTACHMENT_BY_REFERENCE = 'Attachments/reference/{referenceId}',
+  DOWNLOAD_ATTACHMENT_BY_ID = 'Attachments/download/{fileId}',
   DELETE_ATTACHMENT = 'Attachments/{attachmentId}',
   AGENTS_LIST = 'agents',
   ADD_AGENT = 'agents',
@@ -57,4 +58,5 @@ export enum EndPoint {
   ADD_ORGANIZATION = 'organizations',
   CUSTOMERS_LIST = 'customer',
   ORGANIZATION_CUSTOMERS = 'Organizations/customers',
+  SET_PASSWORD = 'User/set-password',
 }

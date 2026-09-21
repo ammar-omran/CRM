@@ -2,7 +2,11 @@
 
 <div class="organizations-container">
   <div class="organizations-header">
-    <button mat-raised-button color="primary" (click)="navigateToCreate()">
+    <button
+      *ngxPermissionsOnly="['ADMIN']"
+      mat-raised-button
+      color="primary"
+      (click)="navigateToCreate()">
       {{ 'organizations.create_button' | translate }}
     </button>
   </div>

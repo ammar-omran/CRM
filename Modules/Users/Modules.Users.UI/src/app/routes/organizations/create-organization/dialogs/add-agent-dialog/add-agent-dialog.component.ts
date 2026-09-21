@@ -14,8 +14,6 @@ import { BaseResponse } from '@shared/interfaces/base-response';
 import { InfoBannerComponent } from '@shared/components/info-banner/info-banner.component';
 import { ResponseStatusEnum } from '@shared/Enums/response-status-enum';
 
-//  Regex: 8–12 chars, at least one digit, at least one special char
-const PASSWORD_PATTERN = /^(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,12}$/;
 
 //  Regex: letters and single spaces only, no leading/trailing spaces
 const NAME_PATTERN = /^[a-zA-Z\u0600-\u06FF]+( [a-zA-Z\u0600-\u06FF]+)*$/;
@@ -69,12 +67,10 @@ export class AddAgentDialogComponent implements OnInit {
     email: ['', [Validators.required, Validators.email]],
     phone: ['', [Validators.required, Validators.pattern(PHONE_PATTERN)]],
     role: ['', [Validators.required]],
-    password: ['', [Validators.required, Validators.pattern(PASSWORD_PATTERN)]],
   });
 
   readonly roles = ORGANIZATION_AGENT_ROLE_OPTIONS;
 
-  showPassword = false;
   isSaving = false;
 
   /**

@@ -12,7 +12,9 @@ export class RbacService {
   private role$ = new BehaviorSubject<AppRole>('');
   private permissions$ = new BehaviorSubject<string[]>([]);
 
-  constructor(private tokenService: TokenService) {}
+  constructor(private tokenService: TokenService) {
+    this.loadFromToken();
+  }
 
   /**
    * Call this on startup (and after every token refresh) to decode

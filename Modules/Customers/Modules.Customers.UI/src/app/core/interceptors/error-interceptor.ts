@@ -41,7 +41,7 @@ export class ErrorInterceptor implements HttpInterceptor {
   constructor(
     private router: Router,
     private toast: ToastrService
-  ) {}
+  ) { }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const isAuditExport = request.url.includes('get_audits') && request.params.has('export');
@@ -66,7 +66,7 @@ export class ErrorInterceptor implements HttpInterceptor {
         skipLocationChange: true,
       });
     } else {
-      this.toast.error(this.getMessage(error));
+      // this.toast.error(this.getMessage(error));
       if (error.status === STATUS.UNAUTHORIZED) {
         this.router.navigateByUrl('/auth/login');
       }

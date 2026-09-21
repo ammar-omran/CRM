@@ -1,0 +1,54 @@
+{
+  "data": [
+    {
+      "id": "1",
+      "code": "AGT001",
+      "amcUsername": "john_doe",
+      "name": "John Doe",
+      "email": "johndoe@example.com",
+      "ghanaCard": "GHA-123456789",
+      "phone": "+233123456789",
+      "state": "enabled"
+    },
+    {
+      "id": "2",
+      "code": "AGT002",
+      "amcUsername": "jane_smith",
+      "name": "Jane Smith",
+      "email": "janesmith@example.com",
+      "ghanaCard": "GHA-987654321",
+      "phone": "+233987654321",
+      "state": "disabled"
+    },
+    {
+      "id": "3",
+      "code": "AGT003",
+      "amcUsername": "michael_owusu",
+      "name": "Michael Owusu",
+      "email": "michaelowusu@example.com",
+      "ghanaCard": "GHA-567890123",
+      "phone": "+233567890123",
+      "state": "enabled"
+    },
+    {
+      "id": "4",
+      "code": "AGT004",
+      "amcUsername": "patricia_koranteng",
+      "name": "Patricia Koranteng",
+      "email": "patriciak@example.com",
+      "ghanaCard": "GHA-654321098",
+      "phone": "+233654321098",
+      "state": "disabled"
+    },
+    {
+      "id": "5",
+      "code": "AGT005",
+      "amcUsername": "kwame_mensah",
+      "name": "Kwame Mensah",
+      "email": "kwamemensah@example.com",
+      "ghanaCard": "GHA-112233445",
+      "phone": "+233112233445",
+      "state": "enabled"
+    }
+  ]
+}

@@ -7,6 +7,7 @@ import { EndPoint, HttpVerb } from '@shared/enums';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
+import { NgxPermissionsModule } from 'ngx-permissions';
 
 @Component({
   selector: 'app-organization-list',
@@ -16,7 +17,8 @@ import { CommonModule } from '@angular/common';
     MatButtonModule,
     AdaptiveTableComponent,
     PageHeaderComponent,
-    TranslateModule
+    TranslateModule,
+    NgxPermissionsModule,
   ],
   templateUrl: './organization-list.component.html',
   styleUrl: './organization-list.component.scss',

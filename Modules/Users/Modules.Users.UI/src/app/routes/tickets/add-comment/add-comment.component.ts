@@ -188,7 +188,20 @@ export class AddCommentComponent implements OnInit {
     this.http.post(url, body).subscribe({
       next: (response: any) => {
         this.isSubmitting = false;
-
+        // Capture new comment id for attachment linking (customer & admin flow)
+        const newCommentId = response?.id ?? response?.Id ?? response?.commentId ?? response?.CommentId ?? null;
+        if (newCommentId) {
+          this.commentId = Number(newCommentId);
+          this.uploadedAttachments.forEach(att => {
+            const ep = HelperService.formatEndpoint(EndPoint.SET_ATTACHMENT_REFERENCE, {
+              attachmentId: att.id,
+              referenceId: this.commentId ?? 0,
+            }) as EndPoint;
+            this.api.triggerApiRequest(ep, HttpVerb.PATCH).subscribe({
+              error: () => console.warn('Failed to link attachment', att.id, 'to comment', this.commentId),
+            });
+          });
+        }
 
         // Get the most current language directly from the service
         const currentLang = this.translateService.currentLang;
@@ -216,6 +229,8 @@ export class AddCommentComponent implements OnInit {
         this.commentForm.markAsPristine();
         this.commentForm.markAsUntouched();
         this.uploadedAttachments = [];
+        // keep commentId for potential UI but uploader will reset on next open
+        setTimeout(() => (this.commentId = null), 0);
 
         // Emit to parent to refresh comments when embedded
         this.commentAdded.emit();

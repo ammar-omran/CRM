@@ -1,0 +1,65 @@
+<h2 class="title">{{ data.title }}</h2>
+<hr class="top-separator" />
+<div class="meter-details-container">
+  @if (data.showTabs) {
+    <mat-tab-group color="accent">
+      <mat-tab label="{{ 'new_meter' | translate }}">
+        <div class="tab-container border px-3">
+          <div>
+            <app-meter-info [details]="newMeterDetails" [meterStatus]="data.meterStatus"></app-meter-info>
+            @if (newMeterSpareParts.length > 0) {
+              <app-spare-parts-table [spareParts]="newMeterSpareParts"></app-spare-parts-table>
+            }
+          </div>
+          @if (data.newMeter.image) {
+            <div class="meter-image">
+              <img
+              [src]="data.newMeter.image"
+              alt="New Meter Image"
+            />  </div>
+          }
+        </div>
+      </mat-tab>
+      <mat-tab label="{{ 'old_meter' | translate }}">
+        <div class="tab-container border px-3">
+          <div>
+            <app-meter-info [details]="oldMeterDetails"></app-meter-info>
+            @if (oldMeterSpareParts.length > 0) {
+              <app-spare-parts-table [spareParts]="oldMeterSpareParts"></app-spare-parts-table>
+            }
+          </div>
+          @if (data.oldMeter.image) {
+            <div class="meter-image">
+              <img
+              [src]="data.oldMeter.image"
+              alt="Old Meter Image"
+              class="meter-img"
+            />
+            </div>
+          }
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  }
+  @if (!data.showTabs) {
+    <div class="tab-container border px-3">
+      <div>
+        <app-meter-info [details]="newMeterDetails"></app-meter-info>
+        @if (newMeterSpareParts.length > 0) {
+          <app-spare-parts-table [spareParts]="newMeterSpareParts"></app-spare-parts-table>
+        }
+        @if (data.newMeter.location && data.meterStatus === 'OnCustomer') {
+          <div class="meter-location mt-2">
+            <a [href]="data.newMeter.location" target="_blank">
+              View on
+
+            </a>
+          </div>
+        }
+      </div>
+      <div class="meter-image">
+        <img [src]="data.newMeter.image" alt="New Meter Image" />
+      </div>
+    </div>
+  }
+</div>

@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  ApiUrl: 'http://45.240.58.52:9032/api', // Azka Getaway
+  ApiUrl: 'https://localhost:55492/api', // Azka Getaway
   baseUrl: '',
   useHash: false,
   releaseDate: '2025',
@@ -10,6 +10,8 @@ export const environment = {
   IV: 'kTo2ADtsGEYKtrzxFjFk5A==',
   RetrySendOTP: 3,
   OTPExpiration: 3,
+  ConfirmEmailOTPAttepts: 3,
+  ConfirmEmailOTPExpiration: 1,
   AttachmentsConfigurations: {
     ticket: {
       limitNumber: 10,

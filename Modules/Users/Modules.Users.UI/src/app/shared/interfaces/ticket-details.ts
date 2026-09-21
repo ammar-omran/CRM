@@ -9,6 +9,7 @@ export interface TicketDetails {
   service: string;
   severity: string;
   type: string;
+  customerId?: number;
   customerName: string;
   customerEmail: string; // Added customer email for notifications
   assignedTo: string;

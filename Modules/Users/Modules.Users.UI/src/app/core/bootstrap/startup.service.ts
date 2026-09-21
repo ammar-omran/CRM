@@ -4,6 +4,7 @@ import { RbacService } from '@core/authentication';
 import { NgxPermissionsService, NgxRolesService } from 'ngx-permissions';
 import { switchMap, tap } from 'rxjs/operators';
 import { Menu, MenuService } from './menu.service';
+import { TokenService } from '../authentication/token.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,8 +15,8 @@ export class StartupService {
     private menuService: MenuService,
     private permissionsService: NgxPermissionsService,
     private rolesService: NgxRolesService,
-    private rbacService: RbacService
-  ) {}
+    private tokenService: TokenService
+  ) { }
 
   /**
    * Load the application only after get the menu or other essential informations
@@ -43,19 +44,21 @@ export class StartupService {
   }
 
   private setPermissions(user: User) {
-    // Load real role & permissions from the JWT via RbacService
-    this.rbacService.loadFromToken();
-
-    const permissions = this.rbacService.getPermissionsList();
-    const role = this.rbacService.getRole();
+    const role = (this.tokenService.getUserRole() ?? '');
+    const permissions = this.tokenService.getPermissions();
 
     this.permissionsService.flushPermissions();
-    this.permissionsService.loadPermissions(permissions);
 
-    // Register the role (maps role name → its permissions)
+    const rolePermissionToken = role ? `ROLE_${role.toUpperCase()}` : null;
+    const allPermissions = rolePermissionToken
+      ? [...permissions, rolePermissionToken]
+      : permissions;
+
+    this.permissionsService.loadPermissions(allPermissions);
+
     this.rolesService.flushRoles();
     if (role) {
-      this.rolesService.addRoles({ [role.toUpperCase()]: permissions });
+      this.rolesService.addRoles({ [role.toUpperCase()]: allPermissions });
     }
   }
 }

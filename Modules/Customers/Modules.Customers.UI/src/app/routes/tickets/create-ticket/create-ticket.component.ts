@@ -335,7 +335,7 @@ export class CreateTicketComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: response => {
-          this.ticketId = response?.id !== undefined ? response.id : 0;
+          this.ticketId = response?.id;
 
           // Assign any pre-uploaded attachments to the new ticket
           this.uploadedAttachments.forEach(att => {

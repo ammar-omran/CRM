@@ -1,0 +1,27 @@
+export const environment = {
+  production: false,
+  ApiUrl: 'http://localhost:55493/api', // Azka Getaway
+  baseUrl: '',
+  useHash: false,
+  releaseDate: '2025',
+  versionNumber: '2.6.0',
+  maxImageSize: 5 * 1024 * 1024,
+  Key: 'CgkiYpej4VYacsKnFom7ZQ==',
+  IV: 'kTo2ADtsGEYKtrzxFjFk5A==',
+  RetrySendOTP: 3,
+  OTPExpiration: 3,
+  ConfirmEmailOTPAttepts: 3,
+  ConfirmEmailOTPExpiration: 1,
+  AttachmentsConfigurations: {
+    ticket: {
+      limitNumber: 10,
+      maxSizeMB: 2,
+      allowedExtensions: ['.jpg', '.jpeg', '.png', '.pdf'],
+    },
+    comment: {
+      limitNumber: 1,
+      maxSizeMB: 2,
+      allowedExtensions: ['.jpg', '.jpeg', '.png', '.pdf'],
+    },
+  },
+};

@@ -12,14 +12,7 @@ export const authGuard = (route?: ActivatedRouteSnapshot, state?: RouterStateSna
 
 export const guestGuard = (route?: ActivatedRouteSnapshot, state?: RouterStateSnapshot) => {
   const auth = inject(AuthService);
-  const rbac = inject(RbacService);
   const router = inject(Router);
 
-  if (!auth.check()) return true;
-
-  // Admin has no ticket permissions — land on dashboard
-  // Supervisor & Agent land on ticket list
-  return rbac.isAdmin()
-    ? router.parseUrl('/dashboard')
-    : router.parseUrl('/tickets/0');
+  return auth.check() ? router.parseUrl('/dashboard') : true;
 };

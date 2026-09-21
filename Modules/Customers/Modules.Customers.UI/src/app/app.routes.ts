@@ -15,6 +15,7 @@ import { RegisterComponent } from './routes/sessions/register/register.component
 import { UpdatePasswordInitComponent } from './routes/profile/change-password/update-password-init/update-password-init.component';
 import { UpdatePasswordComponent } from './routes/profile/change-password/update-password/update-password.component';
 import { OtpConfirmationComponent } from './routes/profile/change-password/otp-confirmation/otp-confirmation.component';
+import { EmailConfirmationComponent } from './routes/sessions/email-confirmation/email-confirmation.component';
 import { ResetPasswordWithEmailComponent } from './routes/profile/change-password/reset-password-with-email/reset-password-with-email.component';
 import { ChangePasswordLayoutComponent } from '@theme/change-password-layout/change-password-layout.component';
 
@@ -79,6 +80,7 @@ export const routes: Routes = [
     children: [
       { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
       { path: 'register', component: RegisterComponent },
+      { path: 'email-confirmation', component: EmailConfirmationComponent }
     ],
   },
   {

@@ -1,0 +1,185 @@
+<div class="d-flex justify-content-center align-items-center min-vh-100 bg-light p-4">
+
+    <div class="verification-wrapper">
+
+        <mat-card class="verification-card">
+
+            <mat-card-content>
+
+                <!-- Icon -->
+                <div class="d-flex justify-content-center mb-3">
+
+                    <div class="icon-circle">
+
+                        <mat-icon color="primary">
+                            mark_email_read
+                        </mat-icon>
+
+                    </div>
+
+                </div>
+
+                <!-- Title -->
+                <h2 class="text-center fw-bold mb-2">
+                    {{'confirm_email_title' | translate}}
+                </h2>
+
+                <!-- Description -->
+                <p class="text-center text-muted mb-4 description">
+
+                    {{'confirm_email_description' | translate}}
+
+                    <strong>{{maskedEmail}}</strong>
+
+                    {{'confirm_email_instruction' | translate}}
+
+                </p>
+
+                <form
+                    [formGroup]="emailConfirmationFormGroub"
+                    (ngSubmit)="otpConfirmation()">
+
+                    <!-- Hidden real control -->
+                    <input
+                        hidden
+                        formControlName="otp"
+                        [disabled]="isExpired || isLocked || isSubmitting">
+
+                    <!-- OTP -->
+                    <div class="otp-container mb-4">
+
+                        <input
+                            *ngFor="let item of otpControls; let i = index"
+                            #otpInput
+                            class="otp-input"
+                            maxlength="1"
+                            type="text"
+                            inputmode="numeric"
+                            autocomplete="one-time-code"
+                            (input)="onOtpInput($event,i)"
+                            (keydown)="onOtpKeyDown($event,i)"
+                            (paste)="onPaste($event)">
+
+                    </div>
+
+                    @if(emailConfirmationFormGroub.controls.otp.invalid &&
+                    emailConfirmationFormGroub.controls.otp.touched){
+
+                    <div class="text-danger text-center mb-3">
+
+                        @if(emailConfirmationFormGroub.controls.otp.errors?.required){
+
+                        {{'otp_required' | translate}}
+
+                        }
+
+                        @if(emailConfirmationFormGroub.controls.otp.errors?.pattern){
+
+                        {{'otp_length' | translate}}
+
+                        }
+
+                    </div>
+
+                    }
+
+                    <!-- Timer -->
+                    <div class="d-flex gap-3 mb-4">
+
+                        <div class="timer-card flex-fill">
+
+                            <div class="timer-value">
+                                {{minutes | number:'2.0-0'}}
+                            </div>
+
+                            <div class="timer-label">
+                                {{'minutes' | translate}}
+                            </div>
+
+                        </div>
+
+                        <div class="timer-card flex-fill">
+
+                            <div class="timer-value">
+                                {{seconds | number:'2.0-0'}}
+                            </div>
+
+                            <div class="timer-label">
+                                {{'seconds' | translate}}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Expiration -->
+                    <div class="text-center text-muted mb-4">
+
+                        <mat-icon class="expire-icon">
+                            schedule
+                        </mat-icon>
+
+                        {{'otp_expires_in' | translate}}
+                        {{OTPExpiration}}
+                        {{'minute' | translate}}
+
+                    </div>
+
+                    <!-- Button -->
+                    <button
+                        mat-flat-button
+                        color="primary"
+                        class="verify-btn w-100"
+                        [disabled]="
+                          emailConfirmationFormGroub.invalid ||
+                          isExpired ||
+                          isLocked ||
+                          isSubmitting
+                          ">
+
+                        {{'confirm_email_button' | translate}}
+
+                        <mat-icon iconPositionEnd>
+                            arrow_forward
+                        </mat-icon>
+
+                    </button>
+
+                </form>
+
+                <!-- Resend -->
+                <div class="text-center mt-4">
+
+                    <span class="text-muted">
+                        @if(disabled){
+                            {{'resend_available_in' | translate}}
+                        } @else {
+                            {{'didnt_receive_code' | translate}}
+                        }
+                    </span>
+
+                    <button
+                        mat-button
+                        color="primary"
+                        type="button"
+                        (click)="resendOtp()"
+                        [disabled]="disabled || isSubmitting">
+
+                        @if(disabled){
+                              {{'resend_otp' | translate}}
+                              ({{resendMinutes | number:'2.0-0'}}:{{resendSeconds | number:'2.0-0'}})
+                          } @else {
+                              {{'resend_otp' | translate}}
+                          }
+
+                    </button>
+
+                </div>
+
+            </mat-card-content>
+
+        </mat-card>
+
+    </div>
+
+</div>

@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { authGuard, guestGuard } from '@core';
-import { adminRoleGuard } from './core/authentication/admin-role.guard';
 import { AdminLayoutComponent } from '@theme/admin-layout/admin-layout.component';
 import { AuthLayoutComponent } from '@theme/auth-layout/auth-layout.component';
 import { DashboardComponent } from './routes/dashboard/dashboard.component';
@@ -9,6 +8,7 @@ import { Error404Component } from './routes/sessions/404.component';
 import { Error500Component } from './routes/sessions/500.component';
 import { LoginComponent } from './routes/sessions/login/login.component';
 import { RegisterComponent } from './routes/sessions/register/register.component';
+import { SetPasswordComponent } from './routes/auth/set-password/set-password.component';
 
 export const routes: Routes = [
   // Default route redirects to auth/login
@@ -23,6 +23,7 @@ export const routes: Routes = [
       { path: '', redirectTo: 'login', pathMatch: 'full' },
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
+      { path: 'set-password', component: SetPasswordComponent },
     ],
   },
 
@@ -44,7 +45,6 @@ export const routes: Routes = [
       },
       {
         path: 'organizations',
-        // canActivate: [adminRoleGuard],
         loadChildren: () =>
           import('./routes/organizations/organizations.routes').then(m => m.routes),
       },

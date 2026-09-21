@@ -1,0 +1,38 @@
+<page-header [title]="'Retired Meters'">
+  <app-list-actions [showFilter]="true" (filterToggled)="toggleFilter()">
+    <button
+      custom-action
+      [matMenuTriggerFor]="exportMenu"
+      class="btn-custom-action btn btn-success"
+    >
+      <mat-icon>save</mat-icon>
+      <span>Export</span>
+    </button>
+  </app-list-actions>
+</page-header>
+<div class="filter-container" [class.active]="filterVisible">
+  <app-filter
+    [isPrimary]="true"
+    [controls]="filterControls"
+    [showAllOption]="true"
+    (filterChanged)="onFilterChanged($event)"
+  ></app-filter>
+</div>
+
+<mat-menu #exportMenu>
+  @for (format of fileFormats; track format.value) {
+    <button mat-menu-item (click)="exportMeters(format.value)">
+      {{ format.label }}
+    </button>
+  }
+</mat-menu>
+
+<app-adaptive-table
+  [apiUrl]="endpoint"
+  [httpMethod]="httpVerb"
+  [filters]="filters"
+  [columns]="columns"
+  [isLoading]="false"
+  [rowSelectable]="false"
+  [rowHover]="false"
+></app-adaptive-table>

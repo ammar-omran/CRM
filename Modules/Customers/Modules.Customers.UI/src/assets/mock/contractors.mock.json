@@ -1,0 +1,38 @@
+[
+  {
+    "code": "C001",
+    "name": "Contractor A",
+    "officeAddress": "123 Office St",
+    "postAddress": "PO Box 456",
+    "contactPerson": "John Doe",
+    "phone": "123-456-7890",
+    "district": "District 1"
+  },
+  {
+    "code": "C002",
+    "name": "Contractor B",
+    "officeAddress": "456 Corporate Ave",
+    "postAddress": "PO Box 789",
+    "contactPerson": "Jane Smith",
+    "phone": "987-654-3210",
+    "district": "District 2"
+  },
+  {
+    "code": "C003",
+    "name": "Contractor C",
+    "officeAddress": "456 Corporate Ave",
+    "postAddress": "PO Box 789",
+    "contactPerson": "Jane Smith",
+    "phone": "987-654-3210",
+    "district": "District 2"
+  },
+  {
+    "code": "C004",
+    "name": "Contractor D",
+    "officeAddress": "456 Corporate Ave",
+    "postAddress": "PO Box 789",
+    "contactPerson": "Jane Smith",
+    "phone": "987-654-3210",
+    "district": "District 1"
+  }
+]

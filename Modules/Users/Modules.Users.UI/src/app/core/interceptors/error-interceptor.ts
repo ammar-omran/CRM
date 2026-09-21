@@ -41,7 +41,7 @@ export class ErrorInterceptor implements HttpInterceptor {
   constructor(
     private router: Router,
     private toast: ToastrService
-  ) {}
+  ) { }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const isAuditExport = request.url.includes('get_audits') && request.params.has('export');
@@ -57,9 +57,9 @@ export class ErrorInterceptor implements HttpInterceptor {
 
   private handleError(error: HttpErrorResponse) {
     if (this.errorPages.includes(error.status)) {
-      this.router.navigateByUrl(`/${error.status}`, {
-        skipLocationChange: true,
-      });
+      // this.router.navigateByUrl(`/${error.status}`, {
+      //   skipLocationChange: true,
+      // });
     } else {
       if (error.status === STATUS.FORBIDDEN) {
         this.toast.error('Access Denied: You do not have permission to perform this action');

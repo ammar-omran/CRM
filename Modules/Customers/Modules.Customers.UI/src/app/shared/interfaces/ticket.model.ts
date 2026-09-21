@@ -18,6 +18,7 @@ export interface TicketDetails {
   service: string;
   severity: string;
   type: string;
+  customerId?: number;
   customerName: string;
   assignedTo: string;
   haveAttachments?: boolean; // may be included in ticket details response from the backend

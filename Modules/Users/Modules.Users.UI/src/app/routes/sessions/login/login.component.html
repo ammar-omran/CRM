@@ -40,22 +40,27 @@
       <form class="form-field-full" [formGroup]="loginForm" autocomplete="off">
         <div class="form-field mb-3">
           <mat-form-field appearance="outline" hideRequiredMarker="true" class="login-form-field">
-            <mat-label>{{ getTranslation('username', 'Username') }}</mat-label>
+            <mat-label>{{ getTranslation('email', 'Email') }}</mat-label>
             <input
-              type="text"
+              type="email"
               matInput
-              formControlName="username"
-              autocomplete="off"
+              formControlName="email"
+              autocomplete="email"
               placeholder=""
             />
-            <mat-icon matPrefix class="form-icon">person_outline</mat-icon>
-            @if (username.hasError('required') && username.touched) {
+            <mat-icon matPrefix class="form-icon">email</mat-icon>
+            @if (email.hasError('required') && email.touched) {
               <mat-error>{{
                 getTranslation('validations.required', 'This field is required')
               }}</mat-error>
             }
-            @if (username.hasError('remote')) {
-              <mat-error>{{ username.getError('remote') }}</mat-error>
+            @if (email.hasError('email') && email.touched && !email.hasError('required')) {
+              <mat-error>{{
+                getTranslation('validations.invalid_email', 'Invalid email')
+              }}</mat-error>
+            }
+            @if (email.hasError('remote')) {
+              <mat-error>{{ email.getError('remote') }}</mat-error>
             }
           </mat-form-field>
         </div>

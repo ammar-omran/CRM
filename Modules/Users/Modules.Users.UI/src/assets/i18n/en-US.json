@@ -87,7 +87,7 @@
   "login_subtitle": "Enter your credentials to access the admin portal",
   "login_success": "Login successful! Welcome to the Admin Portal",
   "login_error": "Login Error",
-  "invalid_credentials": "Invalid username or password.",
+  "invalid_credentials": "Invalid email or password.",
   "network_error": "Unable to connect. Please try again later.",
   "account_locked": "Account is locked or disabled.",
   "server_error": "Server error. Please try again later.",

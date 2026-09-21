@@ -18,9 +18,9 @@ export class LoginService {
     private _encodingService: EncodingService
   ) { }
 
-  login(userName: string, password: string) {
+  login(email: string, password: string) {
     const requestBody = {
-      Username: userName,
+      email,
       password,
     };
 

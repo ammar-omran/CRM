@@ -1,12 +1,3 @@
-<div class="flex justify-end mb-3">
-  <mat-button-toggle-group [value]="currentLang" (change)="setLang($event.value)"
-                           appearance="legacy" class="lang-toggle">
-    <mat-button-toggle value="en-US">En</mat-button-toggle>
-    <mat-button-toggle value="ar-EG">AR</mat-button-toggle>
-    <mat-button-toggle value="ar-EG">AR</mat-button-toggle>
-  </mat-button-toggle-group>
-</div>
-
 <!-- ✅ Page Header -->
 <page-header [title]="'TICKET_DETAILS.TITLE' | translate"></page-header>
 
@@ -14,12 +5,11 @@
 
 <ng-container *ngIf="ticket; else noData">
   <!-- Compact Card Layout -->
-  <mat-card class="ticket-card mat-elevation-z3" [dir]="currentLang === 'ar-EG' ? 'rtl' : 'ltr'">
-  <mat-card class="ticket-card mat-elevation-z3" [dir]="currentLang === 'ar-EG' ? 'rtl' : 'ltr'">
+  <mat-card class="ticket-card mat-elevation-z3">
     <mat-card-title>{{ 'TICKET_DETAILS.TITLE' | translate }}</mat-card-title>
     <mat-card-content>
       <!-- Line 1 -->
-      <div class="ticket-line" [ngClass]="{ 'rtl-text': currentLang === 'ar-EG' }"></div>      <div class="ticket-line" [ngClass]="{ 'rtl-text': currentLang === 'ar-EG' }">
+      <div class="ticket-line">
         <div>
           <strong>{{ 'TICKET_DETAILS.REFERENCE' | translate }}:</strong> {{ ticket.id }}
         </div>
@@ -34,8 +24,7 @@
       </div>
 
       <!-- Line 2 -->
-      <div class="ticket-line" [ngClass]="{ 'rtl-text': currentLang === 'ar-EG' }"></div>
-      <div class="ticket-line" [ngClass]="{ 'rtl-text': currentLang === 'ar-EG' }">
+      <div class="ticket-line">
         <div style="flex: 1">
           <strong>{{ 'TICKET_DETAILS.DESCRIPTION' | translate }}:</strong> {{ ticket.description ||
           ('TICKETS_LIST.UNKNOWN'
@@ -44,7 +33,7 @@
       </div>
 
       <!-- Line 3 -->
-      <div class="ticket-line" [ngClass]="{ 'rtl-text': currentLang === 'ar-EG' }">
+      <div class="ticket-line">
         <div>
           <strong>{{ 'TICKET_DETAILS.CREATED_AT' | translate }}:</strong> {{ ticket.createdAt | date: 'medium'
           }}
@@ -75,8 +64,29 @@
         </div>
       </div>
     </mat-card-content>
+
+    <mat-divider></mat-divider>
+
+    <!-- Attachment Actions per Ticket -->
+    <mat-card-actions align="end">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="openAttachmentInNewTab()"
+        [disabled]="!hasTicketAttachments"
+      >
+        {{ 'open_attachment' | translate: { default: 'Open Attachment' } }}
+      </button>
+      <button
+        mat-stroked-button
+        color="primary"
+        (click)="downloadAttachment()"
+        [disabled]="!hasTicketAttachments"
+      >
+        {{ 'download' | translate: { default: 'Download' } }}
+      </button>
+    </mat-card-actions>
   </mat-card>
-</mat-card>
 
   <!-- Ticket History -->
   <mat-card class="m-3 shadow">
@@ -90,11 +100,29 @@
                 <app-comment [author]="comment.author" [role]="comment.role"
                              [date]="comment.createdDate" [description]="comment.description">
                 </app-comment>
+                <!-- Attachments actions per comment -->
+                <div *ngIf="comment.HaveAttachments" class="attachment-actions" style="margin-top: 8px; display: flex; gap: 8px; justify-content: flex-end;">
+                  <button mat-stroked-button color="primary" (click)="viewCommentAttachment(comment)">
+                    {{ 'open_attachment' | translate: { default: 'Open Attachment' } }}
+                  </button>
+                  <button mat-stroked-button color="primary" (click)="downloadCommentAttachment(comment)">
+                    {{ 'download' | translate: { default: 'Download' } }}
+                  </button>
+                </div>
               </div>
               <div *ngIf="comment.role != 'Support'" class="customer-box">
                 <app-comment [author]="comment.author" [role]="comment.role"
                              [date]="comment.createdDate" [description]="comment.description">
                 </app-comment>
+                <!-- Attachments actions per comment -->
+                <div *ngIf="comment.HaveAttachments" class="attachment-actions" style="margin-top: 8px; display: flex; gap: 8px; justify-content: flex-end;">
+                  <button mat-stroked-button color="primary" (click)="viewCommentAttachment(comment)">
+                    {{ 'open_attachment' | translate: { default: 'Open Attachment' } }}
+                  </button>
+                  <button mat-stroked-button color="primary" (click)="downloadCommentAttachment(comment)">
+                    {{ 'download' | translate: { default: 'Download' } }}
+                  </button>
+                </div>
               </div>
             </div>
           </div>

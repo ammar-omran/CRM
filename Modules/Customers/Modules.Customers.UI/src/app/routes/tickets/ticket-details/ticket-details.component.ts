@@ -153,26 +153,29 @@ export class TicketDetailsComponent implements OnInit {
         if (response.status) {
           if (response.ticketComments != null) {
             this.ticketComments = response.ticketComments.map((comment: any) => {
-
-              if (comment.createdById > 0) {
-                return {
-                  id: comment.id ?? comment.commentId ?? comment.referenceId,
-                  author: comment.createdByName,
-                  description: comment.description,
-                  createdDate: comment.createdDate,
-                  role: 'Support',
-                  HaveAttachments: comment.haveAttachments,
-                };
+              const createdById = comment.createdById ?? comment.CreatedById ?? comment.createdBy ?? 0;
+              const createdByName = comment.createdByName ?? comment.CreatedByName ?? comment.author ?? 'Unknown';
+              const haveAtt = comment.haveAttachments ?? comment.HaveAttachments ?? false;
+              const rawIsAdmin = comment.isAdmin ?? comment.IsAdmin ?? null;
+              let role: string;
+              if (rawIsAdmin !== null && rawIsAdmin !== undefined) {
+                role = rawIsAdmin ? 'Support' : 'Customer';
+              } else if (String(createdByName).toLowerCase() === 'superadmin') {
+                role = 'Support';
               } else {
-                return {
-                  id: comment.id ?? comment.commentId ?? comment.referenceId,
-                  author: comment.createdByName,
-                  description: comment.description,
-                  createdDate: comment.createdDate,
-                  role: 'Customer',
-                  HaveAttachments: comment.haveAttachments,
-                };
+                const ticketCustomerId = (this.ticket as any)?.customerId ?? (this.ticket as any)?.CustomerId ?? (this.ticket as any)?.customerID ?? null;
+                const isCustomer = ticketCustomerId != null ? Number(createdById) === Number(ticketCustomerId) : Number(createdById) <= 0;
+                role = ticketCustomerId != null ? (isCustomer ? 'Customer' : 'Support') : createdById > 0 ? 'Support' : 'Customer';
               }
+              return {
+                id: comment.id ?? comment.commentId ?? comment.CommentId ?? comment.referenceId,
+                author: createdByName,
+                description: comment.description ?? comment.Description ?? '',
+                createdDate: String(comment.createdDate ?? comment.CreatedDate),
+                role,
+                HaveAttachments: haveAtt,
+                createdById,
+              };
             });
 
             // Main ticket-level buttons use Attachments/reference/{ticketId}.
@@ -200,12 +203,10 @@ export class TicketDetailsComponent implements OnInit {
 
       return this.apiService.triggerApiRequest<any>(endpoint, HttpVerb.GET).pipe(
         map(res => {
-          if (Array.isArray(res) && res.length > 0) return true;
-          if (res && typeof res === 'object') {
-            const data = (res as any).data;
-            return Array.isArray(data) ? data.length > 0 : true;
-          }
-          return res != null;
+          const data = (res as any)?.data ?? (res as any)?.Data ?? res;
+          if (Array.isArray(data)) return data.length > 0;
+          if (data && typeof data === 'object') return true;
+          return false;
         }),
         catchError(() => of(false))
       );
@@ -226,43 +227,23 @@ export class TicketDetailsComponent implements OnInit {
       return;
     }
     if (!this.hasTicketAttachments) {
-      this.toastr.error(
-        this.translate.instant('TICKET_DETAILS.NO_ATTACHMENT')
-      );
+      this.toastr.error(this.translate.instant('TICKET_DETAILS.NO_ATTACHMENT'));
       return;
     }
-    this.fetchTicketFileId(this.ticketId)
+    this.getFileIdForReference(this.ticketId)
       .pipe(
         switchMap(fileId => {
-          // Try fileId-based download first, then fallback to ticket direct download
-          const byId = EndPoint.DOWNLOAD_ATTACHMENT_BY_ID.replace(
-            '{fileId}',
-            String(fileId)
-          ) as EndPoint;
-          const byTicket = EndPoint.DOWNLOAD_TICKET_ATTACHMENT.replace(
-            '{ticketId}',
-            String(this.ticketId)
-          ) as EndPoint;
-          return this.apiService
-            .triggerApiRequest(byId, HttpVerb.GET, undefined, undefined, {
-              responseType: 'blob',
-              observe: 'response',
-              headers: { Accept: '*/*' },
-            })
-            .pipe(
-              catchError(() =>
-                this.apiService.triggerApiRequest(byTicket, HttpVerb.GET, undefined, undefined, {
-                  responseType: 'blob',
-                  observe: 'response',
-                  headers: { Accept: '*/*' },
-                })
-              )
-            );
+          const endpoint = EndPoint.DOWNLOAD_ATTACHMENT_BY_ID.replace('{fileId}', String(fileId)) as EndPoint;
+          return this.apiService.triggerApiRequest(endpoint, HttpVerb.GET, undefined, undefined, {
+            responseType: 'blob',
+            observe: 'response',
+            headers: { Accept: '*/*' },
+          });
         }),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((res: any) => {
-        const fileBlob = res ?.body instanceof Blob ? res.body : new Blob([res ?.body || '']);
+        const fileBlob = res?.body instanceof Blob ? res.body : new Blob([res?.body || '']);
         const url = URL.createObjectURL(fileBlob);
         if (fileBlob.type && String(fileBlob.type).startsWith('image/')) {
           this.attachmentUrl = url;
@@ -288,37 +269,20 @@ export class TicketDetailsComponent implements OnInit {
       this.toastr.error('Invalid comment reference');
       return;
     }
-    this.fetchCommentFileId(commentId)
+    this.getFileIdForReference(commentId)
       .pipe(
         switchMap(fileId => {
-          const byId = EndPoint.DOWNLOAD_ATTACHMENT_BY_ID.replace(
-            '{fileId}',
-            String(fileId)
-          ) as EndPoint;
-          const byComment = (EndPoint.DOWNLOAD_COMMENT_ATTACHMENT as string).replace(
-            '{commentId}',
-            String(commentId)
-          ) as EndPoint;
-          return this.apiService
-            .triggerApiRequest(byId, HttpVerb.GET, undefined, undefined, {
-              responseType: 'blob',
-              observe: 'response',
-              headers: { Accept: '*/*' },
-            })
-            .pipe(
-              catchError(() =>
-                this.apiService.triggerApiRequest(byComment, HttpVerb.GET, undefined, undefined, {
-                  responseType: 'blob',
-                  observe: 'response',
-                  headers: { Accept: '*/*' },
-                })
-              )
-            );
+          const endpoint = EndPoint.DOWNLOAD_ATTACHMENT_BY_ID.replace('{fileId}', String(fileId)) as EndPoint;
+          return this.apiService.triggerApiRequest(endpoint, HttpVerb.GET, undefined, undefined, {
+            responseType: 'blob',
+            observe: 'response',
+            headers: { Accept: '*/*' },
+          });
         }),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((res: any) => {
-        const fileBlob = res ?.body instanceof Blob ? res.body : new Blob([res ?.body || '']);
+        const fileBlob = res?.body instanceof Blob ? res.body : new Blob([res?.body || '']);
         const url = URL.createObjectURL(fileBlob);
         window.open(url, '_blank');
       });
@@ -330,44 +294,23 @@ export class TicketDetailsComponent implements OnInit {
       this.toastr.error('Invalid comment reference');
       return;
     }
-    this.fetchCommentFileId(commentId)
+    this.getFileIdForReference(commentId)
       .pipe(
         switchMap(fileId => {
-          const byId = EndPoint.DOWNLOAD_ATTACHMENT_BY_ID.replace(
-            '{fileId}',
-            String(fileId)
-          ) as EndPoint;
-          const byComment = (EndPoint.DOWNLOAD_COMMENT_ATTACHMENT as string).replace(
-            '{commentId}',
-            String(commentId)
-          ) as EndPoint;
-          return this.apiService
-            .triggerApiRequest(byId, HttpVerb.GET, undefined, undefined, {
-              responseType: 'blob',
-              observe: 'response',
-              headers: { Accept: '*/*' },
-            })
-            .pipe(
-              catchError(() =>
-                this.apiService.triggerApiRequest(byComment, HttpVerb.GET, undefined, undefined, {
-                  responseType: 'blob',
-                  observe: 'response',
-                  headers: { Accept: '*/*' },
-                })
-              )
-            );
+          const endpoint = EndPoint.DOWNLOAD_ATTACHMENT_BY_ID.replace('{fileId}', String(fileId)) as EndPoint;
+          return this.apiService.triggerApiRequest(endpoint, HttpVerb.GET, undefined, undefined, {
+            responseType: 'blob',
+            observe: 'response',
+            headers: { Accept: '*/*' },
+          });
         }),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((res: any) => {
-        const fileBlob = res ?.body instanceof Blob ? res.body : new Blob([res ?.body || '']);
-        const contentDisposition: string = res ?.headers ?.get ?.('content-disposition') || '';
-        const filenameMatch = /filename\*=UTF-8''([^;]+)|filename=([^;]+)/i.exec(
-          contentDisposition
-        );
-        const filename = decodeURIComponent(
-          filenameMatch ?.[1] || filenameMatch ?.[2] || `comment-${commentId}`
-        );
+        const fileBlob = res?.body instanceof Blob ? res.body : new Blob([res?.body || '']);
+        const contentDisposition: string = res?.headers?.get?.('content-disposition') || '';
+        const filenameMatch = /filename\*=UTF-8''([^;]+)|filename=([^;]+)/i.exec(contentDisposition);
+        const filename = decodeURIComponent((filenameMatch?.[1] || filenameMatch?.[2] || `comment-${commentId}`).replace(/"/g, ''));
         const url = URL.createObjectURL(fileBlob);
         const link = document.createElement('a');
         link.href = url;
@@ -385,49 +328,26 @@ export class TicketDetailsComponent implements OnInit {
       return;
     }
     if (!this.hasTicketAttachments) {
-      this.toastr.error(
-        this.translate.instant('TICKET_DETAILS.NO_ATTACHMENT')
-      );
+      this.toastr.error(this.translate.instant('TICKET_DETAILS.NO_ATTACHMENT'));
       return;
     }
-    this.fetchTicketFileId(this.ticketId)
+    this.getFileIdForReference(this.ticketId)
       .pipe(
         switchMap(fileId => {
-          const byId = EndPoint.DOWNLOAD_ATTACHMENT_BY_ID.replace(
-            '{fileId}',
-            String(fileId)
-          ) as EndPoint;
-          const byTicket = EndPoint.DOWNLOAD_TICKET_ATTACHMENT.replace(
-            '{ticketId}',
-            String(this.ticketId)
-          ) as EndPoint;
-          return this.apiService
-            .triggerApiRequest(byId, HttpVerb.GET, undefined, undefined, {
-              responseType: 'blob',
-              observe: 'response',
-              headers: { Accept: '*/*' },
-            })
-            .pipe(
-              catchError(() =>
-                this.apiService.triggerApiRequest(byTicket, HttpVerb.GET, undefined, undefined, {
-                  responseType: 'blob',
-                  observe: 'response',
-                  headers: { Accept: '*/*' },
-                })
-              )
-            );
+          const endpoint = EndPoint.DOWNLOAD_ATTACHMENT_BY_ID.replace('{fileId}', String(fileId)) as EndPoint;
+          return this.apiService.triggerApiRequest(endpoint, HttpVerb.GET, undefined, undefined, {
+            responseType: 'blob',
+            observe: 'response',
+            headers: { Accept: '*/*' },
+          });
         }),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((res: any) => {
-        const fileBlob = res ?.body instanceof Blob ? res.body : new Blob([res ?.body || '']);
-        const contentDisposition: string = res ?.headers ?.get ?.('content-disposition') || '';
-        const filenameMatch = /filename\*=UTF-8''([^;]+)|filename=([^;]+)/i.exec(
-          contentDisposition
-        );
-        const filename = decodeURIComponent(
-          filenameMatch ?.[1] || filenameMatch ?.[2] || `ticket-${this.ticketId}`
-        );
+        const fileBlob = res?.body instanceof Blob ? res.body : new Blob([res?.body || '']);
+        const contentDisposition: string = res?.headers?.get?.('content-disposition') || '';
+        const filenameMatch = /filename\*=UTF-8''([^;]+)|filename=([^;]+)/i.exec(contentDisposition);
+        const filename = decodeURIComponent((filenameMatch?.[1] || filenameMatch?.[2] || `ticket-${this.ticketId}`).replace(/"/g, ''));
         const url = URL.createObjectURL(fileBlob);
         const link = document.createElement('a');
         link.href = url;
@@ -441,81 +361,53 @@ export class TicketDetailsComponent implements OnInit {
 
   private extractFileId(refRes: any): number | null {
     if (!refRes) return null;
-    if (typeof refRes === 'object' && 'fileId' in refRes) return Number(refRes.fileId);
-    if (typeof refRes === 'object' && 'id' in refRes) return Number(refRes.id);
+    if (typeof refRes === 'object' && !Array.isArray(refRes)) {
+      const wrapped = (refRes as any).data ?? (refRes as any).Data;
+      if (wrapped !== undefined && wrapped !== refRes) {
+        const fromWrapped = this.extractFileId(wrapped);
+        if (fromWrapped != null) return fromWrapped;
+      }
+      for (const k of Object.keys(refRes)) {
+        if (k.toLowerCase() === 'fileid') {
+          const v = Number((refRes as any)[k]);
+          if (Number.isFinite(v) && v > 0) return v;
+        }
+      }
+      for (const k of Object.keys(refRes)) {
+        if (k.toLowerCase() === 'id') {
+          const v = Number((refRes as any)[k]);
+          if (Number.isFinite(v) && v > 0) return v;
+        }
+      }
+    }
     if (Array.isArray(refRes) && refRes.length > 0) {
       const first = refRes[0];
-      if (first ?.fileId) return Number(first.fileId);
-      if (first ?.id) return Number(first.id);
+      for (const k of Object.keys(first)) {
+        if (k.toLowerCase() === 'fileid') {
+          const v = Number((first as any)[k]);
+          if (Number.isFinite(v) && v > 0) return v;
+        }
+      }
+      for (const k of Object.keys(first)) {
+        if (k.toLowerCase() === 'id') {
+          const v = Number((first as any)[k]);
+          if (Number.isFinite(v) && v > 0) return v;
+        }
+      }
     }
-    if (refRes ?.data) return this.extractFileId(refRes.data);
     return null;
   }
 
-  private tryEndpointsForFileId(attempts: Array<{ endpoint: string; params?: any }>): any {
-    if (!attempts || attempts.length === 0) {
-      return throwError(() => new Error('no-attempts'));
-    }
-    const [{ endpoint, params }, ...rest] = attempts;
-    // Debug the attempted endpoint for troubleshooting 404s
-    // eslint-disable-next-line no-console
-    console.debug('Attachment reference attempt', endpoint, params || {});
-    return this.apiService.triggerApiRequest<any>(endpoint as EndPoint, HttpVerb.GET, params).pipe(
+  /** Resolve FileId for a referenceId via GET Attachments/reference/{referenceId} — only supported endpoint per AttachmentsController.cs */
+  private getFileIdForReference(referenceId: number) {
+    const endpoint = (EndPoint.GET_ATTACHMENT_BY_REFERENCE as string).replace('{referenceId}', String(referenceId)) as EndPoint;
+    return this.apiService.triggerApiRequest<any>(endpoint, HttpVerb.GET).pipe(
       map(res => this.extractFileId(res)),
       switchMap(fileId => (fileId ? of(fileId) : throwError(() => new Error('no-file-id')))),
-      catchError(() =>
-        rest.length ? this.tryEndpointsForFileId(rest) : throwError(() => new Error('no-file-id'))
-      )
-    );
-  }
-
-  private fetchTicketFileId(ticketId: number) {
-    const attempts = [
-      {
-        endpoint: (EndPoint.GET_ATTACHMENT_BY_REFERENCE as string).replace(
-          '{referenceId}',
-          String(ticketId)
-        ),
-      },
-      {
-        endpoint: (EndPoint.GET_ATTACHMENT_BY_TICKET_REFERENCE as string).replace(
-          '{ticketId}',
-          String(ticketId)
-        ),
-      },
-      { endpoint: 'Attachments/reference', params: { ticketId } },
-      { endpoint: 'Attachments/reference', params: { referenceId: ticketId } },
-      { endpoint: `Attachments/reference/ticketid/${ticketId}` },
-    ];
-    return this.tryEndpointsForFileId(attempts).pipe(
       catchError(err => {
-        this.toastr.error(this.translate.instant('TICKET_DETAILS.NO_ATTACHMENT'));
-        return throwError(() => err);
-      })
-    );
-  }
-
-  private fetchCommentFileId(commentId: number) {
-    const attempts = [
-      {
-        endpoint: (EndPoint.GET_ATTACHMENT_BY_REFERENCE as string).replace(
-          '{referenceId}',
-          String(commentId)
-        ),
-      },
-      {
-        endpoint: (EndPoint.GET_ATTACHMENT_BY_COMMENT_REFERENCE as string).replace(
-          '{commentId}',
-          String(commentId)
-        ),
-      },
-      { endpoint: 'Attachments/reference', params: { commentId } },
-      { endpoint: 'Attachments/reference/commentid/' + commentId },
-      { endpoint: 'Attachments/reference', params: { referenceId: commentId } },
-    ];
-    return this.tryEndpointsForFileId(attempts).pipe(
-      catchError(err => {
-        this.toastr.error(this.translate.instant('TICKET_DETAILS.NO_ATTACHMENT_COMMENT'));
+        const isTicket = referenceId === this.ticketId;
+        const key = isTicket ? 'TICKET_DETAILS.NO_ATTACHMENT' : 'TICKET_DETAILS.NO_ATTACHMENT_COMMENT';
+        this.toastr.error(this.translate.instant(key));
         return throwError(() => err);
       })
     );
@@ -526,30 +418,16 @@ export class TicketDetailsComponent implements OnInit {
       this.hasTicketAttachments = false;
       return;
     }
-
-    const endpoint = (EndPoint.GET_ATTACHMENT_BY_REFERENCE as string).replace(
-      '{referenceId}',
-      String(ticketId)
-    ) as EndPoint;
-
+    const endpoint = (EndPoint.GET_ATTACHMENT_BY_REFERENCE as string).replace('{referenceId}', String(ticketId)) as EndPoint;
     this.apiService
       .triggerApiRequest<any>(endpoint, HttpVerb.GET)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: res => {
-          let has = false;
-          if (Array.isArray(res)) {
-            has = res.length > 0;
-          } else if (res && typeof res === 'object') {
-            if (Array.isArray((res as any).data)) {
-              has = (res as any).data.length > 0;
-            } else {
-              has = true;
-            }
-          } else if (res != null) {
-            has = true;
-          }
-          this.hasTicketAttachments = has;
+          const data = (res as any)?.data ?? (res as any)?.Data ?? res;
+          if (Array.isArray(data)) this.hasTicketAttachments = data.length > 0;
+          else if (data && typeof data === 'object') this.hasTicketAttachments = true;
+          else this.hasTicketAttachments = false;
         },
         error: () => {
           this.hasTicketAttachments = false;

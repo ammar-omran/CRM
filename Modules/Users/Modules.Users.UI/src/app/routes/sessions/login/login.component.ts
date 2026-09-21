@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
   currentLanguage = 'en-US';
 
   loginForm = this.fb.nonNullable.group({
-    username: ['', [Validators.required]],
+    email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]],
   });
 
@@ -82,11 +82,11 @@ export class LoginComponent implements OnInit {
   }
 
   /**
-   * Getter for the username form control
-   * @returns The username form control instance
+   * Getter for the email form control
+   * @returns The email form control instance
    */
-  get username() {
-    return this.loginForm.get('username')!;
+  get email() {
+    return this.loginForm.get('email')!;
   }
 
   /**
@@ -113,19 +113,7 @@ export class LoginComponent implements OnInit {
     document.body.setAttribute('dir', direction);
   }
 
-  // Test method to verify translations
-  testTranslations() {
-    console.log('=== Translation Test ===');
-    console.log('Current language:', this.currentLanguage);
-    console.log('Available languages:', this.translateService.getLangs());
-    console.log('Default language:', this.translateService.getDefaultLang());
 
-    const testKeys = ['login_title', 'username', 'password', 'invalid_credentials'];
-    testKeys.forEach(key => {
-      const translation = this.translateService.instant(key);
-      console.log(`${key}: ${translation}`);
-    });
-  }
 
   /**
    * Retrieves a translation for the given key with fallback support
@@ -152,7 +140,7 @@ export class LoginComponent implements OnInit {
     this.isSubmitting = true;
 
     this.auth
-      .login(this.username.value, this.password.value)
+      .login(this.email.value, this.password.value)
       .pipe(
         tap(result => {
           // Process authentication result
@@ -196,8 +184,7 @@ export class LoginComponent implements OnInit {
       const errors = errorRes.error ?.errors;
       if (errors) {
         Object.keys(errors).forEach(key => {
-          const fieldName = key === 'email' ? 'username' : key;
-          const control = form.get(fieldName);
+          const control = form.get(key);
           if (control) {
             control.setErrors({
               remote: errors[key][0],
@@ -235,9 +222,12 @@ export class LoginComponent implements OnInit {
   private showValidationErrors() {
     const errors: string[] = [];
 
-    if (this.username.hasError('required')) {
-      const fieldName = this.translateService.instant('username');
+    if (this.email.hasError('required')) {
+      const fieldName = this.translateService.instant('email');
       errors.push(this.translateService.instant('validations.required_field', { fieldName }));
+    } else if (this.email.hasError('email')) {
+      const fieldName = this.translateService.instant('email');
+      errors.push(this.translateService.instant('validations.invalid_field', { fieldName }));
     }
 
     if (this.password.hasError('required')) {
