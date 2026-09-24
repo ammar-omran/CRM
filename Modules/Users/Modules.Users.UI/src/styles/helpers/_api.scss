@@ -51,4 +51,11 @@ $utilities: functions.map-collect(
     else: $property-class-prefix + '-'
   );
 
+  @each $class-modifier, $value in $values {
+    .#{$property-class-prefix-hyphen + $class-modifier} {
+      @each $property in $properties {
+        #{$property}: $value !important;
+      }
+    }
+  }
 }

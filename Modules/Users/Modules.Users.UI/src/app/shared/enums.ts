@@ -55,18 +55,7 @@ export enum EndPoint {
   DOWNLOAD_COMMENT_ATTACHMENT = 'attachments/download/comment/{commentId}',
   DELETE_ATTACHMENT = 'attachments/{attachmentId}',
 
-  // ── Legacy / out-of-scope (kept for backward compat, not verified for Users/Tickets) ──
-  // Ticket legacy (will 404 behind YARP gateway — use tickets/* above)
-  /** @deprecated use GET_TICKETS */
-  LEGACY_GET_TICKETS_FOR_ADMIN = 'tickets/admin/{adminId}',
-  /** @deprecated use tickets/{id} */
-  LEGACY_GET_TICKET_DETAILS = 'Ticket/GetTicketDetails/{ticketId}',
-  /** @deprecated */
-  LEGACY_TICKET_HISTORY = 'Ticket/{ticketId}/history',
-  LEGACY_SEND_COMMENT_NOTIFICATION = 'Ticket/sendCommentNotification',
-  LEGACY_SEND_STATUS_CHANGE_NOTIFICATION = 'Ticket/sendStatusChangeNotification',
-  LEGACY_SEND_TICKET_UPDATE_NOTIFICATION = 'Ticket/sendTicketUpdateNotification',
-  LEGACY_ADD_TICKET = 'Ticket/AddTicket',
+
   // Meters / Districts / Contractors — belong to other microservices, not Modules.Users/Tickets
   DISTRICTS_LIST = 'Districts/ActiveDistrics/list',
   INSTALLED_METERS = 'meters/installed',
