@@ -26,7 +26,7 @@ public class AttachmentsController : ControllerBase
     /// <summary>
     /// Retrieves all attachments associated with a specific reference ID.
     /// </summary>
-    [Authorize(Policy = AttachmentPolicyConstants.ViewPolicy)]
+    // [Authorize(Policy = AttachmentPolicyConstants.ViewPolicy)]
     [HttpGet("reference/{referenceId}")]
     public async Task<IActionResult> GetAttachmentsOfReference(
         int referenceId,
@@ -45,7 +45,7 @@ public class AttachmentsController : ControllerBase
     /// <summary>
     /// Downloads an attachment file by its ID.
     /// </summary>
-    [Authorize(Policy = AttachmentPolicyConstants.DownloadPolicy)]
+    // [Authorize(Policy = AttachmentPolicyConstants.DownloadPolicy)]
     [HttpGet("download/{attachmentId}")]
     public async Task<IActionResult> DownloadAttachment(
         int attachmentId,
@@ -62,7 +62,7 @@ public class AttachmentsController : ControllerBase
         return PhysicalFile(result.Value!.FilePath, result.Value!.ContentType, result.Value!.FileName);
     }
 
-    [Authorize(Policy = AttachmentPolicyConstants.DeletePolicy)]
+    // [Authorize(Policy = AttachmentPolicyConstants.DeletePolicy)]
     [HttpDelete("{attachmentId}")]
     public async Task<IActionResult> DeleteAttachment(
         int attachmentId,
@@ -81,7 +81,7 @@ public class AttachmentsController : ControllerBase
     /// <summary>
     /// Sets or updates the reference ID for an existing attachment.
     /// </summary>
-    [Authorize(Policy = AttachmentPolicyConstants.UploadPolicy)]
+    // [Authorize(Policy = AttachmentPolicyConstants.UploadPolicy)]
     [HttpPatch("{attachmentId}/set-reference/{referenceId}")]
     public async Task<IActionResult> SetAttachmentReference(
         int attachmentId,
@@ -101,7 +101,7 @@ public class AttachmentsController : ControllerBase
     /// <summary>
     /// Uploads a new attachment. Type is AttachmentTypeEnum (None/Ticket/Comment).
     /// </summary>
-    [Authorize(Policy = AttachmentPolicyConstants.UploadPolicy)]
+    // [Authorize(Policy = AttachmentPolicyConstants.UploadPolicy)]
     [HttpPost("{type}/{referenceId}")]
     public async Task<IActionResult> UploadAttachment(
         AttachmentTypeEnum type,

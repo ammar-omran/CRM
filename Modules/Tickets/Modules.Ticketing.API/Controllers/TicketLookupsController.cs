@@ -15,7 +15,7 @@ namespace Modules.Ticketing.API.Controllers;
 public sealed class TicketLookupsController : ControllerBase
 {
 	[HttpGet("severities")]
-	[Authorize]
+	// [Authorize]
 	public async Task<IActionResult> GetSeverities(
 			[FromServices] ITicketLookupsHandler handler,
 			CancellationToken cancellationToken)
@@ -25,7 +25,7 @@ public sealed class TicketLookupsController : ControllerBase
 	}
 
 	[HttpGet("categories")]
-	[Authorize]
+	// [Authorize]
 	public async Task<IActionResult> GetCategories(
 			[FromServices] ITicketLookupsHandler handler,
 			CancellationToken cancellationToken)
@@ -35,7 +35,7 @@ public sealed class TicketLookupsController : ControllerBase
 	}
 
 	[HttpGet("types")]
-	[Authorize]
+	// [Authorize]
 	public async Task<IActionResult> GetTypes(
 			[FromServices] ITicketLookupsHandler handler,
 			CancellationToken cancellationToken)
@@ -45,7 +45,7 @@ public sealed class TicketLookupsController : ControllerBase
 	}
 
 	[HttpGet("services")]
-	[Authorize]
+	// [Authorize]
 	public async Task<IActionResult> GetServices(
 			[FromServices] ITicketLookupsHandler handler,
 			CancellationToken cancellationToken)
@@ -55,7 +55,7 @@ public sealed class TicketLookupsController : ControllerBase
 	}
 
 	[HttpGet("statuses")]
-	[Authorize]
+	// [Authorize]
 	public async Task<IActionResult> GetStatuses(
 			[FromServices] ITicketLookupsHandler handler,
 			CancellationToken cancellationToken)
@@ -69,7 +69,7 @@ public sealed class TicketLookupsController : ControllerBase
 	/// Omit <paramref name="categoryId"/> for the full list.
 	/// </summary>
 	[HttpGet("titles")]
-	[Authorize]
+	// [Authorize]
 	public async Task<IActionResult> GetTitles(
 			[FromQuery] int? categoryId,
 			[FromServices] ITicketLookupsHandler handler,
