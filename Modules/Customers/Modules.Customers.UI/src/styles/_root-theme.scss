@@ -8,7 +8,7 @@
   $primary: map.get($theme, primary);
   $accent: map.get($theme, accent);
   $is-dark-theme: map.get($theme, is-dark);
-  $root-name: if($is-dark-theme, '.theme-dark', ':root');
+  $root-name: if(sass($is-dark-theme): '.theme-dark'; else: ':root');
 
   :root {
     --body-font-family: 'Roboto', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial,
@@ -21,51 +21,43 @@
 
   @at-root {
     #{$root-name} {
-      --divider-color: #{mat.get-color-from-palette($foreground, divider)};
-      --link-color: #{mat.get-color-from-palette(mat.$blue-palette, if($is-dark-theme, 400, 600))};
+      --divider-color: #{mat.m2-get-color-from-palette($foreground, divider)};
+      --link-color: #{mat.m2-get-color-from-palette(mat.$m2-blue-palette, if(sass($is-dark-theme): 400; else: 600))};
       --link-hover-color: #{color.adjust(
-          mat.get-color-from-palette(mat.$blue-palette, if($is-dark-theme, 400, 600)),
+          mat.m2-get-color-from-palette(mat.$m2-blue-palette, if(sass($is-dark-theme): 400; else: 600)),
           $lightness: -10%
         )};
-      --code-border-color: #{rgba(mat.get-color-from-palette($foreground, secondary-text), 0.08)};
-      --code-background-color: #{rgba(mat.get-color-from-palette($foreground, secondary-text), 0.04)};
-      --sidemenu-heading-hover-background-color: #{mat.get-color-from-palette($background, hover)};
-      --sidemenu-active-heading-text-color: #{if(
-          $is-dark-theme,
-          mat.get-color-from-palette(mat.$blue-palette, 200),
-          mat.get-color-from-palette($primary)
-        )};
-      --sidemenu-active-heading-background-color: #{if(
-          $is-dark-theme,
-          rgba(mat.get-color-from-palette($primary), 0.15),
-          transparent
-        )};
-      --sidemenu-active-heading-hover-background-color: #{mat.get-color-from-palette(
+      --code-border-color: #{rgba(mat.m2-get-color-from-palette($foreground, secondary-text), 0.08)};
+      --code-background-color: #{rgba(mat.m2-get-color-from-palette($foreground, secondary-text), 0.04)};
+      --sidemenu-heading-hover-background-color: #{mat.m2-get-color-from-palette($background, hover)};
+      --sidemenu-active-heading-text-color: #{if(sass($is-dark-theme): mat.m2-get-color-from-palette(mat.$m2-blue-palette, 200); else: mat.m2-get-color-from-palette($primary))};
+      --sidemenu-active-heading-background-color: #{if(sass($is-dark-theme): rgba(mat.m2-get-color-from-palette($primary), 0.15); else: transparent)};
+      --sidemenu-active-heading-hover-background-color: #{mat.m2-get-color-from-palette(
           $background,
           hover
         )};
-      --sidemenu-expanded-background-color: #{mat.get-color-from-palette($background, hover)};
-      --topmenu-background-color: #{mat.get-color-from-palette($background, app-bar)};
-      --topmenu-item-active-background-color: #{mat.get-color-from-palette(
+      --sidemenu-expanded-background-color: #{mat.m2-get-color-from-palette($background, hover)};
+      --topmenu-background-color: #{mat.m2-get-color-from-palette($background, app-bar)};
+      --topmenu-item-active-background-color: #{mat.m2-get-color-from-palette(
           $background,
           focused-button
         )};
-      --topmenu-dropdown-item-active-text-color: #{mat.get-color-from-palette($accent)};
-      --toast-info-background-color: #{mat.get-color-from-palette(
-          mat.$blue-palette,
-          if($is-dark-theme, 900, 500)
+      --topmenu-dropdown-item-active-text-color: #{mat.m2-get-color-from-palette($accent)};
+      --toast-info-background-color: #{mat.m2-get-color-from-palette(
+          mat.$m2-blue-palette,
+          if(sass($is-dark-theme): 900; else: 500)
         )};
-      --toast-success-background-color: #{mat.get-color-from-palette(
-          mat.$green-palette,
-          if($is-dark-theme, 900, 500)
+      --toast-success-background-color: #{mat.m2-get-color-from-palette(
+          mat.$m2-green-palette,
+          if(sass($is-dark-theme): 900; else: 500)
         )};
-      --toast-warning-background-color: #{mat.get-color-from-palette(
-          mat.$orange-palette,
-          if($is-dark-theme, 900, 500)
+      --toast-warning-background-color: #{mat.m2-get-color-from-palette(
+          mat.$m2-orange-palette,
+          if(sass($is-dark-theme): 900; else: 500)
         )};
-      --toast-error-background-color: #{mat.get-color-from-palette(
-          mat.$red-palette,
-          if($is-dark-theme, 900, 500)
+      --toast-error-background-color: #{mat.m2-get-color-from-palette(
+          mat.$m2-red-palette,
+          if(sass($is-dark-theme): 900; else: 500)
         )};
     }
   }

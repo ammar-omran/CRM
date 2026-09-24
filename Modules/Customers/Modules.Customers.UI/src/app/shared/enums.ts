@@ -7,11 +7,60 @@ export enum HttpVerb {
 }
 
 export enum EndPoint {
+  // ── Customers module (Modules.Customers.API) — verified against CustomersController ──
+  // Auth (AllowAnonymous)
+  REGISTER = 'customers/register',
+  CONFIRM_EMAIL = 'customers/confirm-email',
+  RESEND_OTP = 'customers/resend-otp',
+  LOGIN = 'customers/login',
+  LOGIN_WITH_PHONE = 'customers/login-with-phone',
+  REFRESH = 'customers/refresh',
+  UPDATE_PASSWORD = 'customers/update-password',
+  RESET_PASSWORD = 'customers/reset-password',
+  // Customers
+  GET_CUSTOMER_BY_ID = 'customers/{customerId}',
+  GET_CUSTOMERS = 'customers',
+
+  CONFIRM_EMAIL_OTP = 'customers/confirm-email',
+
+  // ── Tickets module (Modules.Ticketing.API) — verified against TicketsController ──
+  GET_TICKETS = 'tickets/list',
+  GET_TICKETS_MINE = 'tickets/mine',
+  GET_TICKETS_GROUP = 'tickets/group',
+  GET_TICKETS_BY_CUSTOMER_ID = 'tickets/mine',
+  GET_TICKET_DETAILS = 'tickets/{ticketId}',
+  GET_TICKET_HISTORY = 'tickets/{ticketId}/history',
+  CREATE_TICKET = 'tickets',
+  AddTicket = 'tickets',
+  ASSIGN_TICKET = 'tickets/{ticketId}/assign',
+  // Ticket lookups
+  GET_TICKET_CATEGORIES = 'tickets/lookups/categories',
+  GET_TICKET_TITLES = 'tickets/lookups/titles',
+  GET_TICKET_TITLES_BY_CATEGORY = 'tickets/lookups/titles',
+  LOOKUP_SEVERITIES = 'tickets/lookups/severities',
+  LOOKUP_CATEGORIES = 'tickets/lookups/categories',
+  LOOKUP_TYPES = 'tickets/lookups/types',
+  LOOKUP_SERVICES = 'tickets/lookups/services',
+  LOOKUP_STATUSES = 'tickets/lookups/statuses',
+  LOOKUP_TITLES = 'tickets/lookups/titles',
+  // Comments
+  GET_TICKET_COMMENTS = 'tickets/{ticketId}/comments',
+  ADD_TICKET_COMMENT = 'tickets/{ticketId}/comments',
+  // Attachments (lowercase, already correct)
+  UPLOAD_ATTACHMENT = 'attachments/{attachmentTypeId}/{referenceId}',
+  SET_ATTACHMENT_REFERENCE = 'attachments/{attachmentId}/set-reference/{referenceId}',
+  GET_ATTACHMENT_BY_REFERENCE = 'attachments/reference/{referenceId}',
+  GET_ATTACHMENT_BY_TICKET = 'attachments/reference/ticket/{ticketId}',
+  GET_ATTACHMENT_BY_COMMENT = 'attachments/reference/comment/{commentId}',
+  DOWNLOAD_ATTACHMENT_BY_ID = 'attachments/download/{fileId}',
+  DOWNLOAD_TICKET_ATTACHMENT = 'attachments/download/ticket/{ticketId}',
+  DOWNLOAD_COMMENT_ATTACHMENT = 'attachments/download/comment/{commentId}',
+  DELETE_ATTACHMENT = 'attachments/{attachmentId}',
+
+  // Meters / Districts / Contractors — other microservices, keep as is
   UPDATE_PASSWORD_WITH_EMAIL = 'Customer/forget-password-with-email',
   OPT_CONFIRMATION_WITH_EMAIL = 'Customer/otp-confirmation-with-email',
-  CONFIRM_EMAIL_OTP = "Customer/confirm-email-otp",
   RESET_PASSWORD_WITH_EMAIL = 'Customer/reset-password-with-email',
-  REGISTER = 'Customer/register',
   AGENTS_LIST = 'agents/list',
   DISTRICTS_LIST = 'Districts/ActiveDistrics/list',
   INSTALLED_METERS = 'meters/installed',
@@ -44,19 +93,5 @@ export enum EndPoint {
   METER_TYPES = 'Lockups/meter-types',
   METER_MAKES = 'Lockups/meter-make',
   EXPORT_RETIRED_METERS = 'meters/retired/export',
-  GET_TICKETS_BY_CUSTOMER_ID = 'Ticket/{customerId}',
-  GET_TICKET_DETAILS = 'Ticket/GetTicketDetails/{ticketId}',
-  GET_TICKET_HISTORY = 'Ticket/{ticketId}/history',
-  AddTicket = 'Ticket/AddTicket',
-  GET_TICKET_COMMENTS = 'Ticket/GetTicketComments',
-  DELETE_ATTACHMENT = 'Attachments/{attachmentId}',
-  UPLOAD_ATTACHMENT = 'Attachments/{attachmentTypeId}/{referenceId}',
-  SET_ATTACHMENT_REFERENCE = 'Attachments/{attachmentId}/set-reference/{referenceId}',
-  GET_ATTACHMENT_BY_REFERENCE = 'Attachments/reference/{referenceId}',
-  DOWNLOAD_ATTACHMENT_BY_ID = 'Attachments/download/{fileId}',
-  GET_TICKET_TITLES = 'Ticket/Titles',
-  GET_TICKET_CATEGORIES = 'Ticket/lookup/category',
-  GET_TICKET_TITLES_BY_CATEGORY = 'Ticket/categories/{categoryId}/titles',
-  ADD_TICKET_COMMENT = 'Ticket/{ticketId}/addComment',
   SEND_TICKET_EMAIL_NOTIFICATION = 'notifications/send-email',
 }

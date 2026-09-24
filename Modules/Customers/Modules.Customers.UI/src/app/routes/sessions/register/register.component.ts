@@ -12,7 +12,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router, RouterLink } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { CustomValidators } from '@shared/utils/custom-validators';
 import { EndPoint, HttpVerb } from '@shared/enums';
 import { ApiService } from '@shared/services/api.service';
@@ -38,7 +38,7 @@ import { MtxButtonModule } from '@ng-matero/extensions/button';
     MatCheckboxModule,
     MatFormFieldModule,
     MatInputModule,
-    TranslateModule,
+    TranslatePipe,
     MatPhoneFieldComponent,
   ],
 })
@@ -77,10 +77,11 @@ export class RegisterComponent {
 
     const resolvedPhone = this.resolvePhone(this.registerForm.value.phone);
     const requestData = {
-      name: this.registerForm.value.name,
-      email: this.registerForm.value.email,
-      phoneNumber: resolvedPhone ? resolvedPhone.phoneNumber : { number: '', countryCode: '' },
-      password: this.registerForm.value.password,
+      Name: this.registerForm.value.name,
+      Email: this.registerForm.value.email,
+      PhoneNumber: resolvedPhone?.phoneNumber?.number ?? '',
+      CountryCode: resolvedPhone?.phoneNumber?.countryCode ?? '',
+      Password: this.registerForm.value.password,
     };
 
     this.apiService

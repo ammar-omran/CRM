@@ -4,14 +4,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EndPoint, HttpVerb } from '@shared/enums';
 import { ApiService } from '@shared/services/api.service';
 import { MatIcon } from '@angular/material/icon';
-import { HeaderComponent } from '@theme/header/header.component';
-import { PageHeaderComponent } from '@shared';
 import { CommonModule, DatePipe } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
   MatCard,
@@ -23,7 +21,6 @@ import {
 } from '@angular/material/card';
 import { RouterLink } from '@angular/router';
 import { environment } from '@env/environment';
-import { MatButtonToggle, MatButtonToggleGroup } from '@angular/material/button-toggle';
 
 interface Ticket {
   id: number;
@@ -48,13 +45,11 @@ interface Ticket {
   templateUrl: './ticket-list.component.html',
   styleUrls: ['./ticket-list.component.scss'],
   imports: [
-    TranslateModule,
+    TranslatePipe,
     MatIcon,
     MatTableModule,
     MatIconModule,
     MatButtonModule,
-    PageHeaderComponent,
-    HeaderComponent,
     DatePipe,
     CommonModule,
     MatCard,
@@ -64,8 +59,6 @@ interface Ticket {
     MatCardSubtitle,
     MatCardAvatar,
     RouterLink,
-    MatButtonToggle,
-    MatButtonToggleGroup,
   ],
 })
 export class TicketListComponent {
@@ -101,7 +94,7 @@ export class TicketListComponent {
   ngOnInit(): void {
     const savedLang = localStorage.getItem('lang') || 'en-US';
     this.currentLang = savedLang;
-    this.translate.setDefaultLang('en-US');
+    this.translate.setFallbackLang('en-US');
     this.translate.use(savedLang);
     this.route.paramMap.subscribe(params => {
       const id = params.get('customerId');
@@ -144,25 +137,10 @@ export class TicketListComponent {
     this.errorMessage = '';
     this.noTickets = false;
 
-    // Get the base endpoint URL
-    let endpointUrl = EndPoint.GET_TICKETS_BY_CUSTOMER_ID.replace(
-      '{customerId}',
-      this.customerId.toString()
-    );
-
-    // Add cache busting parameter if force refresh is requested
-    if (forceRefresh) {
-      const timestamp = new Date().getTime();
-      endpointUrl += `${endpointUrl.includes('?') ? '&' : '?'}_=${timestamp}`;
-    }
-
-    // Cast to EndPoint enum for type safety
-    const endpoint = endpointUrl as EndPoint;
-
-    // Log the full request URL for debugging
+    const params = forceRefresh ? { _: String(Date.now()) } : null;
 
     this.apiService
-      .triggerApiRequest<any>(endpoint, HttpVerb.GET)
+      .triggerApiRequest<any>(EndPoint.GET_TICKETS_MINE, HttpVerb.GET, params as any)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response: any) => {

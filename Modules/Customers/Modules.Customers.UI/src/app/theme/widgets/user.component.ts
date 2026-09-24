@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { Router} from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { debounceTime, tap } from 'rxjs/operators';
 
 import { AuthService, SettingsService, TokenService, User } from '@core';
@@ -32,7 +32,7 @@ import { AuthService, SettingsService, TokenService, User } from '@core';
     `,
   ],
   standalone: true,
-  imports: [MatButtonModule, MatIconModule, MatMenuModule, TranslateModule],
+  imports: [MatButtonModule, MatIconModule, MatMenuModule, TranslatePipe],
 })
 export class UserComponent implements OnInit {
   user!: User;

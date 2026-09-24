@@ -6,7 +6,7 @@ import { SparePartsTableComponent } from './spare-parts-table/spare-parts-table.
 import { BaseMeter, MeterItem } from '@shared/interfaces/meter-info.model';
 import { environment } from '@env/environment';
 import { DomSanitizer, SafeHtml, SafeUrl } from '@angular/platform-browser';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 interface MeterDetail {
   label: string;
@@ -15,7 +15,7 @@ interface MeterDetail {
 @Component({
   selector: 'app-meter-details-dialog',
   standalone: true,
-  imports: [MatTabsModule, MeterInfoComponent, SparePartsTableComponent, TranslateModule],
+  imports: [MatTabsModule, MeterInfoComponent, SparePartsTableComponent, TranslatePipe],
   templateUrl: './meter-details-dialog.component.html',
   styleUrl: './meter-details-dialog.component.scss',
 })

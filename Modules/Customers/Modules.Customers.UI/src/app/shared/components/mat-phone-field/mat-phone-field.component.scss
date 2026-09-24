@@ -1,36 +1,68 @@
+.phone-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.6);
+  margin-bottom: 8px;
+  display: block;
+}
+
 .custom-phone-field {
   display: flex;
   flex-direction: column;
-  position: relative;
-  margin-bottom: 16px;
+  gap: 4px;
+}
 
-  .mat-label {
-    font-size: 16px;
-    color: rgba(0, 0, 0, 0.6);
-    margin-bottom: 4px;
-  }
+.phone-input-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
 
-  ::ng-deep .ngx-intl-tel-input {
-    display: block;
-    width: 100%;
-  }
+.country-select {
+  flex: 0 0 140px;
+  min-width: 140px;
+}
 
-  ::ng-deep .ngx-intl-tel-input input {
-    font-size: 16px;
-    padding: 14px;
-    border: 1px solid rgba(0, 0, 0, 0.23);
-    border-radius: 4px;
-    outline: none;
-    width: 100%;
-    box-sizing: border-box;
-    transition: border-color 0.3s;
-  }
+.phone-number-field {
+  flex: 1;
+}
 
-  ::ng-deep .ngx-intl-tel-input input:focus {
-    border: 2px solid #D32F2F;
-  }
+.country-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
-  ::ng-deep .iti {
-    width: 100%;
-  }
+.country-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.flag {
+  font-size: 18px;
+}
+
+.dial-code,
+.dial-code-option {
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.country-name {
+  flex: 1;
+}
+
+.error-messages {
+  margin-top: -8px;
+}
+
+.text-danger {
+  color: #f44336;
+  font-size: 12px;
+}
+
+.hint {
+  font-size: 11px;
+  margin-top: 2px;
 }

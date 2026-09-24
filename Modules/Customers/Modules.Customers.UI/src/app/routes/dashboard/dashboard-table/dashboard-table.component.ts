@@ -11,7 +11,6 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { FilterControl } from '@shared/interfaces/filter-control.model';
-import { FilterComponent } from '../../../shared/components/filter/filter.component';
 import { EndPoint } from '@shared/enums';
 import { DashboardService } from '../dashboard.service';
 import { CommonModule } from '@angular/common';
@@ -20,7 +19,7 @@ import { ContractorOperationData } from '@shared/interfaces/dashboard';
 @Component({
   selector: 'app-dashboard-table',
   standalone: true,
-  imports: [CommonModule, MatTableModule, FilterComponent, MatPaginatorModule],
+  imports: [CommonModule, MatTableModule, MatPaginatorModule],
   templateUrl: './dashboard-table.component.html',
   styleUrl: './dashboard-table.component.scss',
 })

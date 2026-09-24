@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { environment } from '@env/environment';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { EndPoint, HttpVerb } from '@shared/enums';
 import { ApiService } from '@shared/services/api.service';
 import { ToastrService } from 'ngx-toastr';
@@ -29,7 +29,7 @@ import { ResponseStatusEnum } from '@shared/Enums/response-status-enum';
     MatFormFieldModule,
     MatCardModule,
     ReactiveFormsModule,
-    TranslateModule,
+    TranslatePipe,
     MatInputModule,
     MatIconModule,
     MatButtonModule,
@@ -314,11 +314,11 @@ export class EmailConfirmationComponent implements OnInit, OnDestroy {
 
     this.apiServices
       .triggerApiRequest<BaseResponse<any>>(
-        EndPoint.CONFIRM_EMAIL_OTP,
-        HttpVerb.PUT,
+        EndPoint.RESEND_OTP,
+        HttpVerb.POST,
         null,
         {
-          hashedEmail: this.hashedEmail
+          HashedEmail: this.hashedEmail
         }
       )
       .subscribe({
@@ -359,13 +359,13 @@ export class EmailConfirmationComponent implements OnInit, OnDestroy {
     this.isSubmitting = true;
 
     const formData = {
-      hashedEmail: this.hashedEmail,
-      otp: this.emailConfirmationFormGroub.value.otp
+      HashedEmail: this.hashedEmail,
+      Otp: this.emailConfirmationFormGroub.value.otp
     };
 
     this.apiServices
       .triggerApiRequest<BaseResponse<any>>(
-        EndPoint.CONFIRM_EMAIL_OTP,
+        EndPoint.CONFIRM_EMAIL,
         HttpVerb.POST,
         null,
         formData

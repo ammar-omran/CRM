@@ -7,15 +7,15 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatMenuModule } from '@angular/material/menu';
 import { Router, RouterLink } from '@angular/router';
 import { MtxButtonModule } from '@ng-matero/extensions/button';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 
 import { AuthService } from '@core/authentication';
 import { MatIconModule } from '@angular/material/icon';
 import { PhoneNumberValidator } from '@shared/validators/phone-number.validator';
-import { MaterialModule } from '../../../../../schematics/ng-add/files/module-files/app/material.module';
 import { MatPhoneFieldComponent } from '@shared/components/mat-phone-field/mat-phone-field.component';
 
 @Component({
@@ -33,10 +33,10 @@ import { MatPhoneFieldComponent } from '@shared/components/mat-phone-field/mat-p
     MatFormFieldModule,
     MatInputModule,
     MatTabsModule,
+    MatMenuModule,
     MtxButtonModule,
-    TranslateModule,
+    TranslatePipe,
     MatIconModule,
-    MaterialModule,
     MatPhoneFieldComponent,
   ],
 })
@@ -73,7 +73,7 @@ export class LoginComponent implements OnInit {
   lang: string = '';
   ngOnInit(): void {
     this.lang = localStorage.getItem('lang') || 'en-US';
-    this.translateServices.setDefaultLang('en-US');
+    this.translateServices.setFallbackLang('en-US');
     this.translateServices.use(this.lang || 'en-US');
   }
 
@@ -155,8 +155,8 @@ export class LoginComponent implements OnInit {
     this.isSubmitting = true;
 
     // Ensure translate uses the currently selected language
-    const activeLang = (this.lang || this.translate.currentLang || 'en-US');
-    this.translate.setDefaultLang(activeLang);
+    const activeLang = (this.lang || this.translate.currentLang() || 'en-US');
+    this.translate.setFallbackLang(activeLang);
     this.translate.use(activeLang);
 
     const resolved = this.resolvePhone(this.phoneLoginForm.value.phone);
@@ -192,8 +192,8 @@ export class LoginComponent implements OnInit {
         let message = '';
         if (err?.status === 400 || err?.status === 401) {
           // Ensure translate uses the currently selected language
-          const activeLang = (this.lang || this.translate.currentLang || 'en-US');
-          this.translate.setDefaultLang(activeLang);
+          const activeLang = (this.lang || this.translate.currentLang() || 'en-US');
+          this.translate.setFallbackLang(activeLang);
           this.translate.use(activeLang);
 
           const apiMsg: string = ((err?.error?.message || err?.error?.code || '') as any).toString();

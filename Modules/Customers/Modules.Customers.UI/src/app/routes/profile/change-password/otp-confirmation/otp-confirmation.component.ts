@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { environment } from '@env/environment';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { EndPoint, HttpVerb } from '@shared/enums';
 import { ApiService } from '@shared/services/api.service';
 import { ToastrService } from 'ngx-toastr';
@@ -20,7 +20,7 @@ import { ToastrService } from 'ngx-toastr';
     MatFormFieldModule,
     MatCardModule,
     ReactiveFormsModule,
-    TranslateModule,
+    TranslatePipe,
     MatInputModule,
     MatIconModule,
     MatButtonModule,
@@ -63,7 +63,7 @@ export class OtpConfirmationComponent implements OnInit{
       this.lang = prams.get('lang');
 
     });
-    this.translateServices.setDefaultLang('en-US');
+    this.translateServices.setFallbackLang('en-US');
     this.translateServices.use(this.lang || 'en-US');
 
   }

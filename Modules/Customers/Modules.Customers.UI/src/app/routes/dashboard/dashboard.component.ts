@@ -8,15 +8,11 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MtxProgressModule } from '@ng-matero/extensions/progress';
 import { DashboardService } from './dashboard.service';
-import { DashboardHeaderComponent } from './dashboard-header/dashboard-header.component';
-import { MeterStatsCardComponent } from './meter-stats-card/meter-stats-card.component';
-import { DashboardTableComponent } from './dashboard-table/dashboard-table.component';
 import { MeterStatusDto, RetiredMeterStatusDto } from '@shared/interfaces/dashboard';
 import { BaseResponse } from '@shared/interfaces/base-response';
 import { ApiService } from '@shared/services/api.service';
 import { BehaviorSubject, Observable, combineLatest, switchMap, map } from 'rxjs';
 import { EndPoint, HttpVerb } from '@shared/enums';
-import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
@@ -33,10 +29,6 @@ import { AsyncPipe } from '@angular/common';
     MatTableModule,
     MatTabsModule,
     MtxProgressModule,
-    DashboardHeaderComponent,
-    MeterStatsCardComponent,
-    DashboardTableComponent,
-    AsyncPipe,
   ],
 })
 export class DashboardComponent implements OnInit {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -21,7 +21,7 @@ import { environment } from '@env/environment';
     MatFormFieldModule,
     MatCardModule,
     ReactiveFormsModule,
-    TranslateModule,
+    TranslatePipe,
     MatInputModule,
     MatIconModule,
     MatButtonModule,
@@ -66,7 +66,7 @@ export class UpdatePasswordComponent implements OnInit {
     private toastr: ToastrService,
     private translateServices: TranslateService
   ) {
-    this.translateServices.setDefaultLang('en-US');
+    this.translateServices.setFallbackLang('en-US');
     this.translateServices.use(localStorage.getItem('lang') || 'en-US');
   }
   otpConfirmation() {

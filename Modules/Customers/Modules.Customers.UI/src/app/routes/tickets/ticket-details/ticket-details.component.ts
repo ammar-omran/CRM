@@ -3,12 +3,11 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { TicketDetails, TicketHistory } from '@shared/interfaces/ticket.model';
-import { PageHeaderComponent } from '@shared';
 import { MatTableModule } from '@angular/material/table';
 import { ApiService } from '@shared/services/api.service';
 import { EndPoint, HttpVerb } from '@shared/enums';
+import { HelperService } from '@shared/services/helper.service';
 import { MatCardContent, MatCard, MatCardTitle } from '@angular/material/card';
-import { MatIcon } from '@angular/material/icon';
 import { MatDivider } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -17,13 +16,11 @@ import { TicketHistoryComponent } from '../ticket-history/ticket-history.compone
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { RouterLink } from '@angular/router';
 import { CommentComponent } from '@shared/utils/comment/comment.component';
 import { AddCommentComponent } from '../add-comment/add-comment.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { TokenService } from '@core/authentication/token.service';
-import { MatButtonToggleGroup, MatButtonToggle } from '@angular/material/button-toggle';
 import { TranslateService } from '@ngx-translate/core';
 import { MatCardModule } from '@angular/material/card';
 
@@ -34,12 +31,10 @@ import { MatCardModule } from '@angular/material/card';
   styleUrls: ['./ticket-details.component.scss'],
   imports: [
     CommonModule,
-    PageHeaderComponent,
     MatTableModule,
     MatCardContent,
     MatCard,
     MatCardTitle,
-    MatIcon,
     MatDivider,
     TicketHistoryComponent,
     MatTab,
@@ -48,12 +43,9 @@ import { MatCardModule } from '@angular/material/card';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    RouterLink,
     CommentComponent,
     AddCommentComponent,
-    TranslateModule,
-    MatButtonToggleGroup,
-    MatButtonToggle,
+    TranslatePipe,
     MatButtonModule,
     MatCardModule,
   ],
@@ -86,7 +78,7 @@ export class TicketDetailsComponent implements OnInit {
   ngOnInit(): void {
     const savedLang = localStorage.getItem('lang') || 'en-US';
     this.currentLang = savedLang;
-    this.translate.setDefaultLang('en-US');
+    this.translate.setFallbackLang('en-US');
     this.translate.use(savedLang);
     const id = this.route.snapshot.paramMap.get('ticketId');
     if (id) {
@@ -99,10 +91,9 @@ export class TicketDetailsComponent implements OnInit {
   }
 
   loadTicketDetails(): void {
-    const endpoint = EndPoint.GET_TICKET_DETAILS.replace(
-      '{ticketId}',
-      this.ticketId.toString()
-    ) as EndPoint;
+    const endpoint = HelperService.formatEndpoint(EndPoint.GET_TICKET_DETAILS, {
+      ticketId: this.ticketId,
+    }) as EndPoint;
 
     this.apiService
       .triggerApiRequest<TicketDetails>(endpoint, HttpVerb.GET)
@@ -119,10 +110,9 @@ export class TicketDetailsComponent implements OnInit {
   }
 
   loadTicketHistory(): void {
-    const endpoint = EndPoint.GET_TICKET_HISTORY.replace(
-      '{ticketId}',
-      this.ticketId.toString()
-    ) as EndPoint;
+    const endpoint = HelperService.formatEndpoint(EndPoint.GET_TICKET_HISTORY, {
+      ticketId: this.ticketId,
+    }) as EndPoint;
 
     this.apiService
       .triggerApiRequest<TicketHistory[]>(endpoint, HttpVerb.GET)
@@ -144,47 +134,67 @@ export class TicketDetailsComponent implements OnInit {
   attachmentUrl: string | null = null;
   customerId: string = localStorage.getItem('customerId') || 'no';
   getComments() {
+    const endpoint = HelperService.formatEndpoint(EndPoint.GET_TICKET_COMMENTS, {
+      ticketId: this.ticketId,
+    }) as EndPoint;
     this.apiService
-      .triggerApiRequest(
-        `${EndPoint.GET_TICKET_COMMENTS}/${this.ticketId}` as EndPoint,
-        HttpVerb.GET
-      )
+      .triggerApiRequest<any>(endpoint, HttpVerb.GET)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((response: any) => {
-        if (response.status) {
-          if (response.ticketComments != null) {
-            this.ticketComments = response.ticketComments.map((comment: any) => {
-              const createdById = comment.createdById ?? comment.CreatedById ?? comment.createdBy ?? 0;
-              const createdByName = comment.createdByName ?? comment.CreatedByName ?? comment.author ?? 'Unknown';
-              const haveAtt = comment.haveAttachments ?? comment.HaveAttachments ?? false;
-              const rawIsAdmin = comment.isAdmin ?? comment.IsAdmin ?? null;
-              let role: string;
-              if (rawIsAdmin !== null && rawIsAdmin !== undefined) {
-                role = rawIsAdmin ? 'Support' : 'Customer';
-              } else if (String(createdByName).toLowerCase() === 'superadmin') {
-                role = 'Support';
-              } else {
-                const ticketCustomerId = (this.ticket as any)?.customerId ?? (this.ticket as any)?.CustomerId ?? (this.ticket as any)?.customerID ?? null;
-                const isCustomer = ticketCustomerId != null ? Number(createdById) === Number(ticketCustomerId) : Number(createdById) <= 0;
-                role = ticketCustomerId != null ? (isCustomer ? 'Customer' : 'Support') : createdById > 0 ? 'Support' : 'Customer';
-              }
-              return {
-                id: comment.id ?? comment.commentId ?? comment.CommentId ?? comment.referenceId,
-                author: createdByName,
-                description: comment.description ?? comment.Description ?? '',
-                createdDate: String(comment.createdDate ?? comment.CreatedDate),
-                role,
-                HaveAttachments: haveAtt,
-                createdById,
-              };
-            });
-
-            // Main ticket-level buttons use Attachments/reference/{ticketId}.
-            // Comment attachments use Attachments/reference/{commentId}.
-            // Do NOT enable main buttons based on comment attachments (would cause 404).
-            // For comments: if API does not return HaveAttachments, verify via Attachments API.
-            this.enrichCommentsWithAttachmentStatus();
-          }
+        const raw = Array.isArray(response)
+          ? response
+          : (response?.data ?? response?.ticketComments ?? response?.items ?? []);
+        if (!Array.isArray(raw)) return;
+        if (raw.length === 0) {
+          this.ticketComments = [];
+          return;
         }
+        this.ticketComments = raw.map((comment: any) => {
+          const actualCreatedById =
+            comment.createdById ??
+            comment.CreatedById ??
+            comment.CreatedBy ??
+            comment.createdBy ??
+            0;
+          const createdByName =
+            comment.createdByName ??
+            comment.CreatedByName ??
+            comment.author ??
+            'Unknown';
+          const haveAtt =
+            comment.haveAttachments ??
+            comment.HaveAttachments ??
+            false;
+          const rawIsAdmin = comment.isAdmin ?? comment.IsAdmin ?? null;
+          let role: string;
+          if (rawIsAdmin !== null && rawIsAdmin !== undefined) {
+            role = rawIsAdmin ? 'Support' : 'Customer';
+          } else if (String(createdByName).toLowerCase() === 'superadmin') {
+            role = 'Support';
+          } else {
+            const ticketCustomerId =
+              (this.ticket as any)?.customerId ??
+              (this.ticket as any)?.CustomerId ??
+              (this.ticket as any)?.customerID ??
+              null;
+            const isCustomer =
+              ticketCustomerId != null
+                ? Number(actualCreatedById) === Number(ticketCustomerId)
+                : Number(actualCreatedById) <= 0;
+            role = ticketCustomerId != null ? (isCustomer ? 'Customer' : 'Support') : actualCreatedById > 0 ? 'Support' : 'Customer';
+          }
+          return {
+            id: comment.id ?? comment.commentId ?? comment.CommentId ?? comment.referenceId,
+            author: createdByName,
+            description: comment.description ?? comment.Description ?? comment.content ?? comment.Content ?? '',
+            createdDate: String(comment.createdDate ?? comment.CreatedDate ?? ''),
+            role,
+            HaveAttachments: haveAtt,
+            createdById: actualCreatedById,
+          };
+        });
+
+        this.enrichCommentsWithAttachmentStatus();
       });
   }
 

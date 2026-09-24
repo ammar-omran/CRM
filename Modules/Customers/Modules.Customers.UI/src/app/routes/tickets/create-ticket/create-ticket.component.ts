@@ -17,7 +17,7 @@ import { HelperService } from '@shared/services/helper.service';
 import { MtxButtonModule } from '@ng-matero/extensions/button';
 import { AttachmentUploaderComponent } from '@shared/components/attachment-uploader/attachment-uploader.component';
 import { AttachmentType } from '@shared/Enums/attachment-type';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 // ─── Interfaces ──────────────────────────────────────────────────────────────
 
@@ -56,7 +56,7 @@ interface TicketCategory {
     MatIconModule,
     MtxButtonModule,
     AttachmentUploaderComponent,
-    TranslateModule,
+    TranslatePipe,
   ],
 })
 export class CreateTicketComponent implements OnInit {
@@ -195,15 +195,11 @@ export class CreateTicketComponent implements OnInit {
 
     if (!categoryId) return;
 
-    // Build the endpoint with the selected categoryId
-    const endpoint = EndPoint.GET_TICKET_TITLES_BY_CATEGORY.replace(
-      '{categoryId}',
-      String(categoryId)
-    ) as EndPoint;
-
     this.isTitlesLoading = true;
     this.apiService
-      .triggerApiRequest<any>(endpoint, HttpVerb.GET)
+      .triggerApiRequest<any>(EndPoint.GET_TICKET_TITLES_BY_CATEGORY, HttpVerb.GET, {
+        categoryId: String(categoryId),
+      } as any)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: res => {
@@ -309,29 +305,16 @@ export class CreateTicketComponent implements OnInit {
     const severityId = this.isOtherSelected ? null : this.selectedSeverityId;
 
     const requestBody = {
-      categoryId: Number(formValue.categoryId),
-      typeId: Number(formValue.typeId),
-      titleId: this.isOtherSelected ? 0 : Number(formValue.titleId), // 0 = "Other" signal for backend
-      // 'title' satisfies the backend's required [Required] string property
-      title: titleText,
-      customTitle: this.isOtherSelected ? formValue.customTitle || '' : '',
-      description: formValue.description,
-      customerEmail: customerEmail || 'customer@example.com',
-      // Send severtyId (backend typo preserved); null when customer chose "Other"
-      severtyId: severityId,
-      customerId: Number(this.customerId),
-      customerName: customerName || 'Customer',
-      userId: 0,
-      userName: 'System',
-      createdBy: 1,
-      createdByName: 'Current User',
-      updatedBy: 1,
-      updatedByName: 'Current User',
-      status: 1,
+      CategoryId: Number(formValue.categoryId),
+      TypeId: Number(formValue.typeId),
+      TitleId: this.isOtherSelected ? null : Number(formValue.titleId),
+      OtherTitle: this.isOtherSelected ? (formValue.customTitle || titleText) : null,
+      Description: formValue.description,
+      SeverityId: severityId,
     };
 
     this.apiService
-      .triggerApiRequest<any>(EndPoint.AddTicket, HttpVerb.POST, undefined, requestBody)
+      .triggerApiRequest<any>(EndPoint.CREATE_TICKET, HttpVerb.POST, undefined, requestBody)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: response => {

@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MatCardModule } from "@angular/material/card";
-import { MaterialModule } from "../../../../../../schematics/ng-add/files/module-files/app/material.module";
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApiService } from '@shared/services/api.service';
 import { EndPoint, HttpVerb } from '@shared/enums';
@@ -14,8 +17,11 @@ import { environment } from '@env/environment';
   standalone: true,
   imports: [
     MatCardModule,
-    MaterialModule,
-    TranslateModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    TranslatePipe,
     ReactiveFormsModule
 ],
   templateUrl: './reset-password-with-email.component.html',
@@ -50,7 +56,7 @@ export class ResetPasswordWithEmailComponent implements OnInit {
     private toastr: ToastrService,
     private translateServices: TranslateService
   ){
-    this.translateServices.setDefaultLang('en-US');
+    this.translateServices.setFallbackLang('en-US');
     this.translateServices.use(localStorage.getItem('lang') || 'en-US');
   }
   pass: String = ''

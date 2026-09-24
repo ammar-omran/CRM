@@ -6,11 +6,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDivider } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { PageHeaderComponent } from '@shared';
 import { EndPoint, HttpVerb } from '@shared/enums';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
 import { ApiService } from '@shared/services/api.service';
@@ -34,9 +33,8 @@ import { AttachmentType } from '@shared/Enums/attachment-type';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    MatDivider,
     PageHeaderComponent,
-    TranslateModule,
+    TranslatePipe,
     AttachmentUploaderComponent
   ]
 })
@@ -96,7 +94,7 @@ export class AddCommentComponent implements OnInit {
         .subscribe({
           next: (response: any) => {
             this.submitting = false;
-            const lang = this.translate.currentLang || localStorage.getItem('lang') || 'en-US';
+            const lang = this.translate.currentLang() || localStorage.getItem('lang') || 'en-US';
             const isArabic = (lang || '').toLowerCase().startsWith('ar');
             const candidates = isArabic
               ? [

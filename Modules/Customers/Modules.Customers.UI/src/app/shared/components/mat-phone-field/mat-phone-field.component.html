@@ -1,29 +1,52 @@
-<label for="phone">{{'phone' | translate}}<span style="color: red;">*</span></label>
-<div class="mat-form-field mat-form-field-appearance-outline custom-phone-field">
-  <ngx-intl-tel-input
-                      [preferredCountries]="['us', 'eg']"
-                      [enableAutoCountrySelect]="true"
-                      [enablePlaceholder]="true"
-                      [searchCountryFlag]="true"
-                      [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
-                      [selectFirstCountry]="false"
-                      [selectedCountryISO]="CountryISO.Egypt"
-                      [minlength]="10"
-                      [maxLength]="12"
-                      [dir]="'auto'"
-                      [phoneValidation]="true"
-                      [separateDialCode]="true"
-                      [ariaPlaceholder]="'phone' | translate"
-                      [formControl]="control"
-                      name="phone">
-  </ngx-intl-tel-input>
+<label for="phone" class="phone-label">{{'phone' | translate}}<span style="color: red;">*</span></label>
+<div class="custom-phone-field">
+  <div class="phone-input-row">
+    <mat-form-field appearance="outline" class="country-select">
+      <mat-select [value]="selectedCountry" (selectionChange)="onCountryChange($event.value)" aria-label="Country">
+        <mat-select-trigger>
+          <span class="country-trigger">
+            <span class="flag">{{selectedCountry.flag}}</span>
+            <span class="dial-code">{{selectedCountry.dialCode}}</span>
+          </span>
+        </mat-select-trigger>
+        @for (country of countries; track country.iso2) {
+          <mat-option [value]="country">
+            <span class="country-option">
+              <span class="flag">{{country.flag}}</span>
+              <span class="country-name">{{country.name}}</span>
+              <span class="dial-code-option">{{country.dialCode}}</span>
+            </span>
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
 
-  <div *ngIf="control?.touched && control?.invalid">
-    <small class="text-danger" *ngIf="control?.errors?.['required']">
-      {{'phone_required' | translate}}
-    </small>
-    <small class="text-danger" *ngIf="!control?.errors?.['required']">
-      {{'invalid_phone_format' | translate}}
-    </small>
+    <mat-form-field appearance="outline" class="phone-number-field">
+      <input
+        matInput
+        type="tel"
+        [placeholder]="selectedCountry.placeholder"
+        [value]="phoneNumber"
+        (input)="onPhoneInput($any($event.target).value)"
+        autocomplete="tel"
+        inputmode="numeric"
+        aria-label="Phone number"
+        [attr.maxlength]="selectedCountry.maxLength"
+      />
+      <mat-icon matPrefix>phone</mat-icon>
+    </mat-form-field>
   </div>
+
+  @if (control.touched && control.invalid) {
+    <div class="error-messages">
+      @if (control.hasError('required')) {
+        <small class="text-danger">{{'phone_required' | translate}}</small>
+      } @else {
+        <small class="text-danger">{{'invalid_phone_format' | translate}}</small>
+      }
+    </div>
+  }
+  <small class="hint text-muted">
+    {{selectedCountry.name}} — {{selectedCountry.dialCode}} • {{selectedCountry.minLength}}-{{selectedCountry.maxLength}} digits
+  </small>
 </div>

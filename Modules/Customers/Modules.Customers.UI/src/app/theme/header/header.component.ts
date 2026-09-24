@@ -9,14 +9,10 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatMenuModule } from '@angular/material/menu';
 import screenfull from 'screenfull';
 import { BrandingComponent } from '../widgets/branding.component';
-import { GithubButtonComponent } from '../widgets/github.component';
-import { NotificationComponent } from '../widgets/notification.component';
-import { TranslateComponent } from '../widgets/translate.component';
 import { UserComponent } from '../widgets/user.component';
-import { MaterialModule } from '../../../../schematics/ng-add/files/module-files/app/material.module';
-
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -27,12 +23,9 @@ import { MaterialModule } from '../../../../schematics/ng-add/files/module-files
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
+    MatMenuModule,
     BrandingComponent,
-    GithubButtonComponent,
-    NotificationComponent,
-    TranslateComponent,
     UserComponent,
-    MaterialModule,
   ],
 })
 export class HeaderComponent {

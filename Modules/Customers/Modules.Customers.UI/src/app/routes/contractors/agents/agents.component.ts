@@ -31,7 +31,6 @@ import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatMenuModule } from '@angular/material/menu';
-import { PageHeaderComponent } from '@shared';
 import { ListActionsComponent } from '@shared/components/list-actions/list-actions.component';
 import { downloadFile, FileFormats, getFileExtension, getMimeType } from '@shared/utils/file-utils';
 
@@ -48,7 +47,6 @@ import { downloadFile, FileFormats, getFileExtension, getMimeType } from '@share
     FormsModule,
     MatSelectModule,
     MatOptionModule,
-    PageHeaderComponent,
     ListActionsComponent,
     MatMenuModule,
   ],

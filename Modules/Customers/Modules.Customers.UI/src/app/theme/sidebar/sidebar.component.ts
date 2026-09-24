@@ -3,7 +3,6 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { SidemenuComponent } from '../sidemenu/sidemenu.component';
 import { BrandingComponent } from '../widgets/branding.component';
-import { UserPanelComponent } from './user-panel.component';
 
 @Component({
   selector: 'app-sidebar',
@@ -11,7 +10,7 @@ import { UserPanelComponent } from './user-panel.component';
   styleUrls: ['./sidebar.component.scss'],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [MatSlideToggleModule, BrandingComponent, SidemenuComponent, UserPanelComponent],
+  imports: [MatSlideToggleModule, BrandingComponent, SidemenuComponent],
 })
 export class SidebarComponent {
   @Input() showToggle = true;

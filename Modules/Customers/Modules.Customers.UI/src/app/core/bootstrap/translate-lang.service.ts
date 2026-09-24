@@ -19,7 +19,7 @@ export class TranslateLangService {
       this.settings.options.dir = defaultLang.startsWith('ar') ? 'rtl' : 'ltr';
       this.settings.setDirection();
       this.settings.setLanguage(defaultLang);
-      this.translate.setDefaultLang(defaultLang);
+      this.translate.setFallbackLang(defaultLang);
       this.translate.use(defaultLang).subscribe({
         next: () => console.log(`Successfully initialized '${defaultLang}' language.'`),
         error: () => console.error(`Problem with '${defaultLang}' language initialization.'`),
@@ -36,7 +36,7 @@ export class TranslateLangService {
 
     return new Promise<void>(resolve => {
       this.settings.setLanguage(lang);
-      this.translate.setDefaultLang(lang);
+      this.translate.setFallbackLang(lang);
       this.translate.use(lang).subscribe({
         complete: () => resolve(),
       });
