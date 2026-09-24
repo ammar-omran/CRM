@@ -147,43 +147,114 @@ html.cdk-global-scrollblock {
   overflow: hidden !important;
 }
 
-/* 
-global btn custom action style
-this can be used in the page header 
-for the export btn or any other btn 
-of any component 
+/*
+ btn custom action — compact pill with subtle border
 */
 .btn-custom-action {
-  border-radius: 25px;
-  padding: 12px 25px;
-  display: flex;
-  justify-content: space-between;
+  border-radius: $radius-full;
+  padding: 7px 16px;
+  height: 36px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
+  border: 1px solid $color-border;
+  background: $color-surface;
+  color: $color-text-primary;
+  box-shadow: $shadow-sm;
+  transition: all 0.18s ease;
+
+  &:hover {
+    border-color: $color-border-strong;
+    box-shadow: $shadow-md;
+    transform: translateY(-1px);
+  }
+
+  &.btn-success {
+    background: #fff;
+    color: $color-text-primary;
+    border-color: $color-border;
+  }
+
+  .mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.matero-content {
+  background: $color-bg;
+  min-height: calc(100vh - 64px);
+  padding: 24px 24px 32px;
+
+  @media (max-width: 768px) {
+    padding: 16px 12px 24px;
+  }
 }
 
 /*
-global style of the filter container class in case 
-we used the filter icon in the page header of any 
-component.
-
+ filter panel — redesigned as elevated card with smooth disclosure
 */
 
 .filter-container {
   max-height: 0;
   opacity: 0;
+  overflow: hidden;
+  transform: translateY(-4px);
   transition:
-    max-height 0.5s ease,
-    opacity 0.5s ease;
-  border: 1px solid grey;
+    max-height 0.42s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.32s ease,
+    transform 0.32s ease;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  box-shadow: $shadow-sm;
+  background-color: $color-surface;
+  margin-bottom: 0;
+
   app-filter {
-    padding: 20px;
+    padding: 18px 20px 14px;
     display: block;
   }
-  background-color: #fff;
 }
 
 .filter-container.active {
-  max-height: 500px;
+  max-height: 900px;
   opacity: 1;
+  transform: translateY(0);
+  margin-bottom: 16px;
+}
+
+/* Section / surface helpers for list pages */
+.page-section {
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  box-shadow: $shadow-sm;
+  overflow: hidden;
+}
+
+.page-section__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid $color-border;
+  background: $color-surface;
+}
+
+.page-section__meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: $color-text-secondary;
+
+  strong {
+    font-weight: 600;
+    color: $color-text-primary;
+  }
 }

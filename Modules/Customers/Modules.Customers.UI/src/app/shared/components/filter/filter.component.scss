@@ -1,25 +1,157 @@
 @use '../../../../styles/helpers/variables' as *;
 
-form {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 10px;
+.filter {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.filter__header {
+  display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid $color-border;
+}
 
- .controls {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-  }
-  .buttons {
-    grid-column: span 4;
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+.filter__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: $color-text-primary;
+}
 
-    button {
-      width: 108px;
-      height: 32px;
-    }
+.filter__title-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: $color-text-secondary;
+}
+
+.filter__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: $radius-full;
+  background: $primary-color;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.filter__clear {
+  font-size: 12px;
+  font-weight: 600;
+  color: $color-text-secondary;
+  .mat-icon { font-size: 16px; width: 16px; height: 16px; }
+}
+
+.filter__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 6px 6px 10px;
+  border-radius: $radius-full;
+  background: #f3f4f6;
+  border: 1px solid $color-border;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.filter__chip-label {
+  color: $color-text-secondary;
+  font-weight: 500;
+}
+.filter__chip-value {
+  color: $color-text-primary;
+  font-weight: 600;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.filter__chip-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: $radius-full;
+  border: none;
+  background: #fff;
+  cursor: pointer;
+  color: $color-text-secondary;
+  .mat-icon { font-size: 14px; width: 14px; height: 14px; }
+  &:hover { background: $color-border; color: $color-text-primary; }
+}
+
+.filter__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px 16px;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  @media (max-width: 560px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.field-wrapper {
+  min-width: 0;
+}
+
+.filter-field {
+  width: 100%;
+  font-size: 13px;
+
+  .mat-mdc-form-field-icon-suffix .mat-mdc-icon-button {
+    --mdc-icon-button-state-layer-size: 28px;
+    width: 28px;
+    height: 28px;
+    padding: 2px;
+  }
+}
+
+.filter__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 4px;
+
+  @media (max-width: 560px) {
+    flex-direction: column-reverse;
+    .filter__btn { width: 100%; justify-content: center; }
+  }
+}
+
+.filter__btn {
+  height: 38px;
+  border-radius: $radius-full !important;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 0 18px !important;
+  .mat-icon { font-size: 18px; width: 18px; height: 18px; }
+}
+
+.filter__btn--primary {
+  min-width: 140px;
 }

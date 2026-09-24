@@ -1,62 +1,67 @@
+<page-header [title]="'yourTickets' | translate" [subtitle]="'tickets.subtitle' | translate">
+  <button mat-flat-button color="primary" class="create-ticket-btn" (click)="navigateToCreateTicket()">
+    <mat-icon>add</mat-icon>
+    {{ 'createNew' | translate }}
+  </button>
+</page-header>
+
 <div class="ticket-list-container">
   <!-- Loading State -->
   <div *ngIf="isLoading" class="loading-container">
-    <mat-card class="loading-card">
-      <mat-card-content>
-        <div class="loading-content">
-          <mat-icon class="loading-spinner">hourglass_empty</mat-icon>
-          <h3>{{ 'loading' | translate }}</h3>
-          <p>{{ 'loadingDescription' | translate }}</p>
-        </div>
-      </mat-card-content>
-    </mat-card>
+    <div class="loading-card">
+      <div class="loading-content">
+        <mat-icon class="loading-spinner">hourglass_empty</mat-icon>
+        <h3>{{ 'loading' | translate }}</h3>
+        <p>{{ 'loadingDescription' | translate }}</p>
+      </div>
+    </div>
   </div>
 
   <!-- Error State -->
   <div *ngIf="!isLoading && errorMessage" class="error-container">
-    <mat-card class="error-card">
-      <mat-card-content>
-        <div class="error-content">
-          <mat-icon class="error-icon">error_outline</mat-icon>
-          <h3>{{ 'tickets.errorTitle' | translate }}</h3>
-          <p>{{ errorMessage }}</p>
-          <div class="error-actions">
-            <button mat-raised-button color="primary" (click)="getTickets()">
-              <mat-icon>refresh</mat-icon>
-              {{ 'tryAgain' | translate }}
-            </button>
-          </div>
+    <div class="error-card">
+      <div class="error-content">
+        <mat-icon class="error-icon">error_outline</mat-icon>
+        <h3>{{ 'tickets.errorTitle' | translate }}</h3>
+        <p>{{ errorMessage }}</p>
+        <div class="error-actions">
+          <button mat-flat-button color="primary" (click)="getTickets()">
+            <mat-icon>refresh</mat-icon>
+            {{ 'tryAgain' | translate }}
+          </button>
         </div>
-      </mat-card-content>
-    </mat-card>
+      </div>
+    </div>
   </div>
 
   <!-- Tickets Table -->
   <div *ngIf="!isLoading && !errorMessage && tickets.length > 0" class="tickets-table-container">
-    <mat-card class="tickets-card">
-      <mat-card-header class="tickets-header">
+    <div class="tickets-card">
+      <div class="tickets-header">
         <div class="header-content">
           <div class="header-info">
-            <div mat-card-avatar class="tickets-avatar">
-              <mat-icon>support</mat-icon>
+            <div class="tickets-avatar">
+              <mat-icon>support_agent</mat-icon>
             </div>
             <div class="header-text">
-              <mat-card-title>{{ 'yourTickets' | translate }}</mat-card-title>
-              <mat-card-subtitle>{{ 'ticketsFound' | translate:{ count: tickets.length } }}</mat-card-subtitle>
+              <div class="tickets-title">{{ 'yourTickets' | translate }}</div>
+              <div class="tickets-subtitle">{{ 'ticketsFound' | translate:{ count: tickets.length } }}</div>
             </div>
           </div>
           <div class="header-actions" style="display: flex; gap: 8px;">
-            <!-- Refresh button removed -->
-            <button mat-raised-button color="accent" class="create-ticket-btn" (click)="navigateToCreateTicket()">
+            <button mat-stroked-button class="create-ticket-btn--secondary" (click)="getTickets(true)">
+              <mat-icon>refresh</mat-icon>
+              {{ 'refresh' | translate }}
+            </button>
+            <button mat-flat-button color="primary" class="create-ticket-btn" (click)="navigateToCreateTicket()">
               <mat-icon>add</mat-icon>
               {{ 'createNew' | translate }}
             </button>
           </div>
         </div>
-      </mat-card-header>
+      </div>
 
-      <mat-card-content>
-        <div class="table-wrapper">
+      <div class="table-wrapper">
           <table mat-table [dataSource]="tickets" class="modern-tickets-table">
             <!-- ID -->
             <ng-container matColumnDef="id">
@@ -212,26 +217,23 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row"></tr>
           </table>
         </div>
-      </mat-card-content>
-    </mat-card>
+    </div>
   </div>
 
   <!-- Empty State -->
   <div *ngIf="!isLoading && !errorMessage && noTickets" class="empty-state-container">
-    <mat-card class="empty-state-card">
-      <mat-card-content>
+    <div class="empty-state-card">
         <div class="empty-state-content">
           <mat-icon class="empty-icon">inbox</mat-icon>
           <h3>{{ 'noTicketsTitle' | translate }}</h3>
           <p>{{ 'noTicketsDescription' | translate }}</p>
           <div class="empty-actions">
-            <button mat-raised-button color="primary" routerLink="/tickets/{{ customerId }}/create">
+            <button mat-flat-button color="primary" routerLink="/tickets/{{ customerId }}/create">
               <mat-icon>add</mat-icon>
               {{ 'createFirstTicket' | translate }}
             </button>
           </div>
         </div>
-      </mat-card-content>
-    </mat-card>
+    </div>
   </div>
 </div>

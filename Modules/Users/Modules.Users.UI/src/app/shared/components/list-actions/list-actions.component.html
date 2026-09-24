@@ -1,10 +1,19 @@
 <div class="list-actions">
   <ng-content select="[custom-action]" />
   @if (showFilter) {
-    <div class="list-filter-icon" [class.active]="filterOpen">
-      <button mat-icon-button (click)="onFilterClick()">
-        <mat-icon>filter_list</mat-icon>
-      </button>
-    </div>
+    <button
+      mat-stroked-button
+      class="filter-toggle"
+      [class.active]="filterOpen"
+      (click)="onFilterClick()"
+      [attr.aria-expanded]="filterOpen"
+      aria-label="Toggle filters"
+    >
+      <mat-icon>{{ filterOpen ? 'filter_alt_off' : 'filter_list' }}</mat-icon>
+      <span class="filter-toggle__label">{{ filterOpen ? 'Hide filters' : 'Filters' }}</span>
+      @if (activeCount > 0) {
+        <span class="filter-toggle__badge">{{ activeCount }}</span>
+      }
+    </button>
   }
 </div>

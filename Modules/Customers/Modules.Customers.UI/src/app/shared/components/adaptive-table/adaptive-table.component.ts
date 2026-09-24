@@ -13,6 +13,8 @@ import {
   TemplateRef,
 } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { PageEvent } from '@angular/material/paginator';
 import { MtxGridColumn, MtxGridModule, MtxGridRowClassFormatter } from '@ng-matero/extensions/grid';
 import { EndPoint, HttpVerb } from '@shared/enums';
@@ -24,7 +26,7 @@ import { AsyncPipe } from '@angular/common';
 @Component({
   selector: 'app-adaptive-table',
   standalone: true,
-  imports: [MtxGridModule, MatFormFieldModule, AsyncPipe],
+  imports: [MtxGridModule, MatFormFieldModule, MatButtonModule, MatIconModule, AsyncPipe],
   templateUrl: './adaptive-table.component.html',
   styleUrl: './adaptive-table.component.scss',
 })
@@ -40,12 +42,23 @@ export class AdaptiveTableComponent implements OnInit, OnChanges, AfterViewInit 
   @Input() rowClassFormatter: MtxGridRowClassFormatter = {};
   @Input() rowSelectable: boolean = true;
   @Input() rowHover: boolean = true;
+  @Input() emptyTitle: string = 'No records found';
+  @Input() emptyDescription: string = 'Try adjusting your filters or check back later.';
+  @Input() emptyActionLabel: string = '';
+  @Input() emptyActionIcon: string = 'add';
+  @Input() noResultText: string = 'No data';
   destroyRef = inject(DestroyRef);
+
+  hasError = false;
+  errorMessage = '';
+  @Output() emptyAction = new EventEmitter<void>();
 
   @Output() actionTriggered: EventEmitter<{ action: string; rowData: any }> = new EventEmitter<{
     action: string;
     rowData: any;
   }>();
+
+  @Output() dataLoaded: EventEmitter<any[]> = new EventEmitter<any[]>();
 
   pageIndex = 0;
   pageSize = 10;
@@ -95,22 +108,33 @@ export class AdaptiveTableComponent implements OnInit, OnChanges, AfterViewInit 
 
   fetchData(): Observable<any[]> {
     this.isLoading = true;
+    this.hasError = false;
+    this.errorMessage = '';
     return this.apiService
       .triggerApiRequest(this.apiUrl, this.httpMethod, this.buildRequestParams())
       .pipe(
         debounceTime(300),
         takeUntilDestroyed(this.destroyRef),
         switchMap((response: any) => {
-          this.totalRecords = response.totalItemsCount;
+          const items = response?.items ?? [];
+          this.totalRecords = response?.totalItemsCount ?? 0;
           this.isLoading = false;
-          return [response.data];
+          this.hasError = false;
+          this.dataLoaded.emit(items);
+          return [items];
         }),
         catchError(err => {
           this.isLoading = false;
-
-          return [];
+          this.hasError = true;
+          this.errorMessage = err?.error?.message || err?.message || '';
+          return [[]];
         })
       );
+  }
+
+  retry(): void {
+    this.hasError = false;
+    this.fetchSubject.next();
   }
 
   onPageChange(event: PageEvent): void {

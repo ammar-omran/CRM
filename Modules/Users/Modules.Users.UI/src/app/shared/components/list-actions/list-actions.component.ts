@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class ListActionsComponent {
   @Input() showFilter: boolean = true;
+  @Input() activeCount: number = 0;
   @Output() filterToggled = new EventEmitter<void>();
 
   filterOpen: boolean = false;

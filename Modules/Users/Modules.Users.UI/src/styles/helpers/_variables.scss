@@ -97,6 +97,29 @@ $primary-color: #e41e26;
 $secondary-color: #475073;
 $text-secondary-color: #8b8b8b;
 
+// ── Design system semantic tokens ──
+$color-bg: #f7f8fa;
+$color-surface: #ffffff;
+$color-surface-muted: #f9fafb;
+$color-border: #e5e7eb;
+$color-border-strong: #d1d5db;
+$color-text-primary: #111827;
+$color-text-secondary: #6b7280;
+$color-text-tertiary: #9ca3af;
+
+$radius-sm: 8px;
+$radius-md: 10px;
+$radius-lg: 14px;
+$radius-full: 9999px;
+
+$shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.05), 0 1px 3px rgba(16, 24, 40, 0.07);
+$shadow-md: 0 4px 12px rgba(16, 24, 40, 0.06), 0 1px 4px rgba(16, 24, 40, 0.08);
+$shadow-lg: 0 12px 24px rgba(16, 24, 40, 0.08), 0 4px 8px rgba(16, 24, 40, 0.06);
+
+$font-display: 'Inter', Roboto, 'Helvetica Neue', sans-serif;
+$font-body: Roboto, 'Helvetica Neue', sans-serif;
+$font-mono: 'Roboto Mono', monospace;
+
 //typography
 $body-large-font: 1rem;
 $footer-height: 36px;

@@ -1,5 +1,5 @@
-<page-header [title]="'adminTicketsList' | translate">
-  <app-list-actions [showFilter]="true" (filterToggled)="toggleFilter()"></app-list-actions>
+<page-header [title]="'adminTicketsList' | translate" [subtitle]="'tickets.subtitle' | translate">
+  <app-list-actions [showFilter]="true" [activeCount]="activeFilterCount" (filterToggled)="toggleFilter()"></app-list-actions>
 </page-header>
 
 <div class="filter-container" [class.active]="filterVisible">
@@ -18,4 +18,7 @@
   [filters]="filters"
   [columns]="columns"
   [isLoading]="false"
+  emptyTitle="No tickets found"
+  emptyDescription="Try adjusting your filters or check back later for new tickets."
+  noResultText="No tickets match your filters"
 ></app-adaptive-table>

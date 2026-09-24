@@ -49,6 +49,7 @@ export class TicketListComponent implements OnInit {
   filterVisible = false;
   filters: any = {};
   isFilterApplied = false;
+  activeFilterCount = 0;
 
   endpoint: EndPoint = EndPoint.GET_TICKETS;
   httpVerb: HttpVerb = HttpVerb.GET;
@@ -186,6 +187,10 @@ export class TicketListComponent implements OnInit {
 
     this.filters = transformedFilters;
     this.isFilterApplied = Object.keys(this.filters).length > 0;
+    this.activeFilterCount = Object.keys(this.filters).filter(k => {
+      const v = (this.filters as any)[k];
+      return v !== '' && v !== null && v !== undefined && !(Array.isArray(v) && v.length === 0);
+    }).length;
   }
 
   viewDetails(ticket: AdminTicket): void {

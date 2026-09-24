@@ -1,23 +1,62 @@
 @use '../../../../styles/helpers/variables' as *;
 .list-actions {
   display: flex;
-  gap: 9px;
   align-items: center;
+  gap: 10px;
+}
 
-  .list-filter-icon {
-    background-color: #aeaeae;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    transition: background-color 0.3s ease;
-    &.active {
-      background-color: $primary-color;
-    }
-    mat-icon {
-      color: #fff;
-    }
+.filter-toggle {
+  height: 36px;
+  border-radius: $radius-full !important;
+  border: 1px solid $color-border !important;
+  background: #fff !important;
+  color: $color-text-primary !important;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 0 14px !important;
+  gap: 8px;
+  box-shadow: $shadow-sm;
+  transition: all 0.18s ease;
+
+  .mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: $color-text-secondary;
   }
+
+  &:hover {
+    border-color: $color-border-strong !important;
+    box-shadow: $shadow-md;
+    transform: translateY(-1px);
+  }
+
+  &.active {
+    background: $primary-color !important;
+    border-color: $primary-color !important;
+    color: #fff !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.14);
+
+    .mat-icon { color: #fff; }
+    .filter-toggle__badge { background: #fff; color: $primary-color; }
+  }
+}
+
+.filter-toggle__label {
+  letter-spacing: 0.01em;
+}
+
+.filter-toggle__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: $radius-full;
+  background: $primary-color;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
 }

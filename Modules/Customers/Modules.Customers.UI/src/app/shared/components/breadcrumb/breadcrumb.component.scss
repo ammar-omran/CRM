@@ -1,14 +1,22 @@
 .matero-breadcrumb {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
   padding: 0;
-  margin-bottom: 1rem;
-  font-size: .875rem;
+  margin: 0;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
   list-style: none;
+  color: #9ca3af;
 }
 
 .matero-breadcrumb-item {
-  line-height: 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  line-height: 16px;
   text-transform: capitalize;
 
   > * {
@@ -16,19 +24,25 @@
   }
 
   > a.link {
-    color: currentColor;
+    color: #9ca3af;
     text-decoration: none;
-
+    font-weight: 500;
     &:hover {
-      color: currentColor;
-      text-decoration: underline;
+      color: #6b7280;
+      text-decoration: none;
     }
   }
 
+  span {
+    color: #374151;
+    font-weight: 600;
+  }
+
   > .chevron {
-    width: 18px;
-    height: 18px;
-    font-size: 18px;
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+    color: #d1d5db;
     user-select: none;
   }
 }

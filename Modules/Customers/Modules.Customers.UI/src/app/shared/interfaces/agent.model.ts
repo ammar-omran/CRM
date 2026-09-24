@@ -1,4 +1,10 @@
-//FIXME: this interface will be changed based on api resonse
+export interface AgentResponse {
+  id: number;
+  userId: string;
+  name: string;
+  email: string;
+}
+
 export interface Agent {
   mobile: string;
   id: string;

@@ -42,6 +42,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class AuditsComponent {
   filterVisible = false;
+  activeFilterCount = 0;
   toggleFilter() {
     this.filterVisible = !this.filterVisible;
   }
@@ -130,6 +131,10 @@ export class AuditsComponent {
     }
 
     this.filters = transformedFilters;
+    this.activeFilterCount = Object.keys(filterValues || {}).filter(k => {
+      const v = (filterValues as any)[k];
+      return v !== '' && v !== null && v !== undefined && !(Array.isArray(v) && v.length === 0) && v !== '0';
+    }).length;
   }
 
   export(format: string): void {

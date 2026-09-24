@@ -1,21 +1,69 @@
-<mtx-grid
-  #grid
-  [data]="(data$ | async) || []"
-  [columns]="columns"
-  [loading]="isLoading"
-  [columnResizable]="true"
-  [rowHover]="true"
-  [columnHideable]="true"
-  [columnSortable]="true"
-  [expandable]="true"
-  [showPaginator]="true"
-  [pageSizeOptions]="pageSizeOptions"
-  [pageIndex]="pageIndex"
-  [pageSize]="pageSize"
-  [pageOnFront]="false"
-  [length]="totalRecords"
-  [rowClassFormatter]="rowClassFormatter"
-  (page)="onPageChange($event)"
-  (sortChange)="sortChange($event)"
->
-</mtx-grid>
+<div class="adaptive-table">
+  <div class="adaptive-table__toolbar">
+    <div class="adaptive-table__meta">
+      @if (isLoading) {
+        <span class="adaptive-table__skeleton">Loading…</span>
+      } @else {
+        <span class="adaptive-table__count"><strong>{{ totalRecords }}</strong> records</span>
+        <span class="adaptive-table__divider">·</span>
+        <span class="adaptive-table__page">Page {{ pageIndex + 1 }} · {{ pageSize }} per page</span>
+      }
+    </div>
+    @if (hasError) {
+      <button mat-stroked-button class="adaptive-table__retry" (click)="retry()">
+        <mat-icon>refresh</mat-icon> Retry
+      </button>
+    }
+  </div>
+
+  <div class="adaptive-table__grid-wrap" [class.is-loading]="isLoading">
+    <mtx-grid
+      #grid
+      [data]="(data$ | async) || []"
+      [columns]="columns"
+      [loading]="isLoading"
+      [columnResizable]="true"
+      [rowHover]="true"
+      [columnHideable]="true"
+      [columnSortable]="true"
+      [expandable]="true"
+      [showPaginator]="true"
+      [pageSizeOptions]="pageSizeOptions"
+      [pageIndex]="pageIndex"
+      [pageSize]="pageSize"
+      [pageOnFront]="false"
+      [length]="totalRecords"
+      [noResultText]="noResultText"
+      [rowClassFormatter]="rowClassFormatter"
+      (page)="onPageChange($event)"
+      (sortChange)="sortChange($event)"
+    >
+    </mtx-grid>
+
+    @if (!isLoading && !hasError && totalRecords === 0 && emptyTitle) {
+      <div class="adaptive-table__empty">
+        <div class="adaptive-table__empty-icon">
+          <mat-icon>inbox</mat-icon>
+        </div>
+        <h3 class="adaptive-table__empty-title">{{ emptyTitle }}</h3>
+        <p class="adaptive-table__empty-desc">{{ emptyDescription }}</p>
+        @if (emptyActionLabel) {
+          <button mat-flat-button color="primary" (click)="emptyAction.emit()">
+            <mat-icon>{{ emptyActionIcon }}</mat-icon> {{ emptyActionLabel }}
+          </button>
+        }
+      </div>
+    }
+
+    @if (hasError && !isLoading) {
+      <div class="adaptive-table__error">
+        <mat-icon>error_outline</mat-icon>
+        <h3>Couldn’t load data</h3>
+        <p>{{ errorMessage || 'An unexpected error occurred. Please try again.' }}</p>
+        <button mat-flat-button color="primary" (click)="retry()">
+          <mat-icon>refresh</mat-icon> Try again
+        </button>
+      </div>
+    }
+  </div>
+</div>

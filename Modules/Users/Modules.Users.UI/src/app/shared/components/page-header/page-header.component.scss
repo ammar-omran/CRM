@@ -1,31 +1,76 @@
 @use '../../../../styles/helpers/variables' as *;
 
-.matero-page-header-inner {
+:host.matero-page-header {
+  display: block;
+  margin-bottom: 18px;
+}
+
+.page-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.page-header__breadcrumb {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.page-header__main {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.page-header__titles {
+  min-width: 0;
+  flex: 1 1 320px;
+}
+
+.page-header__title {
+  margin: 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  font-size: 1.25rem;
-  line-height: 1;
+  gap: 12px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: $color-text-primary;
 
-  .matero-breadcrumb {
-    margin-top: 8px;
-    margin-bottom: 0;
-  }
-
-  .add-icon {
-    width: 35px;
-    height: 35px;
-
-    &:hover {
-      color: #fff;
-    }
+  @media (max-width: 768px) {
+    font-size: 18px;
   }
 }
 
-.matero-page-title {
-  margin: 0;
-  font-size: 1.5rem;
-  font-weight: 400;
-  color: $primary-color;
+.page-header__title-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.page-header__add {
+  width: 32px !important;
+  height: 32px !important;
+  flex-shrink: 0;
+  box-shadow: $shadow-sm !important;
+}
+
+.page-header__subtitle {
+  margin: 6px 0 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: $color-text-secondary;
+  max-width: 62ch;
+}
+
+.page-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  padding-top: 2px;
 }

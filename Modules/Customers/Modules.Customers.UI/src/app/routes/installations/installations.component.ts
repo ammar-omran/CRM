@@ -41,6 +41,7 @@ import { MatMenuModule } from '@angular/material/menu';
 })
 export class InstallationsComponent implements OnInit, OnDestroy {
   filterVisible = false;
+  activeFilterCount = 0;
   filters: any = {};
   sortField: string = 'meterSerial';
   sortDirection: 'asc' | 'desc' = 'asc';
@@ -182,7 +183,7 @@ export class InstallationsComponent implements OnInit, OnDestroy {
 
       this.contractors = (response as BaseResponse<Contractor[]>).data;
     } catch (error) {
-
+      console.error('Failed to load contractors:', error);
     }
   }
 
@@ -202,6 +203,10 @@ export class InstallationsComponent implements OnInit, OnDestroy {
     }
 
     this.filters = newFilters;
+    this.activeFilterCount = Object.keys(filterValues || {}).filter(k => {
+      const v = (filterValues as any)[k];
+      return v !== '' && v !== null && v !== undefined && !(Array.isArray(v) && v.length === 0) && v !== '0';
+    }).length;
   }
 
   async openAssignDialog(rowData: InstalledMeter): Promise<void> {
@@ -265,7 +270,7 @@ export class InstallationsComponent implements OnInit, OnDestroy {
           });
         },
         error: err => {
-
+          console.error('Error loading meter details:', err);
         },
       });
   }
@@ -322,7 +327,7 @@ export class InstallationsComponent implements OnInit, OnDestroy {
           downloadFile(response, defaultFilename, format);
         },
         error: err => {
-
+          console.error('Export failed:', err);
         },
       });
   }

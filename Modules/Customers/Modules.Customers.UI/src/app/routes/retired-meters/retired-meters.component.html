@@ -1,5 +1,5 @@
-<page-header [title]="'Retired Meters'">
-  <app-list-actions [showFilter]="true" (filterToggled)="toggleFilter()">
+<page-header [title]="'Retired Meters'" subtitle="Meters retired from service">
+  <app-list-actions [showFilter]="true" [activeCount]="activeFilterCount" (filterToggled)="toggleFilter()">
     <button
       custom-action
       [matMenuTriggerFor]="exportMenu"
@@ -35,4 +35,6 @@
   [isLoading]="false"
   [rowSelectable]="false"
   [rowHover]="false"
+  emptyTitle="No retired meters"
+  emptyDescription="No retired meters match your current filters."
 ></app-adaptive-table>

@@ -8,6 +8,7 @@ export interface FilterControl {
   options?: Array<{ value: any; label: string }>;
   validators?: Array<ValidatorFn>;
   apiEndpoint?: EndPoint;
+  canSelectMulti?: boolean;
   key?: string; //if the data for example not coming as an array of string like array of objects , we have to know each value then
   isFirstValueDynamic?: boolean;
   optionVal?: string;

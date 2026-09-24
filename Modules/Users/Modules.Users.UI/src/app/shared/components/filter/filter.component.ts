@@ -16,6 +16,8 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { TranslatePipe } from '@ngx-translate/core';
 import { EndPoint, HttpVerb } from '@shared/enums';
@@ -36,6 +38,8 @@ import { debounceTime, switchMap } from 'rxjs/operators';
     MatAutocompleteModule,
     MatDatepickerModule,
     MatButtonModule,
+    MatIconModule,
+    MatCheckboxModule,
     MatSelectModule,
     TranslatePipe,
   ],
@@ -52,6 +56,8 @@ export class FilterComponent implements OnInit {
 
   filterForm!: FormGroup;
   userSearchResults$: Observable<any[]> = of([]);
+  activeCount = 0;
+  activeChips: Array<{ key: string; label: string; value: string }> = [];
 
   constructor(
     private fb: FormBuilder,
@@ -61,6 +67,45 @@ export class FilterComponent implements OnInit {
   ngOnInit(): void {
     this.buildForm();
     this.fetchDynamicOptions();
+    this.filterForm.valueChanges.subscribe(() => this.updateChips());
+  }
+
+  private updateChips(): void {
+    const chips: Array<{ key: string; label: string; value: string }> = [];
+    let count = 0;
+    for (const c of this.controls) {
+      const v = this.filterForm.get(c.formControlName)?.value;
+      const isEmpty =
+        v === null ||
+        v === undefined ||
+        v === '' ||
+        v === '0' ||
+        (Array.isArray(v) && v.length === 0);
+      if (!isEmpty) {
+        count++;
+        let display = '';
+        if (Array.isArray(v)) {
+          if (c.options?.length) {
+            display = v
+              .map((id: any) => c.options?.find(o => String(o.value) === String(id))?.label ?? String(id))
+              .join(', ');
+          } else display = `${v.length} selected`;
+        } else if (c.type === 'select' && c.options?.length) {
+          display = c.options.find(o => String(o.value) === String(v))?.label ?? String(v);
+        } else if (c.type === 'date' && v) {
+          try { display = new Date(v).toLocaleDateString(); } catch { display = String(v); }
+        } else display = String(v);
+        if (display.length > 40) display = display.slice(0, 40) + '…';
+        chips.push({ key: c.formControlName, label: c.label, value: display });
+      }
+    }
+    this.activeCount = count;
+    this.activeChips = chips;
+  }
+
+  clearOne(key: string): void {
+    this.filterForm.get(key)?.setValue('');
+    this.onSubmit();
   }
 
   fetchDynamicOptions(): void {
@@ -130,12 +175,16 @@ export class FilterComponent implements OnInit {
 
   onSubmit() {
     if (this.filterForm.valid) {
+      this.updateChips();
       this.filterChanged.emit(this.filterForm.value);
     }
   }
 
   resetForm() {
     this.filterForm.reset();
+    this.activeCount = 0;
+    this.activeChips = [];
+    this.filterChanged.emit(this.filterForm.value);
   }
 
   displayFn(control: FilterControl): (value: any) => string {

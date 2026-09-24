@@ -1,5 +1,5 @@
-<page-header [title]="'Installations'">
-  <app-list-actions [showFilter]="true" (filterToggled)="toggleFilter()">
+<page-header [title]="'Installations'" subtitle="Installed meters and contractor assignments">
+  <app-list-actions [showFilter]="true" [activeCount]="activeFilterCount" (filterToggled)="toggleFilter()">
     <button
       custom-action
       [matMenuTriggerFor]="exportMenu"
@@ -35,4 +35,6 @@
   [isLoading]="false"
   [rowSelectable]="false"
   [rowHover]="false"
+  emptyTitle="No installations found"
+  emptyDescription="No meters match the current filters."
 ></app-adaptive-table>

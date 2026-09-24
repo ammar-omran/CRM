@@ -1,5 +1,5 @@
-<page-header [title]="'Audits'">
-  <app-list-actions [showFilter]="true" (filterToggled)="toggleFilter()">
+<page-header [title]="'Audits'" subtitle="System audit trail and change history">
+  <app-list-actions [showFilter]="true" [activeCount]="activeFilterCount" (filterToggled)="toggleFilter()">
     <button
       custom-action
       [matMenuTriggerFor]="exportMenu"
@@ -33,4 +33,6 @@
   [filters]="filters"
   [columns]="columns"
   [isLoading]="false"
+  emptyTitle="No audit records"
+  emptyDescription="No audits match your current filters."
 ></app-adaptive-table>

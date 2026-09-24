@@ -1,5 +1,5 @@
-<page-header [title]="'Contractors'" [addLink]="'add'" addTooltip="Add Contractor">
-  <app-list-actions [showFilter]="true" (filterToggled)="toggleFilter()">
+<page-header [title]="'Contractors'" subtitle="Manage contracted partners and their agents" [addLink]="'add'" addTooltip="Add Contractor">
+  <app-list-actions [showFilter]="true" [activeCount]="activeFilterCount" (filterToggled)="toggleFilter()">
     <button
       custom-action
       [matMenuTriggerFor]="exportMenu"
@@ -33,4 +33,6 @@
   [filters]="filters"
   [columns]="columns"
   [isLoading]="false"
+  emptyTitle="No contractors found"
+  emptyDescription="Adjust filters or add a new contractor to get started."
 ></app-adaptive-table>

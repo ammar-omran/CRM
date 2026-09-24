@@ -1,9 +1,175 @@
+@use '../../../../styles/helpers/variables' as *;
+
+.adaptive-table {
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  box-shadow: $shadow-sm;
+  overflow: hidden;
+}
+
+.adaptive-table__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  background: #f9fafb;
+  border-bottom: 1px solid $color-border;
+  font-size: 12.5px;
+  color: $color-text-secondary;
+
+  @media (max-width: 560px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.adaptive-table__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.adaptive-table__count strong {
+  color: $color-text-primary;
+  font-weight: 700;
+}
+
+.adaptive-table__divider {
+  color: $color-border-strong;
+}
+
+.adaptive-table__page {
+  color: $color-text-tertiary;
+}
+
+.adaptive-table__retry {
+  height: 30px;
+  border-radius: $radius-full !important;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.adaptive-table__grid-wrap {
+  position: relative;
+  background: #fff;
+
+  &.is-loading {
+    opacity: 0.9;
+  }
+}
+
 :host ::ng-deep .mtx-grid {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+
   .disabled-state {
-    background-color: #f2e6e6 !important;
+    background-color: #fef2f2 !important;
   }
 
   .mat-mdc-icon-button .mat-mdc-button-persistent-ripple::before {
     background-color: transparent !important;
   }
+
+  .mtx-grid-no-result {
+    padding: 24px;
+    color: $color-text-secondary;
+    font-size: 13px;
+  }
+
+  // Badge helpers — consumers can add cellClass for status/severity
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 9px;
+    border-radius: $radius-full;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: capitalize;
+    border: 1px solid transparent;
+    line-height: 1.4;
+  }
+  .badge--open,
+  .badge--new {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border-color: #bfdbfe;
+  }
+  .badge--inprogress,
+  .badge--in_progress {
+    background: #fff7ed;
+    color: #c2410c;
+    border-color: #fed7aa;
+  }
+  .badge--resolved,
+  .badge--closed {
+    background: #ecfdf5;
+    color: #065f46;
+    border-color: #a7f3d0;
+  }
+  .badge--high,
+  .badge--critical {
+    background: #fef2f2;
+    color: #991b1b;
+    border-color: #fecaca;
+  }
+  .badge--medium {
+    background: #fffbeb;
+    color: #92400e;
+    border-color: #fde68a;
+  }
+  .badge--low {
+    background: #f0fdf4;
+    color: #166534;
+    border-color: #bbf7d0;
+  }
+}
+
+.adaptive-table__empty,
+.adaptive-table__error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 36px 24px 32px;
+  gap: 10px;
+  background: #fff;
+}
+
+.adaptive-table__empty-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: $radius-full;
+  background: #f3f4f6;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  .mat-icon { font-size: 28px; width: 28px; height: 28px; }
+}
+
+.adaptive-table__empty-title {
+  margin: 4px 0 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: $color-text-primary;
+}
+
+.adaptive-table__empty-desc {
+  margin: 0;
+  font-size: 13px;
+  color: $color-text-secondary;
+  max-width: 36ch;
+  line-height: 1.5;
+}
+
+.adaptive-table__error {
+  color: $color-text-secondary;
+  .mat-icon { font-size: 32px; width: 32px; height: 32px; color: #f87171; }
+  h3 { margin: 0; font-size: 14px; font-weight: 700; color: $color-text-primary; }
+  p { margin: 0; font-size: 13px; max-width: 42ch; }
 }

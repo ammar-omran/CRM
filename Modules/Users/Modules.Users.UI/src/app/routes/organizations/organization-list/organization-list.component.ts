@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MtxGridColumn } from '@ng-matero/extensions/grid';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { AdaptiveTableComponent } from '@shared/components/adaptive-table/adaptive-table.component';
 import { EndPoint, HttpVerb } from '@shared/enums';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
@@ -15,6 +16,7 @@ import { NgxPermissionsModule } from 'ngx-permissions';
   imports: [
     CommonModule,
     MatButtonModule,
+    MatIconModule,
     AdaptiveTableComponent,
     PageHeaderComponent,
     TranslatePipe,

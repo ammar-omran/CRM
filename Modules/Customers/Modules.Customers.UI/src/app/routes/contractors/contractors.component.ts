@@ -46,6 +46,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class ContractorsComponent {
   filterVisible = false;
+  activeFilterCount = 0;
   toggleFilter() {
     this.filterVisible = !this.filterVisible;
   }
@@ -109,6 +110,10 @@ export class ContractorsComponent {
 
   onFilterChanged(filterValues: any): void {
     this.filters = filterValues;
+    this.activeFilterCount = Object.keys(filterValues || {}).filter(k => {
+      const v = (filterValues as any)[k];
+      return v !== '' && v !== null && v !== undefined && !(Array.isArray(v) && v.length === 0) && v !== '0';
+    }).length;
   }
 
   viewAgents(contractorId: number): void {
@@ -149,7 +154,7 @@ export class ContractorsComponent {
           downloadFile(response, defaultFilename, format);
         },
         error: err => {
-
+          console.error('Export failed:', err);
         },
       });
   }

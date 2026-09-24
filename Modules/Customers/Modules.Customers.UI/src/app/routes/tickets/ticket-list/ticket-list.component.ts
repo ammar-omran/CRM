@@ -11,16 +11,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
-import {
-  MatCard,
-  MatCardContent,
-  MatCardHeader,
-  MatCardTitle,
-  MatCardSubtitle,
-  MatCardAvatar,
-} from '@angular/material/card';
 import { RouterLink } from '@angular/router';
 import { environment } from '@env/environment';
+import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
 
 interface Ticket {
   id: number;
@@ -52,13 +45,8 @@ interface Ticket {
     MatButtonModule,
     DatePipe,
     CommonModule,
-    MatCard,
-    MatCardContent,
-    MatCardHeader,
-    MatCardTitle,
-    MatCardSubtitle,
-    MatCardAvatar,
     RouterLink,
+    PageHeaderComponent,
   ],
 })
 export class TicketListComponent {

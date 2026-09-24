@@ -33,6 +33,7 @@ import { ApiService } from '@shared/services/api.service';
 })
 export class RetiredMetersComponent {
   filterVisible = false;
+  activeFilterCount = 0;
   fileFormats = FileFormats;
   private apiService = inject(ApiService);
   private destroyRef = inject(DestroyRef);
@@ -127,6 +128,10 @@ export class RetiredMetersComponent {
     }
 
     this.filters = newFilters;
+    this.activeFilterCount = Object.keys(filterValues || {}).filter(k => {
+      const v = (filterValues as any)[k];
+      return v !== '' && v !== null && v !== undefined && !(Array.isArray(v) && v.length === 0) && v !== '0';
+    }).length;
   }
 
   exportMeters(format: string): void {
@@ -159,7 +164,7 @@ export class RetiredMetersComponent {
           downloadFile(response, defaultFilename, format);
         },
         error: err => {
-
+          console.error('Export failed:', err);
         },
       });
   }

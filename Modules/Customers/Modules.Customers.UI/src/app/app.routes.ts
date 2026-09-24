@@ -32,43 +32,10 @@ export const routes: Routes = [
         path: 'tickets',
         loadChildren: () => import('./routes/tickets/ticket.routes').then(m => m.routes),
       },
-
-      {
-        path: 'contractors',
-        loadChildren: () => import('./routes/contractors/contractors.routes').then(m => m.routes),
-      },
       {
         path: 'profile',
         loadChildren: () => import('./routes/profile/profile.routes').then(c => c.routes),
       },
-
-      {
-        path: 'retired-meters',
-        loadComponent: () =>
-          import('./routes/retired-meters/retired-meters.component').then(
-            c => c.RetiredMetersComponent
-          ),
-      },
-      {
-        path: 'installation',
-        loadComponent: () =>
-          import('./routes/installations/installations.component').then(
-            c => c.InstallationsComponent
-          ),
-      },
-      {
-        path: 'audits',
-        loadComponent: () =>
-          import('./routes/audits/audits.component').then(c => c.AuditsComponent),
-      },
-      {
-        path: 'meter-operations',
-        loadComponent: () =>
-          import('./routes/meter-operations/meter-operations.component').then(
-            c => c.MeterOperationsComponent
-          ),
-      },
-
       { path: '403', component: Error403Component },
       { path: '404', component: Error404Component },
       { path: '500', component: Error500Component },

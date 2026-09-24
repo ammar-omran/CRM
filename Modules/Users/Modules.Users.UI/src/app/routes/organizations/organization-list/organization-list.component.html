@@ -1,20 +1,23 @@
-<page-header [title]="'organizations.title' | translate"></page-header>
+<page-header [title]="'organizations.title' | translate" subtitle="Manage organizational units and customers"></page-header>
 
 <div class="organizations-container">
   <div class="organizations-header">
     <button
       *ngxPermissionsOnly="['ADMIN']"
-      mat-raised-button
+      mat-flat-button
       color="primary"
       (click)="navigateToCreate()">
+      <mat-icon>add</mat-icon>
       {{ 'organizations.create_button' | translate }}
     </button>
   </div>
 
   <div *ngIf="!hasOrganizations" class="organizations-empty-state">
+    <mat-icon style="color:#9ca3af;font-size:32px;width:32px;height:32px;margin-bottom:10px">business</mat-icon>
     <p class="empty-title">
       {{ 'organizations.empty_message' | translate }}
     </p>
+    <p style="margin:6px 0 0;color:#6b7280;font-size:13px;max-width:36ch">Create your first organization to start managing customers.</p>
   </div>
 
   <div *ngIf="hasOrganizations">
@@ -23,6 +26,8 @@
       [httpMethod]="httpVerb"
       [columns]="columns"
       (dataLoaded)="onDataLoaded($event)"
+      emptyTitle="No organizations"
+      emptyDescription="No organizations match your current view."
     ></app-adaptive-table>
   </div>
 </div>
